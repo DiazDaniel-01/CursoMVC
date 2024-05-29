@@ -122,15 +122,16 @@
                     </div>
                 </div>
             </footer>
-        @*@<li>@Html.ActionLink("Home", "Index", "Home")</li>
+            @*@<li>@Html.ActionLink("Home", "Index", "Home")</li>
         <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
         <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>*@
 
 
 
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/complementos")
+            @Scripts.Render("~/bundles/bootstrap")
+            @RenderSection("scripts", required: false)
 </body>
 </html>
