@@ -54,7 +54,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_RegistrarUsuario", oconexion);
+                    SqlCommand cmd = new SqlCommand("sp_RegistrarUsuarios", oconexion);
                     cmd.Parameters.AddWithValue("Nombres",obj.Nombres);
                     cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
                     cmd.Parameters.AddWithValue("Correo", obj.Correo);
@@ -87,8 +87,8 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oconexion);
-                    cmd.Parameters.AddWithValue("IdUsuario", obj.Id_Usuario);
+                    SqlCommand cmd = new SqlCommand("sp_EditarUsuarios", oconexion);
+                    cmd.Parameters.AddWithValue("Id_Usuario", obj.Id_Usuario);
                     cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
                     cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
                     cmd.Parameters.AddWithValue("Correo", obj.Correo);
