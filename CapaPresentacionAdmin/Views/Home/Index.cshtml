@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="col-sm-1">
-                    <div class="mb-2 d-grid" ">
+                    <div class="mb-2 d-grid">
                         <button class="btn btn-success" type="submit"><i class="fas fa-file-excel"></i> Exportar</button>
                     </div>
                 </div>
@@ -147,7 +147,6 @@
             success: function (data) {
 
                 var objeto = data.resultado;
-
 
                 $("#totalcliente").text(objeto.TotalCliente),
                 $("#totalventa").text(objeto.TotalVenta),
