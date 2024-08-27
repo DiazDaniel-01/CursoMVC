@@ -17,51 +17,10 @@ namespace CapaDatos
         {
             List<Reporte> lista = new List<Reporte>();
 
-            try
-            {
-                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
-                {
-                    
-
-                    SqlCommand cmd = new SqlCommand("sp_ReporteVentas", oconexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
-                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
-                    cmd.Parameters.AddWithValue("Correo", obj.Correo);
-                    oconexion.Open();
-                    using (SqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            lista.Add(
-                                new Usuario()
-                                {
-                                    Id_Usuario = Convert.ToInt32(dr["Id_Usuario"]),
-                                    Nombres = dr["Nombres"].ToString(),
-                                    Apellidos = dr["Apellidos"].ToString(),
-                                    Correo = dr["Correo"].ToString(),
-                                    Clave = dr["Clave"].ToString(),
-                                    Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),
-                                    Activo = Convert.ToBoolean(dr["Activo"])
-                                }
-                                );
-                        }
-                    }
-                }
-            }
-
-            catch
-            {
-                lista = new List<Reporte>();
-            }
+            
 
             return lista;
         }
-
-
-
-
-
 
         public DashBoard VerDashBoard()
         {
