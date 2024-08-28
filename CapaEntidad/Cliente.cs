@@ -10,8 +10,7 @@ namespace CapaEntidad
     {
         public int Id_Cliente { get; set; }
         public string Nombre { get; set; }
-        public string Apellidos { get; set; }
-        public string Direccion { get; set; }
+        public string Apellido { get; set; }
         public string Descripcion { get; set; }
         public string Celular { get; set; }
 

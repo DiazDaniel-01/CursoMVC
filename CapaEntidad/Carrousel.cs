@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class Carrito
+    public class Carrousel
     {
-        public int Id_Carrito { get; set; }
-        public Cliente oCliente { get; set; }
+        public int Id_Carrousel { get; set; }
+        public Oferta oOferta { get; set; }
         public Producto oProducto { get; set; }
-        public int Cantidad { get; set; }
-
-
+        public bool Activo { get; set; }
     }
 }
