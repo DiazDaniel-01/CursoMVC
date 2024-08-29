@@ -16,7 +16,6 @@ namespace CapaEntidad
         public decimal Total_Pago { get; set; }
         public DateTime Fecha_Venta { get; set; }
         public string Departamento { get; set; }
-        public string Piso { get; set; }
         public string Direccion { get; set; }
     }
 }
