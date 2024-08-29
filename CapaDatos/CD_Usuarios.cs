@@ -26,14 +26,14 @@ namespace CapaDatos
                             lista.Add(
                                 new Usuario(){
                                     Id_Usuario = Convert.ToInt32(dr["Id_Usuario"]),
-                                    Nombres = dr["Nombres"].ToString(),
-                                    Apellidos = dr["Apellidos"].ToString(),
+                                    Nombre = dr["Nombres"].ToString(),
+                                    Apellido = dr["Apellidos"].ToString(),
                                     Correo = dr["Correo"].ToString(),
                                     Clave = dr["Clave"].ToString(),
                                     Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),
                                     Activo = Convert.ToBoolean(dr["Activo"])
                                 }
-                                );
+                            );
                         }
                     }
                 }
@@ -55,8 +55,8 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_RegistrarUsuarios", oconexion);
-                    cmd.Parameters.AddWithValue("Nombres",obj.Nombres);
-                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Nombres",obj.Nombre);
+                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellido);
                     cmd.Parameters.AddWithValue("Correo", obj.Correo);
                     cmd.Parameters.AddWithValue("Clave", obj.Clave);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
@@ -89,8 +89,8 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_EditarUsuarios", oconexion);
                     cmd.Parameters.AddWithValue("Id_Usuario", obj.Id_Usuario);
-                    cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
-                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Nombres", obj.Nombre);
+                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellido);
                     cmd.Parameters.AddWithValue("Correo", obj.Correo);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
