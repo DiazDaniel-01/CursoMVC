@@ -23,10 +23,10 @@ namespace CapaNegocio
 
             Mensaje = string.Empty;
 
-            if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres)) {
+            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre)) {
                 Mensaje = "El nombre del usuario no puede ser vacio";
             }
-            else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
+            else if (string.IsNullOrEmpty(obj.Apellido) || string.IsNullOrWhiteSpace(obj.Apellido))
             {
                 Mensaje = "El apellido del usuario no puede ser vacio";
             }
@@ -66,11 +66,11 @@ namespace CapaNegocio
         public bool Editar(Usuario obj, out string Mensaje) {
             Mensaje = string.Empty;
 
-            if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
+            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre))
             {
                 Mensaje = "El nombre del usuario no puede ser vacio";
             }
-            else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
+            else if (string.IsNullOrEmpty(obj.Apellido) || string.IsNullOrWhiteSpace(obj.Apellido))
             {
                 Mensaje = "El apellido del usuario no puede ser vacio";
             }
