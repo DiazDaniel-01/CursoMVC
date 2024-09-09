@@ -17,7 +17,7 @@ namespace CapaDatos
             try
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn)) {
-                    string query = "select Id_Usuario, Nombre, Apellido, Correo, Clave, Reestablecer, Activo from USUARIOS";
+                    string query = "select Id_Usuario, Nombre, Apellido, Correo, Clave, Reestablecer, Activo from USUARIO";
                     SqlCommand cmd = new SqlCommand(query, oconexion);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();
@@ -54,7 +54,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_RegistrarUsuarios", oconexion);
+                    SqlCommand cmd = new SqlCommand("sp_RegistrarUsuario", oconexion);
                     cmd.Parameters.AddWithValue("Nombre",obj.Nombre);
                     cmd.Parameters.AddWithValue("Apellido", obj.Apellido);
                     cmd.Parameters.AddWithValue("Correo", obj.Correo);
@@ -87,7 +87,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_EditarUsuarios", oconexion);
+                    SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oconexion);
                     cmd.Parameters.AddWithValue("Id_Usuario", obj.Id_Usuario);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Apellido", obj.Apellido);
@@ -118,7 +118,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("delete top (1) from USUARIOS where Id_Usuario = @id", oconexion);
+                    SqlCommand cmd = new SqlCommand("delete top (1) from USUARIO where Id_Usuario = @id", oconexion);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();

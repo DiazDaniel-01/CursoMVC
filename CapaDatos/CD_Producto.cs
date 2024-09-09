@@ -44,8 +44,10 @@ namespace CapaDatos
                                 Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
                                 Nombre = dr["Nombre"].ToString(),
                                 Descripcion = dr["Descripcion"].ToString(),
+                                Extra_Producto = dr["Extra_Producto"].ToString(),
                                 oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
                                 Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
+                                Stock = Convert.ToInt32(dr["Stock"]),
                                 Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
                                 Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
                                 Activo = Convert.ToBoolean(dr["Activo"])
@@ -71,10 +73,12 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_RegistrarProducto", oconexion);
+                    cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
-                    cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
+                    cmd.Parameters.AddWithValue("Extra_Producto", obj.Extra_Producto);
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
+                    cmd.Parameters.AddWithValue("Stock", obj.Stock);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -108,6 +112,8 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
+                    cmd.Parameters.AddWithValue("Extra_Producto", obj.Extra_Producto);
+                    cmd.Parameters.AddWithValue("Stock", obj.Stock);
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;

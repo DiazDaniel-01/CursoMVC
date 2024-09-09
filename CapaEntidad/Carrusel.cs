@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class Carrousel
+    public class Carrusel
     {
-        public int Id_Carrousel { get; set; }
+        public int Id_Carrusel { get; set; }
         public Oferta oOferta { get; set; }
         public Producto oProducto { get; set; }
         public bool Activo { get; set; }
