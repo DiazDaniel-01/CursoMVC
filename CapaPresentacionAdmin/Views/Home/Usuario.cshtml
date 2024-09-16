@@ -1,17 +1,17 @@
 ﻿
 @{
-    ViewBag.Title = "Usuarios";
+    ViewBag.Title = "Usuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="index.html">Resumen</a></li>
-    <li class="breadcrumb-item active">Usuarios</li>
+    <li class="breadcrumb-item active">Usuario</li>
 </ol>
 
 <div class="card">
     <div class="card-header">
-        <i class="fas fa-users me-1"></i> Lista de Usuarios
+        <i class="fas fa-users me-1"></i> Lista de Usuario
     </div>
     <div class="card-body">
         <div class="row">
@@ -25,8 +25,8 @@
         <table id="tabla" class="display cell-border" style="width: 100%">
             <thead>
                 <tr>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
                     <th>Correo</th>
                     <th>Activo</th>
                     <th></th>
@@ -55,12 +55,12 @@
 
                     <div class="col-sm-6">
                         <label for="txtnombres" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="txtnombres" autocomplete="off">
+                        <input type="text" class="form-control" id="txtnombre" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtapellidos" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="txtapellidos" autocomplete="off">
+                        <input type="text" class="form-control" id="txtapellido" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
@@ -105,13 +105,13 @@
             responsive: true,
             ordering: false,
             "ajax": {
-                url: '@Url.Action("ListarUsuarios","Home")',
+                url: '@Url.Action("ListarUsuario","Home")',
                 type: "GET",
                 dataType: "json"
             },
             "columns": [
-                { "data": "Nombres" },
-                { "data": "Apellidos" },
+                { "data": "Nombre" },
+                { "data": "Apellido" },
                 { "data": "Correo" },
                 {
                     "data": "Activo", "render": function (valor) {
@@ -138,8 +138,8 @@
         function abrirModal(json) {
 
             $("#txtid").val(0);
-            $("#txtnombres").val("");
-            $("#txtapellidos").val("");
+            $("#txtnombre").val("");
+            $("#txtapellido").val("");
             $("#txtcorreo").val("");
             $("#cboactivo").val(1);
             $("#mensajeError").hide();
@@ -148,8 +148,8 @@
             if (json != null) {
 
                 $("#txtid").val(json.Id_Usuario);
-                $("#txtnombres").val(json.Nombres);
-                $("#txtapellidos").val(json.Apellidos);
+                $("#txtnombre").val(json.Nombre);
+                $("#txtapellido").val(json.Apellido);
                 $("#txtcorreo").val(json.Correo);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
 
@@ -220,9 +220,9 @@
             var Usuario = {
                 Id_Usuario: $("#txtid").val(),
                 Activo: $("#cboactivo").val() == 1 ? true : false,
-                Apellidos: $("#txtapellidos").val(),
+                Apellido: $("#txtapellido").val(),
                 Correo: $("#txtcorreo").val(),
-                Nombres: $("#txtnombres").val()
+                Nombre: $("#txtnombre").val()
             }
 
             jQuery.ajax({
