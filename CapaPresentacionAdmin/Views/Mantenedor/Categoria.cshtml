@@ -27,6 +27,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Descripcion</th>
                     <th>Activo</th>
                     <th></th>
                 </tr>
@@ -55,6 +56,11 @@
                     <div class="col-sm-6">
                         <label for="txtnombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="txtnombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtdescripcion" class="form-label">Descripcion</label>
+                        <input type="text" class="form-control" id="txtdescripcion" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
@@ -101,6 +107,7 @@
             },
             "columns": [
                 { "data": "Nombre" },
+                { "data": "Descripcion" },
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
@@ -127,6 +134,7 @@
 
             $("#txtid").val(0);
             $("#txtnombre").val("");
+            $("#txtdescripcion").val("");
             $("#cboactivo").val(1);
             $("#mensajeError").hide();
 
@@ -135,6 +143,7 @@
 
                 $("#txtid").val(json.Id_Categoria);
                 $("#txtnombre").val(json.Nombre);
+                $("#txtdescripcion").val(json.Descripcion);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
 
             }
@@ -206,6 +215,7 @@
             var Categoria = {
                 Id_Categoria: $("#txtid").val(),
                 Nombre: $("#txtnombre").val(),
+                Descripcion: $("#txtdescripcion").val(),
                 Activo: $("#cboactivo").val() == 1 ? true : false
             }
 

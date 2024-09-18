@@ -19,7 +19,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "SELECT Id_Categoria, Nombre, Activo FROM CATEGORIA";
+                    string query = "SELECT Id_Categoria, Nombre, Descripcion, Activo FROM CATEGORIA";
                     SqlCommand cmd = new SqlCommand(query, oconexion);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();
@@ -31,6 +31,7 @@ namespace CapaDatos
                             {
                                 Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]),
                                 Nombre = dr["Nombre"].ToString(),
+                                Descripcion = dr["Descripcion"].ToString(),
                                 Activo = Convert.ToBoolean(dr["Activo"])
                             });
                         }
@@ -55,6 +56,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_RegistrarCategoria", oconexion);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
+                    cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -87,6 +89,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.Id_Categoria);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
