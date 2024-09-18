@@ -41,6 +41,11 @@ namespace CapaNegocio
 
                 Mensaje = "Debe ingresar el precio del producto";
             }
+            else if (obj.Stock == 0)
+            {
+
+                Mensaje = "Debe ingresar la cantidad del stock";
+            }
 
 
             if (string.IsNullOrEmpty(Mensaje))

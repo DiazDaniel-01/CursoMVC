@@ -31,7 +31,6 @@
                     <th>Categoria</th>
                     <th>Precio</th>
                     <th>Stock</th>
-                    <th>Ingrediente Extra</th>
                     <th>Activo</th>
                     <th></th>
                 </tr>
@@ -61,7 +60,7 @@
                             <img id="img_producto" height="197" width="200" class="border rounded mx-auto d-block img-fluid" />
                         </div>
                         <div class="mb-2">
-                            <input class="form-control" type="file" id="fileProducto" accept="image/png, imgage/jpg, image/jpeg" onchange="mostrarImagen(this)" />
+                            <input class="form-control" type="file" id="fileProducto" accept="image/png, image/jpg, image/jpeg" onchange="mostrarImagen(this)" />
                         </div>
                     </div>
 
@@ -260,7 +259,6 @@
 
                 jQuery.ajax({
                     
-
                     url: '@Url.Action("ImagenProducto", "Mantenedor")',
                     type: "POST",
                     data: JSON.stringify({ id : json.Id_Producto }),
