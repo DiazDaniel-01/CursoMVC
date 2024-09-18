@@ -1,0 +1,11 @@
+@capaservicio_HostAddress = http://localhost:5185
+
+GET {{capaservicio_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{capaservicio_HostAddress}}/todos/1
+Accept: application/json
+
+###
