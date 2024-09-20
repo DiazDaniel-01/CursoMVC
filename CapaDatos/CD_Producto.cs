@@ -54,7 +54,6 @@ namespace CapaDatos
                     }
                 }
             }
-
             catch
             {
                 lista = new List<Producto>();
@@ -131,7 +130,6 @@ namespace CapaDatos
             bool resultado = false;
             Mensaje = string.Empty;
 
-
             try
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
@@ -164,8 +162,6 @@ namespace CapaDatos
             return (resultado);
         }
 
-
-
         public bool Eliminar(int id, out string Mensaje)
         {
             bool resultado = false;
@@ -192,7 +188,5 @@ namespace CapaDatos
             }
             return resultado;
         }
-
-
     }
 }
