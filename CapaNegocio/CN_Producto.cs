@@ -41,7 +41,10 @@ namespace CapaNegocio
 
                 Mensaje = "Debe ingresar el precio del producto";
             }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
             if (string.IsNullOrEmpty(Mensaje))
             {
