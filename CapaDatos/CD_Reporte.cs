@@ -12,16 +12,6 @@ namespace CapaDatos
     public class CD_Reporte
     {
 
-
-        public List<Reporte> Ventas(string fechainicio, string fechafin, string idtransaccion)
-        {
-            List<Reporte> lista = new List<Reporte>();
-
-            
-
-            return lista;
-        }
-
         public DashBoard VerDashBoard()
         {
             DashBoard objeto = new DashBoard();
@@ -31,7 +21,7 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
 
-                    SqlCommand cmd = new SqlCommand("sp_ReporteDashboard", oconexion);
+                    SqlCommand cmd = new SqlCommand("sp_ReporteDashboardTotales", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
                     using (SqlDataReader dr = cmd.ExecuteReader())
@@ -40,9 +30,9 @@ namespace CapaDatos
                         {
                             objeto = new DashBoard()
                             {
-                                TotalCliente = Convert.ToInt32(dr["TotalCliente"]),
-                                TotalVenta = Convert.ToInt32(dr["TotalCliente"]),
-                                TotalProducto = Convert.ToInt32(dr["TotalProducto"]),
+                                TotalClientes = Convert.ToInt32(dr["TotalClientes"]),
+                                TotalVentas = Convert.ToInt32(dr["TotalVentas"]),
+                                TotalProducto = Convert.ToInt32(dr["TotalProductos"]),
 
 
                             };
@@ -61,3 +51,4 @@ namespace CapaDatos
 
     }
 }
+
