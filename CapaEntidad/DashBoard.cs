@@ -12,6 +12,6 @@ namespace CapaEntidad
 
         public int TotalVentas { get; set; }
 
-        public int TotalProducto { get; set; }
+        public int TotalProductos { get; set; }
     }
 }
