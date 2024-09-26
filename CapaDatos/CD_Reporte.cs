@@ -6,11 +6,55 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace CapaDatos
 {
     public class CD_Reporte
     {
+
+        public List<Reporte> Venta(string FechaInicio, string FechaFin, string Id_Venta)
+        {
+            List<Reporte> lista = new List<Reporte>();
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_ReporteVentas", oconexion);
+                    cmd.Parameters.AddWithValue("FechaInicio", FechaInicio);
+                    cmd.Parameters.AddWithValue("FechaVenta", FechaFin);
+                    cmd.Parameters.AddWithValue("Id_Venta", Id_Venta);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    oconexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(
+                                new Reporte()
+                                {
+                                    FechaVenta = dr["FechaVenta"].ToString(),
+                                    Cliente = dr["Cliente"].ToString(),
+                                    Producto = dr["Producto"].ToString(),
+                                    Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
+                                    Cantidad = Convert.ToInt32(dr["Total_Producto"].ToString()),
+                                    Total = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR")),
+                                    Transaccion = dr["Transaccion"].ToString()
+                                }
+                            );
+                        }
+                    }
+                }
+            }
+
+            catch
+            {
+                lista = new List<Reporte>();
+            }
+
+            return lista;
+        }
 
         public DashBoard VerDashBoard()
         {
@@ -34,7 +78,6 @@ namespace CapaDatos
                                 TotalVentas = Convert.ToInt32(dr["TotalVentas"]),
                                 TotalProductos = Convert.ToInt32(dr["TotalProductos"]),
 
-
                             };
                         }
                     }
@@ -51,4 +94,3 @@ namespace CapaDatos
 
     }
 }
-

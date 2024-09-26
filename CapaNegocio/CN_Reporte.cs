@@ -13,6 +13,10 @@ namespace CapaNegocio
 
         private CD_Reporte objCapaDato = new CD_Reporte();
 
+        public List<Reporte> Venta(string FechaInicio, string FechaFin, string Id_Venta) {
+            return objCapaDato.Venta(FechaInicio, FechaFin, Id_Venta);
+        }
+
         public DashBoard VerDashBoard()
         {
             return objCapaDato.VerDashBoard();
