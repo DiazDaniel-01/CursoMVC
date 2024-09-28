@@ -23,7 +23,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_ReporteVentas", oconexion);
                     cmd.Parameters.AddWithValue("FechaInicio", FechaInicio);
-                    cmd.Parameters.AddWithValue("FechaVenta", FechaFin);
+                    cmd.Parameters.AddWithValue("FechaFin", FechaFin);
                     cmd.Parameters.AddWithValue("Id_Venta", Id_Venta);
                     cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
@@ -35,12 +35,12 @@ namespace CapaDatos
                                 new Reporte()
                                 {
                                     FechaVenta = dr["FechaVenta"].ToString(),
-                                    Cliente = dr["Cliente"].ToString(),
-                                    Producto = dr["Producto"].ToString(),
+                                    Clientes = dr["Cliente"].ToString(),
+                                    Productos = dr["Producto"].ToString(),
                                     Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
-                                    Cantidad = Convert.ToInt32(dr["Total_Producto"].ToString()),
-                                    Total = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR")),
-                                    Transaccion = dr["Transaccion"].ToString()
+                                    Total_Producto = Convert.ToInt32(dr["Total_Productos"].ToString()),
+                                    Total_Pago = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR")),
+                                    Id_Venta = dr["Id_Venta"].ToString()
                                 }
                             );
                         }
