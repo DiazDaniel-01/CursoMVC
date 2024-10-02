@@ -2,9 +2,9 @@
     ViewBag.Title = "Home Page";
 }
 
-<h1 class="mt-4">Dashboard</h1>
+<h1 class="mt-4">Reporte de Ventas</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Dashboard</li>
+    <li class="breadcrumb-item active">Reportes</li>
 </ol>
 
 <div class="row">
@@ -72,24 +72,24 @@
         Historial de Ventas
     </div>
     <div class="card-body">
-        <form>
+        <form action="@Url.Action("ExportarVenta","Home")" method="post">
             <div class="row align-items-lg-end">
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="form-label">Fecha de Inicio:</label>
-                        <input class="form-control" type="text" id="txtfechainicio" name="fechainicio" />
+                        <input class="form-control" type="text" id="txtfechainicio" name="FechaInicio" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="form-label">Fecha de Finalizacion:</label>
-                        <input class="form-control" type="text" id="txtfechafin" name="fechafin" />
+                        <input class="form-control" type="text" id="txtfechafin" name="FechaFin" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label">Id de Transaccion:</label>
-                        <input class="form-control" type="text" id="txtidventa" name="idtransaccion" />
+                        <label class="form-label">Transaccion:</label>
+                        <input class="form-control" type="text" id="txtidventa" name="Id_Venta" />
                     </div>
                 </div>
 
@@ -185,7 +185,6 @@
                     { "data": "Total_Producto" },
                     { "data": "Total_Pago" },
                     { "data": "Id_Venta" }
-
                 ],
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json"
@@ -201,7 +200,6 @@
 
             tabladata.ajax.url(nueva_url).load();
         })
-
     </script>
 
          
