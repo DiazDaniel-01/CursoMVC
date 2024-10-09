@@ -2,9 +2,9 @@
     ViewBag.Title = "Home Page";
 }
 
-<h1 class="mt-4">Dashboard</h1>
+<h1 class="mt-4">Reporte de Ventas</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Dashboard</li>
+    <li class="breadcrumb-item active">Reportes</li>
 </ol>
 
 <div class="row">
@@ -72,24 +72,24 @@
         Historial de Ventas
     </div>
     <div class="card-body">
-        <form>
+        <form action="@Url.Action("ExportarVenta","Home")" method="post">
             <div class="row align-items-lg-end">
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="form-label">Fecha de Inicio:</label>
-                        <input class="form-control" type="text" id="txtfechainicio" name="fechainicio" />
+                        <input class="form-control" type="text" id="txtfechainicio" name="FechaInicio" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="form-label">Fecha de Finalizacion:</label>
-                        <input class="form-control" type="text" id="txtfechafin" name="fechafin" />
+                        <input class="form-control" type="text" id="txtfechafin" name="FechaFin" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label">Id de Transaccion:</label>
-                        <input class="form-control" type="text" id="txtidtransaccion" name="idtransaccion" />
+                        <label class="form-label">Transaccion:</label>
+                        <input class="form-control" type="text" id="txtidventa" name="Id_Venta" />
                     </div>
                 </div>
 
@@ -115,12 +115,12 @@
                     <thead>
                         <tr>
                             <th>Fecha Venta</th>
-                            <th>Cliente</th>
-                            <th>Producto</th>
+                            <th>Clientes</th>
+                            <th>Productos</th>
                             <th>Precio</th>
                             <th>Cantidad</th>
                             <th>Total</th>
-                            <th>Id Transaccion</th>
+                            <th>Id_Venta</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,6 +138,13 @@
 
     <script>
 
+        var tabladata;
+
+        $(document).ready(function () {
+
+        $("#txtfechainicio").datepicker({ dateFormat : 'dd/mm/yy' }).datepicker( 'setDate', new Date())
+        $("#txtfechafin").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+
 
         jQuery.ajax({
             url: '@Url.Action("VistaDashBoard", "Home")',
@@ -148,16 +155,51 @@
 
                 var objeto = data.resultado;
 
-                $("#totalcliente").text(objeto.TotalCliente),
-                $("#totalventa").text(objeto.TotalVenta),
-                $("#totalproducto").text(objeto.TotalProducto)
+                $("#totalcliente").text(objeto.TotalClientes),
+                $("#totalventa").text(objeto.TotalVentas),
+                $("#totalproducto").text(objeto.TotalProductos)
 
             }
         });
 
+        // string FechaInicio, string FechaFin, string Id_Venta
 
+            var Url = '@Url.Action("ListaReporte", "Home")' +
+            "?FechaInicio=" + $("#txtfechainicio").val() +
+            "&FechaFin=" + $("#txtfechafin").val() +
+            "&Id_Venta=" + $("#txtidventa").val()
 
+            tabladata = $("#tabla").DataTable({
+                responsive: true,
+                ordering: false,
+                "ajax": {
+                    url: Url,
+                    type: "GET",
+                    dataType: "json"
+                },
+                "columns": [
+                    { "data": "FechaVenta" },
+                    { "data": "Clientes" },
+                    { "data": "Productos" },
+                    { "data": "Precio" },
+                    { "data": "Total_Producto" },
+                    { "data": "Total_Pago" },
+                    { "data": "Id_Venta" }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json"
+                }
+            });
+        })
 
+        $("#btnbuscar").on("click", function () {
+            var nueva_url = '@Url.Action("ListaReporte","Home")' +
+            "?FechaInicio=" + $("#txtfechainicio").val() +
+            "&FechaFin=" + $("#txtfechafin").val() +
+            "&Id_Venta=" + $("#txtidventa").val()
+
+            tabladata.ajax.url(nueva_url).load();
+        })
     </script>
 
          
