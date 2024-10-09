@@ -158,14 +158,14 @@ namespace CapaPresentacionAdmin.Controllers
 
 
                 // Definir el rango de formato para copiar
-                var rangoFormato = worksheet.Range("B16:H16");
+                var rangoFormato = worksheet.Range("B15:H15");
 
                 int filaInicio = 16; // Empieza a insertar desde la fila 16
 
                 foreach (DataRow row in dt.Rows)
                 {
                     // Copiar formato
-                    //rangoFormato.CopyTo(worksheet.Row(filaInicio));
+                    rangoFormato.CopyTo(worksheet.Row(filaInicio));
 
                     // Insertar los datos solo en las columnas correctas (B a H)
                     worksheet.Cell("B" + filaInicio).Value = row["FechaVenta"].ToString();
@@ -174,7 +174,16 @@ namespace CapaPresentacionAdmin.Controllers
                     worksheet.Cell("E" + filaInicio).Value = Convert.ToDecimal(row["Precio"]);
                     worksheet.Cell("F" + filaInicio).Value = Convert.ToInt32(row["Total_Producto"]);
                     worksheet.Cell("G" + filaInicio).Value = Convert.ToDecimal(row["Total_Pago"]);
-                    worksheet.Cell("H" + filaInicio).Value = row["Id_Venta"].ToString();
+                    worksheet.Cell("H" + filaInicio).Value = Convert.ToInt32(row["Id_Venta"]);
+
+                    // Establecer formato de números (Precio y Total_Pago con 2 decimales)
+                    worksheet.Cell("E" + filaInicio).Style.NumberFormat.Format = "#,##0.00";
+                    worksheet.Cell("G" + filaInicio).Style.NumberFormat.Format = "#,##0.00";
+                    worksheet.Cell("F" + filaInicio).Style.NumberFormat.Format = "#,##0";
+
+                    // Opcional: Si también necesitas restablecer bordes manualmente
+                    worksheet.Range("B" + filaInicio + ":H" + filaInicio).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Range("B" + filaInicio + ":H" + filaInicio).Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
                     filaInicio++;
                 }
