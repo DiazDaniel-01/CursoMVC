@@ -30,8 +30,6 @@
                     <th>Descripcion</th>
                     <th>Categoria</th>
                     <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Ingrediente Extra</th>
                     <th>Activo</th>
                     <th></th>
                 </tr>
@@ -61,7 +59,7 @@
                             <img id="img_producto" height="197" width="200" class="border rounded mx-auto d-block img-fluid" />
                         </div>
                         <div class="mb-2">
-                            <input class="form-control" type="file" id="fileProducto" accept="image/png, imgage/jpg, image/jpeg" onchange="mostrarImagen(this)" />
+                            <input class="form-control" type="file" id="fileProducto" accept="image/png, image/jpg, image/jpeg" onchange="mostrarImagen(this)" />
                         </div>
                     </div>
 
@@ -85,10 +83,6 @@
                         <div class="mb-3">
                             <label class="form-label">Precio</label>
                             <input type="text" class="form-control" id="txtprecio" name="precio" autocomplete="off" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Stock</label>
-                            <input type="text" class="form-control" id="txtstock" name="stock" autocomplete="off" />
                         </div>
                     </div>
 
@@ -159,7 +153,6 @@
                     }
                 },
                 { "data": "Precio" },
-                { "data": "Stock" },
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
@@ -214,9 +207,6 @@
                 descripcion: {
                     required: true
                 },
-                stock: {
-                    required: true
-                },
                 precio: {
                     required: true,
                     preciodecimal: true
@@ -225,7 +215,6 @@
             messages: {
                 nombre: "- El campo nombre es obligatorio",
                 descripcion: "- El campo descripcion es obligatorio",
-                stock: "- El campo stock es obligatorio",
                 precio: { required: "- El campo precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.##" }
             },
             errorElement: "div",
@@ -242,7 +231,6 @@
             $("#txtdescripcion").val("");
             $("#cbocategoria").val($("#cbocategoria option:first").val());
             $("#txtprecio").val("");
-            $("#txtstock").val("");
             $("#cboactivo").val(1);
 
             $("#mensajeError").hide();
@@ -255,12 +243,10 @@
                 $("#txtdescripcion").val(json.Descripcion);
                 $("#cbocategoria").val(json.oCategoria.Id_Categoria);
                 $("#txtprecio").val(json.Precio);
-                $("#txtstock").val(json.Stock);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
 
                 jQuery.ajax({
                     
-
                     url: '@Url.Action("ImagenProducto", "Mantenedor")',
                     type: "POST",
                     data: JSON.stringify({ id : json.Id_Producto }),
@@ -367,7 +353,6 @@
                 },
                 PrecioTexto: $("#txtprecio").val(),
                 Precio: $("#txtprecio").val(),
-                Stock: $("#txtstock").val(),
                 Activo: $("#cboactivo").val() == 1 ? true : false,
             };
 

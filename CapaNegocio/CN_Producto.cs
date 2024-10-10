@@ -42,7 +42,6 @@ namespace CapaNegocio
                 Mensaje = "Debe ingresar el precio del producto";
             }
 
-
             if (string.IsNullOrEmpty(Mensaje))
             {
                 return objCapaDato.Registrar(obj, out Mensaje);
