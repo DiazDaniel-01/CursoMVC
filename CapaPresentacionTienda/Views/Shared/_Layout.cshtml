@@ -1,6 +1,5 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<<<<<<< Updated upstream
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta charset="utf-8" />
@@ -100,7 +99,7 @@
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
     </body>
-=======
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
@@ -119,15 +118,40 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("Nombre de la aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                </ul>
-            </div>
+            <hr style="border:none;border-top:1px solid black;margin:20px 0;" />     
         </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    @RenderBody()
+                </div>
+            </main>
+            <div class="container body-content">
+               
+
+                <footer class="py-5 bg-dark">
+                    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; @DateTime.Now.Year - Mi aplicacion ASP.NET</p></div>
+                </footer>
+
+            </div>
+
+           
+        </div>
+
+
+        @*RenderBody()*@
+        @*<li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
+        <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
+        <li>@Html.ActionLink("Tienda", "Tienda", "Home")</li>*@
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
+
     </div>
     <div class="container body-content">
         @RenderBody()
@@ -142,5 +166,4 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
->>>>>>> Stashed changes
 </html>
