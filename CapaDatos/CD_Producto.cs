@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -44,10 +44,8 @@ namespace CapaDatos
                                 Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
                                 Nombre = dr["Nombre"].ToString(),
                                 Descripcion = dr["Descripcion"].ToString(),
-                                Extra_Producto = dr["Extra_Producto"].ToString(),
                                 oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
                                 Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
-                                Stock = Convert.ToInt32(dr["Stock"]),
                                 Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
                                 Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
                                 Activo = Convert.ToBoolean(dr["Activo"])
@@ -56,7 +54,6 @@ namespace CapaDatos
                     }
                 }
             }
-
             catch
             {
                 lista = new List<Producto>();
@@ -76,9 +73,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
-                    cmd.Parameters.AddWithValue("Extra_Producto", obj.Extra_Producto);
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
-                    cmd.Parameters.AddWithValue("Stock", obj.Stock);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -112,8 +107,6 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
-                    cmd.Parameters.AddWithValue("Extra_Producto", obj.Extra_Producto);
-                    cmd.Parameters.AddWithValue("Stock", obj.Stock);
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -136,7 +129,6 @@ namespace CapaDatos
         public bool GuardarDatosImagen(Producto obj, out string Mensaje) { 
             bool resultado = false;
             Mensaje = string.Empty;
-
 
             try
             {
@@ -170,8 +162,6 @@ namespace CapaDatos
             return (resultado);
         }
 
-
-
         public bool Eliminar(int id, out string Mensaje)
         {
             bool resultado = false;
@@ -198,6 +188,7 @@ namespace CapaDatos
             }
             return resultado;
         }
+
 
         public List<Producto> ListarProductoporCategorias(int idcategoria)
         {
