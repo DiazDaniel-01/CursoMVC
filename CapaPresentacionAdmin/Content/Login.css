@@ -1,0 +1,23 @@
+﻿body {
+    background-image: url('img_login/Fondo Bondioleta.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+.logo {
+    float: left;
+    margin-right: 20px;
+    margin-left: 30px;
+}
+
+    .logo img {
+        width: 140px;
+        height: 90px;
+    }
