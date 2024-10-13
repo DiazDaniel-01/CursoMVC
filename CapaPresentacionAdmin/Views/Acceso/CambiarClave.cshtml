@@ -10,15 +10,21 @@
     <meta name="viewport" content="width=device-width" />
     <title>CambiarClave</title>
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/Login.css" rel="stylesheet" />
 </head>
-<body class="bg-primary">
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="~/Content/img_login/BONDIOLETA.png" alt="Logo">
+        </div>
+    </nav>
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-7">
-                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card shadow-lg border-0 rounded-lg card-login">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Cambiar Contraseña</h3></div>
                                 <div class="card-body">
                                     <form action="@Url.Action("CambiarClave","Acceso")" method="post">
@@ -26,7 +32,7 @@
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputPassword" type="password" name="claveactual"/>
+                                                    <input class="form-control" id="inputPassword" type="password" name="claveactual" value="@ViewData["vclave"]" />
                                                     <label for="inputPassword">Contraseña Actual</label>
                                                 </div>
                                             </div>
@@ -34,7 +40,7 @@
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputPassword" type="password" name="nuevaclave"/>
+                                                    <input class="form-control" id="inputPassword" type="password" name="nuevaclave" />
                                                     <label for="inputPassword">Nueva Contraseña</label>
                                                 </div>
                                             </div>
@@ -42,15 +48,27 @@
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputPassword" type="password" name="cofirmarclave"/>
+                                                    <input class="form-control" id="inputPassword" type="password" name="confirmarclave" />
                                                     <label for="inputPassword">Confirmar Nueva Contraseña</label>
                                                 </div>
                                             </div>
                                         </div>
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="alert alert-danger" role="alert">
+                                                            @ViewBag.Error
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
                                         <div class="mt-4 mb-0">
-                                            <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Cambiar Contraseña</a></div>
+                                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Cambiar Contraseña</button></div>
                                         </div>
-                                    </form>                            
+                                    </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
                                     <div class="small"><a href="@Url.Action("Index","Acceso")">Volver</a></div>

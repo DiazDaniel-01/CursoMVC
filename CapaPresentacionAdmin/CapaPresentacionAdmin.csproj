@@ -665,6 +665,7 @@
     <Content Include="Templates\Royal Tech - Historial_de_Ventas.xlsx" />
     <Content Include="Views\Acceso\Index.cshtml" />
     <Content Include="Views\Acceso\CambiarClave.cshtml" />
+    <Content Include="Views\Acceso\Reestablecer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
