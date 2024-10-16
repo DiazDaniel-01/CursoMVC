@@ -41,31 +41,12 @@ namespace CapaPresentacionTienda.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListarProducto(int idcategoria, int idproducto)
+        public JsonResult ListarTodosProductos()
         {
-            List<Producto> lista = new List<Producto>();
-            bool conversion;
-            lista = new CN_Producto().Listar().Select(p => new Producto()
-            {
-                Id_Producto = p.Id_Producto,
-                Nombre = p.Nombre,
-                Descripcion = p.Descripcion,
-                oCategoria = p.oCategoria,
-                Extra_Producto = p.Extra_Producto,
-                Precio = p.Precio,
-                Stock = p.Stock,
-                Ruta_Imagen = p.Ruta_Imagen,
-                Base64 = CN_Recursos.ConvertirBase64(Path.Combine(p.Ruta_Imagen, p.Nombre_Imagen), out conversion),
-                Extension = Path.GetExtension(p.Nombre_Imagen),
-                Activo = p.Activo
+            CN_Producto objCN_Producto = new CN_Producto();
+            List<Producto> listaProductos = objCN_Producto.Listar();
 
-            }).Where(p =>
-            p.oCategoria.Id_Categoria == (idcategoria == 0 ? p.oCategoria.Id_Categoria : idcategoria) &&
-            p.Stock > 0 && p.Activo == true).ToList();
-
-            var jsonresult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
-            jsonresult.MaxJsonLength = int.MaxValue;
-            return jsonresult;
+            return Json(new { data = listaProductos }, JsonRequestBehavior.AllowGet);
         }
 
     }
