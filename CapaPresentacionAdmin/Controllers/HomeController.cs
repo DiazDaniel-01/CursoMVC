@@ -13,6 +13,7 @@ using ClosedXML.Excel;
 
 namespace CapaPresentacionAdmin.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -82,44 +83,6 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public FileResult ExportarVenta(string FechaInicio, string FechaFin, string Id_Venta) {
-        //    List<Reporte> oLista = new List<Reporte>();
-        //    oLista = new CN_Reporte().Venta(FechaInicio, FechaFin, Id_Venta);
-
-        //    DataTable dt = new DataTable();
-
-        //    dt.Locale = new System.Globalization.CultureInfo("es-AR");
-        //    dt.Columns.Add("FechaVenta", typeof(string));
-        //    dt.Columns.Add("Clientes", typeof(string));
-        //    dt.Columns.Add("Productos", typeof(string));
-        //    dt.Columns.Add("Precio", typeof(decimal));
-        //    dt.Columns.Add("Total_Producto", typeof(int));
-        //    dt.Columns.Add("Total_Pago", typeof(decimal));
-        //    dt.Columns.Add("Id_Venta", typeof(string));
-
-        //    foreach (Reporte rp in oLista) {
-        //        dt.Rows.Add(new object[] {
-        //            rp.FechaVenta,
-        //            rp.Clientes,
-        //            rp.Productos,
-        //            rp.Precio,
-        //            rp.Total_Producto,
-        //            rp.Total_Pago,
-        //            rp.Id_Venta
-        //        });
-        //    }
-        //    dt.TableName = "Datos";
-
-        //    using (XLWorkbook wb = new XLWorkbook()) {
-        //        wb.Worksheets.Add(dt);
-        //        using (MemoryStream stream = new MemoryStream()) {
-        //            wb.SaveAs(stream);
-        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta" + DateTime.Now.ToString() + ".xlsx");
-        //        }
-        //    }
-
-        //}
 
         [HttpPost]
         public FileResult ExportarVenta(string FechaInicio, string FechaFin, string Id_Venta)

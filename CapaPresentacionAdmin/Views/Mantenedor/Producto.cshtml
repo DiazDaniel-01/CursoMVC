@@ -223,7 +223,6 @@
 
 
         function abrirModal(json) {
-
             $("#txtid").val(0);
             $("#img_producto").removeAttr("src");
             $("#fileProducto").val("");
@@ -232,12 +231,9 @@
             $("#cbocategoria").val($("#cbocategoria option:first").val());
             $("#txtprecio").val("");
             $("#cboactivo").val(1);
-
             $("#mensajeError").hide();
 
-
             if (json != null) {
-
                 $("#txtid").val(json.Id_Producto);
                 $("#txtnombre").val(json.Nombre);
                 $("#txtdescripcion").val(json.Descripcion);
@@ -245,35 +241,34 @@
                 $("#txtprecio").val(json.Precio);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
 
+                // Aquí es donde se configura la imagen
+                var rutaImagen = '@Url.Content("~/Content/img-product/")' + json.Nombre_Imagen; // Asegúrate de que json.Nombre_Imagen contenga el nombre correcto
+                $("#img_producto").attr("src", rutaImagen);
+
+                // Si necesitas cargar la imagen desde el servidor, puedes hacer una llamada AJAX aquí
                 jQuery.ajax({
-                    
                     url: '@Url.Action("ImagenProducto", "Mantenedor")',
                     type: "POST",
-                    data: JSON.stringify({ id : json.Id_Producto }),
+                    data: JSON.stringify({ id: json.Id_Producto }),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
-
-
                         $("#img_producto").LoadingOverlay("hide");
                         if (data.conversion) {
-                            $("#img_producto").attr({ "src": "data:image/" + data.extension + ";base64," + data.textoBase64 });
-
+                            var rutaImagen = '@Url.Content("~/Content/img-product/")' + data.nombreImagen; // Asegúrate de que data.nombreImagen contiene el nombre del archivo
+                            $("#img_producto").attr("src", rutaImagen);
                         }
                     },
                     error: function (error) {
                         $("#img_producto").LoadingOverlay("hide");
-
                         $("#mensajeError").show();
                         $("#mensajeError").text("Error al mostrar imagen");
                     },
                     beforeSend: function () {
-                        $("#img_producto").LoadingOverlay("show")
+                        $("#img_producto").LoadingOverlay("show");
                     }
-
-                })
+                });
             }
-
 
             $("#FormModal").modal("show");
         }
