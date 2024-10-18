@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using CapaEntidad;
+using CapaNegocio;
+using System.IO;
+
 namespace CapaPresentacionTienda.Controllers
 {
     public class HomeController : Controller
@@ -12,19 +16,39 @@ namespace CapaPresentacionTienda.Controllers
         {
             return View();
         }
-
-        public ActionResult About()
+        public ActionResult Menu()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
+        [HttpGet]
+        public JsonResult ListaCategorias()
+        {
+            List<Categoria> lista = new List<Categoria>();
+
+            lista = new CN_Categoria().Listar();
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult ListarProductoporCategorias(int idcategoria)
+        {
+            List<Producto> lista = new List<Producto>();
+
+            lista = new CN_Producto().ListarProductoporCategorias(idcategoria);
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ListarTodosProductos()
+        {
+            CN_Producto objCN_Producto = new CN_Producto();
+            List<Producto> listaProductos = objCN_Producto.Listar();
+
+            return Json(new { data = listaProductos }, JsonRequestBehavior.AllowGet);
+        }
+
     }
+
 }

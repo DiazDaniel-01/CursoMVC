@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -188,5 +188,48 @@ namespace CapaDatos
             }
             return resultado;
         }
+
+
+        public List<Producto> ListarProductoporCategorias(int idcategoria)
+        {
+            List<Producto> lista = new List<Producto>();
+
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine("select p.Id_Producto, p.Nombre, p.Descripcion,");
+                sb.AppendLine("c.Id_Categoria, c.Nombre[NomCategoria],");
+                sb.AppendLine("p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo");
+                sb.AppendLine("from PRODUCTO p");
+                sb.AppendLine("inner join CATEGORIA c on c.Id_Categoria = p.Id_Categoria");
+                sb.AppendLine("where c.Id_Categoria = @idcategoria");
+
+                SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
+                cmd.Parameters.AddWithValue("@idcategoria", idcategoria);
+                cmd.CommandType = CommandType.Text;
+                oconexion.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        lista.Add(new Producto()
+                        {
+                            Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
+                            Nombre = dr["Nombre"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
+                            Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
+                            Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
+                            Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
+                            Activo = Convert.ToBoolean(dr["Activo"])
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
     }
 }
