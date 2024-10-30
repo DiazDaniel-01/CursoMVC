@@ -188,5 +188,48 @@ namespace CapaDatos
             }
             return resultado;
         }
+    
+    public List<Producto> ListarProductoporCategorias(int idcategoria)
+    {
+        List<Producto> lista = new List<Producto>();
+
+        try
+        {
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine("SELECT DISTINCT p.Id_Producto, p.Descripcion FROM PRODUCTO p");
+                sb.AppendLine("INNER JOIN CATEGORIA c ON c.Id_Categoria = p.Id_Categoria AND c.Activo = 1");
+                sb.AppendLine("WHERE c.Id_Categoria = iif(@Id_Categoria = 0, c.Id_Categoria = @Id_Categoria");
+
+
+                SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
+                cmd.Parameters.AddWithValue("@idcategoria", idcategoria);
+                cmd.CommandType = CommandType.Text;
+                oconexion.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        lista.Add(new Producto()
+                        {
+                            Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
+
+                            Descripcion = dr["Descripcion"].ToString(),
+
+                        });
+                    }
+                }
+            }
+        }
+
+        catch
+        {
+            lista = new List<Producto>();
+        }
+        return lista;
     }
+}
 }

@@ -101,6 +101,10 @@ namespace CapaNegocio
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+        public List<Producto> ListarProductoporCategorias(int idcategoria)
+        {
+            return objCapaDato.ListarProductoporCategorias(idcategoria);
+        }
     }
 
 }

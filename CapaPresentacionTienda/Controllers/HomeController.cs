@@ -1,6 +1,8 @@
-﻿using CapaNegocio;
+﻿using CapaEntidad;
+using CapaNegocio;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -27,7 +29,49 @@ namespace CapaPresentacionTienda.Controllers
 
             return View();
         }
-    
+
+        [HttpGet]
+        public JsonResult ListaCategorias()
+        {
+            List<Categoria> lista = new CN_Categoria().Listar();
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ListarProductoporCategorias(int idcategoria)
+        {
+            List<Producto> lista = new CN_Producto().ListarProductoporCategorias(idcategoria);
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ListarProducto(int idcategoria, int idproducto)
+        {
+            List<Producto> lista = new CN_Producto().Listar().Select(p => new Producto()
+            {
+                Id_Producto = p.Id_Producto,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                oCategoria = p.oCategoria,
+                Extra_Producto = p.Extra_Producto,
+                Precio = p.Precio,
+                Ruta_Imagen = p.Ruta_Imagen,
+                Base64 = CN_Recursos.ConvertirBase64(Path.Combine(p.Ruta_Imagen, p.Nombre_Imagen), out bool conversion),
+                Extension = Path.GetExtension(p.Nombre_Imagen),
+                Activo = p.Activo
+            })
+            .Where(p =>
+                (idcategoria == 0 || p.oCategoria.Id_Categoria == idcategoria) &&
+                p.Stock > 0 && p.Activo)
+            .ToList();
+
+            var jsonResult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            return jsonResult;
+        }
+
+
 
 
         [HttpPost]
