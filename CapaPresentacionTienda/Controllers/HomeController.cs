@@ -167,12 +167,6 @@ namespace CapaPresentacionTienda.Controllers
 
 
         }
-
-        public ActionResult Carrito()
-        {
-
-        }
-
-
+                
     }
 }
