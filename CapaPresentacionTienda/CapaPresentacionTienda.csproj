@@ -238,7 +238,7 @@
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Scripts\loadingoverlay.min.js.map" />
-    <Content Include="Views\Shared\Carrito.cshtml" />
+    <Content Include="Views\Home\Carrito.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
