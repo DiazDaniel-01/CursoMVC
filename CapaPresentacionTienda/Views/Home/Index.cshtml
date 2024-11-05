@@ -204,58 +204,59 @@
         }
 
         function MostrarProductoporCategoria() {
-    var _idcategoria = $("input[name='categoria']:checked").val();
+            var _idcategoria = $("input[name='categoria']:checked").val();
 
-    jQuery.ajax({
-        url: "@Url.Action("ListarProductoporCategorias", "Home")",
-        type: "POST",
-        data: JSON.stringify({ idcategoria: _idcategoria }),
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-            $("#contenedor_producto").html(""); // Limpiar el contenedor antes de mostrar los productos nuevos
-            $("#contenedor_producto").LoadingOverlay("hide");
+            jQuery.ajax({
+                url: "@Url.Action("ListarProductoporCategorias", "Home")",
+                type: "POST",
+                data: JSON.stringify({ idcategoria: _idcategoria }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $("#contenedor_producto").html(""); // Limpiar el contenedor antes de mostrar los productos nuevos
+                    $("#contenedor_producto").LoadingOverlay("hide");
 
-            // Verificar si hay productos para mostrar
-            if (response.data.length > 0) {
-                $.each(response.data, function (i, element) {
-                    // Crear la tarjeta de producto
+                    // Verificar si hay productos para mostrar
+                    if (response.data.length > 0) {
+                        $.each(response.data, function (i, element) {
+                            // Crear la tarjeta de producto
 
-                    $("<div>").addClass("card h-100").append(
-                        $("<img>").addClass("card-img-top").attr({ "src": element.Ruta_Imagen }),
-                        $("<div>").addClass("card-body p-4").append(
-                            $("<div>").addClass("text-center").append(
-                                $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                "$" + element.Precio.toFixed(2) + " PESO"
-                            )
-                        ),
-                        $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
-                            $("<div>").addClass("d-grid gap-2").append(
-                                $("<button>").addClass("btn btn-success mt-auto agrearcarrito")
-                                   .data("idproducto", element.Id_Producto)
-                                   .text("Agregar a carrito"),
-                                $("<a>").addClass("btn btn-dark mt-auto")
-                                   .attr({ "href": "@Url.Action("DetalleProducto","Home")" + "?idproducto=" + element.Id_Producto })
-                                   .text("Ver detalle")
+                            $("<div>").addClass("card h-100").append(
+                                $("<img>").addClass("card-img-top").attr({ "src": element.Ruta_Imagen }),
+                                $("<div>").addClass("card-body p-4").append(
+                                    $("<div>").addClass("text-center").append(
+                                        $("<h5>").addClass("fw-bolder").text(element.Nombre),
+                                        "$" + element.Precio.toFixed(2) + " PESO"
+                                    )
+                                ),
+                                $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
+                                    $("<div>").addClass("d-grid gap-2").append(
+                                        $("<button>").addClass("btn btn-success mt-auto agrearcarrito")
+                                            .data("idproducto", element.Id_Producto)
+                                            .text("Agregar a carrito"),
+                                        $("<a>").addClass("btn btn-dark mt-auto")
+                                            .attr({ "href": "@Url.Action("DetalleProducto","Home")" + "?idproducto=" + element.Id_Producto })
+                                            .text("Ver detalle")
 
-                            )
-                        )
-                    ).appendTo("#contenedor_producto");
+                                    )
+                                )
+                            ).appendTo("#contenedor_producto");
 
-                });
-            } else {
-                // Mostrar mensaje si no hay productos en la categoría seleccionada
-                $("<div>").addClass("alert alert-warning").text("No hay productos disponibles para esta categoría.").appendTo("#contenedor_producto");
-            }
-        },
-        beforeSend: function () {
-           $("#contenedor_producto").LoadingOverlay("show");
+                        });
+                    } else {
+                        // Mostrar mensaje si no hay productos en la categoría seleccionada
+                        $("<div>").addClass("alert alert-warning").text("No hay productos disponibles para esta categoría.").appendTo("#contenedor_producto");
+                    }
+                },
+                beforeSend: function () {
+                    $("#contenedor_producto").LoadingOverlay("show");
+                }
+            });
+
+            $(document).on("change", "input[name=categoria]", function () {
+                MostrarProductoporCategoria();  // Llama a la función al cambiar la categoría
+            });
         }
-    });
-
-    $(document).on("change", "input[name=categoria]", function () {
-        MostrarProductoporCategoria();  // Llama a la función al cambiar la categoría
-    });
 
     </script>
 }
