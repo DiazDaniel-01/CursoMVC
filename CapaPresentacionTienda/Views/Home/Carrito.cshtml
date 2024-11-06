@@ -10,13 +10,69 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-9">
-                            <!-- Aquí puedes añadir el contenido principal del carrito de compras -->
+                            
+                                <div class="me-2">
+
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="ms-2 mt-2">Detalle Pedido</h5>
+                                        <a class="btn btn-primary" href="@Url.Action("Index","Home")"><i class="fas fa-cart-plus"></i>Seguir Comprando</a>
+
+                                    </div>
+
+                                    <hr class="mt-2 mb-2">
+                                    <div id="productos-carrito">
+
+
+                                        <div class="card mb-2 card-producto">
+
+                                            <div class="card-body">
+                                                <div class="row">
+
+                                                    <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                                        <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757.jpg" style="width:100px;height:100px" />
+                                                    </div>
+
+                                                    <div class="col-sm-4 align-self-center">
+                                                        <span class="font-weight-bold d-block"></span>
+                                                        <span>Nombre Producto</span>
+                                                    </div>
+
+                                                    <div class="col-sm-2 align-self-center">
+                                                        <span>Precio : S/. 1500</span>
+                                                    </div>
+
+                                                    <div class="col-sm-2 align-self-center">
+                                                        <div class="d-flex">
+
+                                                            <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />
+                                                            <button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2 align-self-center">
+
+                                                        <button class="btn btn-outline-danger btn-eliminar"><i class="far fa-trash-alt"></i> Eliminar</button>                                                       
+                                                        
+                                                    </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
                         </div>
 
                         <div class="col-sm-3">
                             <div class="card">
                                 <div class="card-body bg-light">
-                                    <h5 class="card-title">Detalle Pedido</h5>
+                                    <h5 class="card-title">Datos</h5>
                                     <form>
                                         <div class="mb-2">
                                             <label for="cbolocalidad" class="form-label">Localidad</label>
@@ -50,3 +106,57 @@
         </div>
     </div>
 </div>
+
+
+@section scripts {
+
+    <script>
+
+        $(document).ready(function () {
+
+            jQuery.ajax({
+                url: "@Url.Action("ObtenerLocalidad","Home")",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                }
+
+
+
+            })   
+                 ListarLocalidad()
+            
+        })
+
+        function ListarLocalidad() {
+
+            $("<option>").attr({ "value": "00", "disabled":"disabled", "selected":"true" }).text("Seleccionar").appendTo("#cbolocalidad");
+
+
+            jQuery.ajax({
+                url: "@Url.Action("ObtenerLocalidad","Home")",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.lista != null) {
+
+                        $.each(data.lista, function(i, item) {
+
+                            $("<option>").attr({"value": item.Id_Localidad}).text(item.Descripcion).appendTo("#cbolocalidad");
+
+                        })
+
+                    }
+                }
+
+            })
+        }
+
+    </script>
+
+}
+
