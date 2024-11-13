@@ -9,7 +9,9 @@ namespace CapaEntidad
 {
     public class Localidad
     {
-        public int CodigoPostal { get; set; }
+        public int Id_Localidad { get; set; }
+        public string Barrio { get; set; }
+        public int Codigo_Postal { get; set; }
         public string Departamento { get; set; }
         public string Calle { get; set; }
         public string Calle_2 { get; set; }

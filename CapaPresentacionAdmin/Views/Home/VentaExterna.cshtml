@@ -1,0 +1,235 @@
+﻿<div class="modal-body modal-xl">
+    <!-- Formulario para crear Cliente -->
+    <div id="formCliente" class="mt-3">
+        <h5>Crear Cliente</h5>
+        <div class="row g-1">
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtNombreCliente" class="form-label">Nombre del Cliente</label>
+                    <input type="text" class="form-control" id="txtNombreCliente" autocomplete="off">
+                </div>
+                <div class="mb-2">
+                    <label for="txtApellidoCliente" class="form-label">Apellido del Cliente</label>
+                    <input type="text" class="form-control" id="txtApellidoCliente" autocomplete="off">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCelular" class="form-label">Celular del Cliente</label>
+                    <input type="email" class="form-control" id="txtCelular" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <!-- Formulario para crear Localidad -->
+    <div id="formLocalidad">
+        <h5>Crear Localidad</h5>
+        <div class="row g-1">
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtBarrio" class="form-label">Barrio</label>
+                    <input type="text" class="form-control" id="txtBarrio" autocomplete="off">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCodigoPostal" class="form-label">Código Postal</label>
+                    <input type="text" class="form-control" id="txtCodigoPostal" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtDepartamento" class="form-label">Departamento</label>
+                    <input type="text" class="form-control" id="txtDepartamento" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtNumeroPiso" class="form-label">Numero del Piso</label>
+                    <input type="text" class="form-control" id="txtNumeroPiso" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCalle1" class="form-label">Calle Principal</label>
+                    <input type="text" class="form-control" id="txtCalle1" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCalle2" class="form-label">Calle Secundaria</label>
+                    <input type="text" class="form-control" id="txtCalle2" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtReferencia" class="form-label">Referencia</label>
+                    <input type="text" class="form-control" id="txtReferencia" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCosto" class="form-label">Costo del Envio</label>
+                    <input type="text" class="form-control" id="txtCosto" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- Botón para enviar ambos formularios -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary" onclick="guardarClienteYLocalidad()">Guardar Cliente y Localidad</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script>
+    function guardarClienteYLocalidad() {
+        var cliente = {
+            Id_Cliente: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
+            Nombre: $("#txtNombreCliente").val(),
+            Apellido: $("#txtApellidoCliente").val(),
+            Celular: $("#txtCelular").val()
+        };
+
+        // Primero, intentamos guardar el cliente
+        $.ajax({
+            url: '@Url.Action("CrearCliente", "Home")',
+            type: "POST",
+            data: JSON.stringify({ objeto: cliente }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".modal-body").LoadingOverlay("hide");
+
+                if (data.resultado) {
+                    // Si el cliente se crea con éxito, asignamos el ID
+                    cliente.Id_Cliente = data.resultado;
+                    tabladata.row.add(cliente).draw(false);
+
+                    // Ahora, procedemos a guardar la localidad
+                    var localidad = {
+                        Id_Localidad: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
+                        Barrio: $("#txtBarrio").val(),
+                        CodigoPostal: $("#txtCodigoPostal").val(),
+                        Departamento: $("#txtDepartamento").val(),
+                        Piso: $("#txtNumeroPiso").val(),
+                        Calle1: $("#txtCalle1").val(),
+                        Calle2: $("#txtCalle2").val(),
+                        Referencia: $("#txtReferencia").val(),
+                        Costo: $("#txtCosto").val(),
+                    };
+
+                    // Intentamos guardar la localidad solo después de crear el cliente
+                    $.ajax({
+                        url: '@Url.Action("CrearLocalidad", "Home")',
+                        type: "POST",
+                        data: JSON.stringify({ objeto: localidad }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            $(".modal-body").LoadingOverlay("hide");
+
+                            if (data.resultado) {
+                                localidad.Id_Localidad = data.resultado;
+                                tabladata.row.add(localidad).draw(false);
+                                $("#FormModal").modal("hide");  // Cerrar modal después de ambos guardados
+                            } else {
+                                $("#mensajeError").text(data.mensaje);
+                                $("#mensajeError").show();
+                            }
+                        },
+                        error: function (error) {
+                            $(".modal-body").LoadingOverlay("hide");
+                            $("#mensajeError").text("Error Ajax al guardar localidad");
+                            $("#mensajeError").show();
+                        },
+                        beforeSend: function () {
+                            $(".modal-body").LoadingOverlay("show", {
+                                imageResizeFactor: 2,
+                                text: "Cargando...",
+                                size: 14
+                            });
+                        }
+                    });
+                } else {
+                    // Si no se pudo crear el cliente, mostramos el mensaje de error
+                    $("#mensajeError").text(data.mensaje);
+                    $("#mensajeError").show();
+                }
+            },
+            error: function (error) {
+                $(".modal-body").LoadingOverlay("hide");
+                $("#mensajeError").text("Error Ajax al guardar cliente");
+                $("#mensajeError").show();
+            },
+            beforeSend: function () {
+                $(".modal-body").LoadingOverlay("show", {
+                    imageResizeFactor: 2,
+                    text: "Cargando...",
+                    size: 14
+                });
+            }
+        });
+    }
+    
+</script>
+}
+
+@*function guardarLocalidad() {
+        var localidad = {
+            Id_Localidad: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
+            Barrio: $("#txtBarrio").val(),
+            CodigoPostal: $("#txtCodigoPostal").val(),
+            Departamento: $("#txtDepartamento").val(),
+            Piso: $("#txtNumeroPiso").val(),
+            Calle1: $("#txtCalle1").val(),
+            Calle2: $("#txtCalle2").val(),
+            Referencia: $("#txtReferencia").val(),
+            Costo: $("#txtCosto").val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("CrearLocalidad", "Home")',
+            type: "POST",
+            data: JSON.stringify({ objeto: localidad }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".modal-body").LoadingOverlay("hide");
+
+                if (localidad.Id_Localidad == 0) {
+                    if (data.resultado) {
+                        localidad.Id_Localidad = data.resultado;
+                        tabladata.row.add(localidad).draw(false);
+                        $("#FormModal").modal("hide");
+                    } else {
+                        $("#mensajeError").text(data.mensaje);
+                        $("#mensajeError").show();
+                    }
+                }
+            },
+            error: function (error) {
+                $(".modal-body").LoadingOverlay("hide");
+                $("#mensajeError").text("Error Ajax al guardar localidad");
+                $("#mensajeError").show();
+            },
+            beforeSend: function () {
+                $(".modal-body").LoadingOverlay("show", {
+                    imageResizeFactor: 2,
+                    text: "Cargando...",
+                    size: 14
+                });
+            }
+        });
+    }*@

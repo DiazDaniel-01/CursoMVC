@@ -137,6 +137,16 @@
 @section scripts{
 
     <script>
+        $(document).ready(function () {
+            // Interceptar el Enter en los campos de fecha para activar la búsqueda
+            $('#txtfechainicio, #txtfechafin, #txtidventa').on('keypress', function (e) {
+                if (e.which === 13) { // Detecta el Enter
+                    e.preventDefault(); // Previene el envío del formulario
+                    $('#btnbuscar').click(); // Ejecuta la función del botón Buscar
+                }
+            });
+        });
+
 
         var tabladata;
 

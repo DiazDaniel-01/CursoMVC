@@ -25,7 +25,16 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
+        public ActionResult Cliente()
+        {
+            return View();
+        }
+        public ActionResult Localidad()
+        {
+            return View();
+        }
 
+        #region Usuario
         [HttpGet]
         public JsonResult ListarUsuario()
         {
@@ -63,7 +72,9 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
+        #region Reportes
         [HttpGet]
         public JsonResult ListaReporte(string FechaInicio, string FechaFin, string Id_Venta)
         {
@@ -74,6 +85,7 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
         }
+
 
         [HttpGet]
         public JsonResult VistaDashBoard() { 
@@ -161,6 +173,43 @@ namespace CapaPresentacionAdmin.Controllers
                 }
             }
         }
+        #endregion
 
+        #region Cliente y Localidad
+        [HttpPost]
+        public ActionResult CrearCliente(Cliente objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+            if (objeto.Id_Cliente == 0)
+            {
+                resultado = new CN_VentaExterna().InsertarCliente(objeto, out mensaje);
+            }
+            else
+            {
+                return View();
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult CrearLocalidad(Localidad objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+            if (objeto.Id_Localidad == 0)
+            {
+                resultado = new CN_VentaExterna().InsertarLocalidad(objeto, out mensaje);
+            }
+            else
+            {
+                return View();
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
     }
 }

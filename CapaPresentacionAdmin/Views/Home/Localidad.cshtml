@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "Localidad";
+}
+<div class="modal-body modal-xl">
+
+    <div id="formLocalidad">
+        <h5>Crear Localidad</h5>
+        <div class="row g-1">
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtBarrio" class="form-label">Barrio</label>
+                    <input type="text" class="form-control" id="txtBarrio" autocomplete="off">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCodigoPostal" class="form-label">Código Postal</label>
+                    <input type="text" class="form-control" id="txtCodigoPostal" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtDepartamento" class="form-label">Departamento</label>
+                    <input type="text" class="form-control" id="txtDepartamento" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtNumeroPiso" class="form-label">Numero del Piso</label>
+                    <input type="text" class="form-control" id="txtNumeroPiso" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCalle1" class="form-label">Calle Principal</label>
+                    <input type="text" class="form-control" id="txtCalle1" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCalle2" class="form-label">Calle Secundaria</label>
+                    <input type="text" class="form-control" id="txtCalle2" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtReferencia" class="form-label">Referencia</label>
+                    <input type="text" class="form-control" id="txtReferencia" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="mb-2">
+                    <label for="txtCosto" class="form-label">Costo del Envio</label>
+                    <input type="text" class="form-control" id="txtCosto" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- Botón para enviar ambos formularios -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary" onclick="CrearLocalidad()">Guardar Localidad</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        function CrearLocalidad() {
+            var localidad = {
+                Id_Localidad: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
+                Barrio: $("#txtBarrio").val(),
+                Codigo_Postal: $("#txtCodigoPostal").val(),
+                Departamento: $("#txtDepartamento").val(),
+                Piso: $("#txtNumeroPiso").val(),
+                Calle: $("#txtCalle1").val(),
+                Calle_2: $("#txtCalle2").val(),
+                Referencia: $("#txtReferencia").val(),
+                Costo_Envio: $("#txtCosto").val(),
+            };
+
+            // Intentamos guardar la localidad
+            $.ajax({
+                url: '@Url.Action("CrearLocalidad", "Home")',
+                type: "POST",
+                data: JSON.stringify({ objeto: localidad }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    if (data.resultado) {
+                        localidad.Id_Localidad = data.resultado;
+                        tabladata.row.add(localidad).draw(false);  // Agrega la localidad a la tabla si es necesario
+                        $("#FormModal").modal("hide");  // Cierra el modal después de guardar ambos
+                    } else {
+                        $("#mensajeError").text(data.mensaje);
+                        $("#mensajeError").show();
+                    }
+                },
+                error: function (error) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    $("#mensajeError").text("Error al guardar localidad");
+                    $("#mensajeError").show();
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+        }
+
+    </script>
+}
