@@ -33,6 +33,37 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
+        public ActionResult CrearVenta()
+        {
+            // Obtener el último cliente y localidad guardados en la sesión
+            int? ultimoClienteId = Session["UltimoClienteId"] as int?;
+            int? ultimaLocalidadId = Session["UltimaLocalidadId"] as int?;
+
+            ViewBag.UltimoClienteId = ultimoClienteId;
+            ViewBag.UltimaLocalidadId = ultimaLocalidadId;
+
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult ListarClientes()
+        {
+            List<Cliente> oLista = new List<Cliente>();
+
+            oLista = new CN_VentaExterna().ListarCliente();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ListarLocalidad()
+        {
+            List<Localidad> oLista = new List<Localidad>();
+
+            oLista = new CN_VentaExterna().ListarLocalidad();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
 
         #region Usuario
         [HttpGet]
@@ -181,9 +212,17 @@ namespace CapaPresentacionAdmin.Controllers
         {
             object resultado;
             string mensaje = string.Empty;
+
             if (objeto.Id_Cliente == 0)
             {
+                // Insertar el cliente y obtener el ID del nuevo cliente
                 resultado = new CN_VentaExterna().InsertarCliente(objeto, out mensaje);
+
+                // Verificar si la inserción fue exitosa y guardar el ID en la sesión
+                if (resultado is int nuevoClienteId && nuevoClienteId > 0)
+                {
+                    Session["UltimoClienteId"] = nuevoClienteId;
+                }
             }
             else
             {
@@ -198,9 +237,17 @@ namespace CapaPresentacionAdmin.Controllers
         {
             object resultado;
             string mensaje = string.Empty;
+
             if (objeto.Id_Localidad == 0)
             {
+                // Insertar la localidad y obtener el ID de la nueva localidad
                 resultado = new CN_VentaExterna().InsertarLocalidad(objeto, out mensaje);
+
+                // Verificar si la inserción fue exitosa y guardar el ID en la sesión
+                if (resultado is int nuevaLocalidadId && nuevaLocalidadId > 0)
+                {
+                    Session["UltimaLocalidadId"] = nuevaLocalidadId;
+                }
             }
             else
             {
@@ -210,6 +257,52 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+
+
+
+        [HttpPost]
+        public JsonResult RegistrarVenta(Venta venta)
+        {
+            string mensaje = string.Empty;
+
+            // Verificar que el objeto Venta y sus sub-objetos no sean nulos
+            if (venta == null)
+    {
+                return Json(new { success = false, message = "Error: Algunos datos obligatorios están incompletos." });
+            }
+
+            // Realizar lógica de inserción solo si es una nueva venta (Id_Venta == 0)
+            if (venta.Id_Venta == 0)
+            {
+                try
+                {
+                    // Registrar la venta
+                    var resultado = new CN_VentaExterna().RegistrarVenta(venta, out mensaje);
+
+                    // Verificar si la operación fue exitosa
+                    if (resultado is int nuevaVentaId && nuevaVentaId > 0)
+                    {
+                        return Json(new { success = true, message = "Venta creada con éxito.", nuevaVentaId });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Error al registrar la venta: " + mensaje });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Capturar y devolver cualquier error que ocurra durante la inserción
+                    return Json(new { success = false, message = "Excepción al registrar la venta: " + ex.Message });
+                }
+            }
+            else
+            {
+                // Si el Id_Venta es distinto de 0, significa que ya existe y se ignora la operación
+                return Json(new { success = false, message = "La venta ya existe y no se puede registrar de nuevo." });
+            }
+        }
+
         #endregion
+
     }
 }

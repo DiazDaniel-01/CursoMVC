@@ -667,9 +667,9 @@
     <Content Include="Views\Acceso\CambiarClave.cshtml" />
     <Content Include="Views\Acceso\Reestablecer.cshtml" />
     <Content Include="Views\Mantenedor\Extra_Producto.cshtml" />
-    <Content Include="Views\Home\VentaExterna.cshtml" />
     <Content Include="Views\Home\Cliente.cshtml" />
     <Content Include="Views\Home\Localidad.cshtml" />
+    <Content Include="Views\Home\CrearVenta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -76,8 +76,7 @@ namespace CapaDatos
                             {
                                 TotalClientes = Convert.ToInt32(dr["TotalClientes"]),
                                 TotalVentas = Convert.ToInt32(dr["TotalVentas"]),
-                                TotalProductos = Convert.ToInt32(dr["TotalProductos"]),
-
+                                TotalProductos = Convert.ToInt32(dr["TotalProductos"])
                             };
                         }
                     }
@@ -91,6 +90,7 @@ namespace CapaDatos
 
             return objeto;
         }
+
 
     }
 }

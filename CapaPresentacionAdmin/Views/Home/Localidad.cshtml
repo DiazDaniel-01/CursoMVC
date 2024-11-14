@@ -4,7 +4,7 @@
 }
 <div class="modal-body modal-xl">
 
-    <div id="formLocalidad">
+    <div id="formLocalidad" class="mt-3">
         <h5>Crear Localidad</h5>
         <div class="row g-1">
             <div class="col-sm-6">
@@ -101,15 +101,12 @@
 
                     if (data.resultado) {
                         localidad.Id_Localidad = data.resultado;
-                        tabladata.row.add(localidad).draw(false);  // Agrega la localidad a la tabla si es necesario
-                        $("#FormModal").modal("hide");  // Cierra el modal después de guardar ambos
                     } else {
                         $("#mensajeError").text(data.mensaje);
                         $("#mensajeError").show();
                     }
                 },
                 error: function (error) {
-                    $(".modal-body").LoadingOverlay("hide");
                     $("#mensajeError").text("Error al guardar localidad");
                     $("#mensajeError").show();
                 },

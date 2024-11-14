@@ -12,6 +12,15 @@ namespace CapaNegocio
     {
         private CD_VentaExterna objCapaDato = new CD_VentaExterna();
 
+        public List<Cliente> ListarCliente()
+        {
+            return objCapaDato.ListarCliente();
+        }
+
+        public List<Localidad> ListarLocalidad()
+        {
+            return objCapaDato.ListarLocalidad();
+        }
         public int InsertarCliente(Cliente obj, out string Mensaje)
         {
 
@@ -19,7 +28,7 @@ namespace CapaNegocio
 
             if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre))
             {
-                Mensaje = "El nombre de la categoria no puede ser vacio";
+                Mensaje = "El nombre del cliente no puede ser vacio";
             }
 
             if (string.IsNullOrEmpty(Mensaje))
@@ -59,8 +68,42 @@ namespace CapaNegocio
             {
                 return 0;
             }
+        }
 
+        public int RegistrarVenta(Venta obj, out string Mensaje)
+        {
+
+            Mensaje = string.Empty;
+
+            if (obj.oCliente.Id_Cliente == 0)
+            {
+                Mensaje = "Debe seleccionar un cliente";
+            }
+            else if (obj.oLocalidad.Id_Localidad == 0)
+            {
+                Mensaje = "Debe seleccionar una localidad";
+            }
+            else if (obj.oProducto.Id_Producto == 0)
+            {
+                Mensaje = "Debe seleccionar un producto";
+            }
+
+            else if (obj.Total_Productos == 0)
+            {
+
+                Mensaje = "Debe ingresar una cantidad de productos";
+            }
+            if (string.IsNullOrEmpty(Mensaje))
+            {
+                return objCapaDato.RegistrarVenta(obj, out Mensaje);
+
+            }
+            else
+            {
+                return 0;
+            }
 
         }
+
     }
 }
