@@ -1,22 +1,13 @@
 ﻿
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    
 }
 
-
-/*body {
-    background: linear-gradient(to right, #fbbf24, #f97316);
-}
-
-.bg-gradient {
-    background: linear-gradient(to right, #000000, #ff8C00);
-}*/
 .search {
     width: 60%;
     display: flex;
     align-items: center;
-    height: 40px;
+    height: 60px;
     margin: 0 200px;
 }
 
@@ -30,9 +21,7 @@ body {
     line-height: inherit;
 }
 
-.h-12 {
-    height:100%;
-}
+
 
 .h-8 {
     height: 2rem;
@@ -6679,13 +6668,22 @@ textarea.form-control-lg {
 
 .carousel-item {
     position: relative;
-    display: none;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100%; /* Asegura que el carrusel ocupe toda la altura */
     float: left;
     width: 100%;
     margin-right: -100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item img {
+        max-width: 100%; /* Evita que la imagen exceda el ancho del contenedor */
+        max-height: 100%; /* Evita que la imagen exceda la altura del contenedor */
+        object-fit: contain; /* Ajusta la imagen sin cortarla */
 }
 
 @media (prefers-reduced-motion: reduce) {
