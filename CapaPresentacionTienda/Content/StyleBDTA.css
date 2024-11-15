@@ -1,20 +1,25 @@
-﻿
+﻿/* Estilos generales */
 body {
     padding-bottom: 20px;
 }
 
+/* Estilos del encabezado */
 .header {
     background-color: #fff4b8;
     padding: 10px 0;
     border-bottom: 4px solid #ffc107;
 }
 
+/* Contenedor principal */
 .cont {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas más pequeñas */
+    gap: 20px; /* Agrega espacio entre los elementos */
 }
 
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
@@ -25,6 +30,7 @@ body {
         height: 100%;
     }
 
+/* Información de contacto */
 .contact-info {
     display: flex;
     align-items: center;
@@ -47,20 +53,7 @@ body {
             margin-right: 5px;
         }
 
-/* Ajuste para pantallas pequeñas */
-@media (max-width: 576px) {
-    .contact-info {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .divider {
-        width: 80%; /* Barra horizontal en pantallas pequeñas */
-        height: 1px;
-        margin: 10px 0;
-    }
-}
-
+/* Redes sociales */
 .social-media {
     display: flex;
     align-items: center;
@@ -81,3 +74,173 @@ body {
         .social-media a:hover {
             color: #e17055;
         }
+
+/* Contenedor personalizado para evitar conflictos con Bootstrap */
+.container-categ {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Nuevo contenedor principal ajustable */
+.container-main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Estilos del carousel */
+.carousel-inner {
+    width: 100%;
+    overflow: hidden;
+    max-height: 700px; /* Altura máxima por defecto */
+}
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ocupa toda la altura del contenedor */
+}
+
+    .carousel-item img {
+        width: 100%;
+        height: auto;
+        max-height: inherit; /* Se ajusta a la altura del contenedor */
+        object-fit: cover; /* Ajusta la imagen al contenedor manteniendo proporciones */
+    }
+
+/* Ajustes para el nuevo carousel */
+.custom-carousel-slide.custom-carousel-dark.custom-mx-auto {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%; /* Hace que el carousel ocupe el 100% del ancho disponible */
+    padding: 0 10px;
+}
+
+.carousel-item {
+    flex: 0 0 100%; /* Asegura que cada item ocupe todo el espacio disponible */
+}
+
+.carousel-inner {
+    width: 100%;
+}
+
+/* Ajustes para pantallas con resolución menor o igual a 1280px */
+@media (max-width: 1280px) {
+    .container-categ,
+    .container-main {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-info {
+        font-size: 0.9em; /* Ajusta el tamaño de fuente en pantallas medianas */
+    }
+
+    .carousel-inner {
+        max-height: 600px; /* Limita la altura del carousel en pantallas medianas */
+    }
+
+    .carousel-item {
+        max-height: 600px; /* Ajuste de la altura del item para pantallas medianas */
+    }
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 768px) {
+    .container-categ,
+    .container-main {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .carousel-inner {
+        max-height: 450px; /* Limita la altura del carousel en pantallas más pequeñas */
+    }
+
+    .carousel-item {
+        max-height: 450px; /* Ajuste de la altura del item para pantallas más pequeñas */
+    }
+
+    .cont {
+        flex-direction: column; /* Coloca los elementos en columna en pantallas más pequeñas */
+        gap: 10px; /* Espacio entre los elementos */
+        align-items: flex-start; /* Alinea los elementos al inicio */
+    }
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 576px) {
+    .container-categ,
+    .container-main {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .divider {
+        width: 80%; /* Barra horizontal en pantallas pequeñas */
+        height: 1px;
+        margin: 10px 0;
+    }
+
+    .carousel-inner {
+        max-height: 300px; /* Limita la altura del carousel en pantallas pequeñas */
+    }
+
+    .carousel-item {
+        max-height: 300px; /* Ajuste de la altura del item para pantallas pequeñas */
+    }
+
+    .cont {
+        flex-direction: column; /* Coloca los elementos en columna */
+        gap: 10px; /* Espacio entre los elementos */
+        align-items: flex-start; /* Alinea los elementos al inicio */
+    }
+}
+
+/* Ajustes para la clase .container */
+.container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1280px) {
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
