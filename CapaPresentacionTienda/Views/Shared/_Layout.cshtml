@@ -37,9 +37,7 @@
                 <button class="btn btn-orange text-white mx-2">
                     #####
                 </button>
-                <a class="btn btn-orange text-white mx-2" href=">
-                    #####
-                </a>
+
                 <button class="btn btn-orange text-white mx-2">
                     CONTACTO
                 </button>
@@ -56,7 +54,7 @@
             <div class="btn btn-warning text-bg-danger-black d-flex align-items-center mx-2">
                 <a class="btn btn-outline-dark" href="@Url.Action("Carrito", "Home")">
                     <i class="fas fa-shopping-cart me-1"></i>
-                    Cart
+                    Carrito
                     <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                     <img src="~/Content/icono/pngwing.com (1).png" width="30" height="30" />
                 </a>
@@ -110,26 +108,26 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script>
+            $(document).ready(function () {
+                MostrarCantidadCarrito();
+            });
 
             function MostrarCantidadCarrito() {
-
                 if ($("#cantidadcarrito").length > 0) {
-                    jQuery.ajax({
-                        url: '@Url.Action("CantidadEnCarrito", "Tienda")',
+                    $.ajax({
+                        url: '@Url.Action("CantidadEnCarrito", "Home")',
                         type: "GET",
-                        datatype: "json",
+                        dataType: "json",
                         contentType: "application/json; charset=utf-8",
                         success: function (data) {
-
-                            $("#cantidadcarrito").text(data.cantidad)
+                            $("#cantidadcarrito").text(data.cantidad);
+                        },
+                        error: function () {
+                            console.error("Error al obtener la cantidad de productos en el carrito.");
                         }
-
                     });
-
                 }
             }
-
-
     </script>
 </body>
 </html>

@@ -1,11 +1,17 @@
-﻿using CapaEntidad;
-using CapaNegocio;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+
+
+using CapaEntidad;
+using CapaNegocio;
+using System.IO;
+using CapaDatos;
+using System.Threading.Tasks;
+using System.Data;
+using System.Globalization;
+using System;
+
 
 namespace CapaPresentacionTienda.Controllers
 {
@@ -13,22 +19,12 @@ namespace CapaPresentacionTienda.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            CD_Oferta ofertaDatos = new CD_Oferta();
+            List<Oferta> ofertas = ofertaDatos.Listar() ?? new List<Oferta>(); // Evita que la lista sea null
+            return View(ofertas); // Pasar la lista de ofertas a la vista
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
 
         [HttpGet]
         public JsonResult ListaCategorias()
@@ -38,14 +34,14 @@ namespace CapaPresentacionTienda.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListarProductoporCategorias(int idcategoria)
+        public JsonResult ListarProductoporCategorias(int Id_Categoria)
         {
-            List<Producto> lista = new CN_Producto().ListarProductoporCategorias(idcategoria);
+            List<Producto> lista = new CN_Producto().ListarProductoporCategorias(Id_Categoria);
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult ListarProducto(int idcategoria, int idproducto)
+        public JsonResult ListarProducto(int Id_Categoria, int Id_Producto)
         {
             List<Producto> lista = new CN_Producto().Listar().Select(p => new Producto()
             {
@@ -61,7 +57,7 @@ namespace CapaPresentacionTienda.Controllers
                 Activo = p.Activo
             })
             .Where(p =>
-                (idcategoria == 0 || p.oCategoria.Id_Categoria == idcategoria) &&
+                (Id_Categoria == 0 || p.oCategoria.Id_Categoria == Id_Categoria) &&
                 p.Stock > 0 && p.Activo)
             .ToList();
 
@@ -69,6 +65,30 @@ namespace CapaPresentacionTienda.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
 
             return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult ListarOfertas()
+        {
+            List<Oferta> oLista = new CN_Oferta().Listar();
+
+            // Convertir las fechas a un formato legible
+            bool conversion;
+            var ofertasFormateadas = oLista.Select(o => new
+            {
+                o.Id_Oferta,
+                o.Nombre,
+                o.Descripcion,
+                o.PrecioOriginal,
+                o.PrecioOferta,
+                FechaInicio = o.FechaInicio.ToString("dd/MM/yyyy"),  // Formateamos la fecha de inicio
+                FechaFin = o.FechaFin.ToString("dd/MM/yyyy"),        // Formateamos la fecha de fin
+                Base64 = CN_Recursos.ConvertirBase64(Path.Combine(o.Ruta_Imagen, o.Nombre_Imagen), out conversion),
+                Extension = Path.GetExtension(o.Nombre_Imagen),
+                o.Activo
+            }).ToList();
+
+            return Json(new { data = ofertasFormateadas }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -102,13 +122,13 @@ namespace CapaPresentacionTienda.Controllers
 
 
         [HttpPost]
-        public JsonResult ListarProductosCarrito()
+        public JsonResult ListarProductosCarrito(int? idCliente = null)
         {
-            int Id_Cliente = ((Cliente)Session["Cliente"]).Id_Cliente;
+            int Id_Cliente = idCliente ?? 0;
             List<Carrito> oLista = new List<Carrito>();
             bool conversion;
 
-            
+
             oLista = new CN_Carrito().ListarProducto(Id_Cliente).Select(oc => new Carrito()
             {
                 oProducto = new Producto()
@@ -128,23 +148,23 @@ namespace CapaPresentacionTienda.Controllers
         }
 
         [HttpPost]
-        public JsonResult OperacionCarrito(int Id_Producto, bool sumar)
+        public JsonResult OperacionCarrito(int Id_Producto, bool sumar, int? idCliente = null)
         {
-            int Id_Cliente = ((Cliente)Session["Cliente"]).Id_Cliente;
+            int Id_Cliente = idCliente ?? 0;
 
             bool respuesta = false;
             string mensaje = string.Empty;
 
-            respuesta = new CN_Carrito().OperacionCarrito(Id_Cliente,Id_Producto, true, out mensaje);
+            respuesta = new CN_Carrito().OperacionCarrito(Id_Cliente, Id_Producto, true, out mensaje);
 
-           
+
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult EliminarCarrito(int Id_Producto)
+        public JsonResult EliminarCarrito(int Id_Producto, int? idCliente = null)
         {
-            int Id_Cliente = ((Cliente)Session["Cliente"]).Id_Cliente;
+            int Id_Cliente = idCliente ?? 0;
 
             bool respuesta = false;
             string mensaje = string.Empty;
@@ -172,6 +192,22 @@ namespace CapaPresentacionTienda.Controllers
         {
             return View();
         }
-               
+        public ActionResult DetalleProducto(int Id_Producto = 0)
+        {
+            Producto oProducto = new Producto();
+            bool conversion;
+
+            oProducto = new CN_Producto().Listar().Where(p => p.Id_Producto == Id_Producto).FirstOrDefault();
+
+            if (oProducto != null)
+            {
+                oProducto.Base64 = CN_Recursos.ConvertirBase64(Path.Combine(oProducto.Ruta_Imagen, oProducto.Nombre_Imagen), out conversion);
+                oProducto.Extension = Path.GetExtension(oProducto.Nombre_Imagen);
+            }
+            return View(oProducto);
+        }     
+
+
+        
     }
 }

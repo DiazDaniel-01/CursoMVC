@@ -1,0 +1,73 @@
+﻿@model CapaEntidad.Producto
+@{
+    ViewBag.Title = "DetalleProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0" src="data:image/@Html.DisplayTextFor(p => p.Extension);base64,@Html.DisplayTextFor(p => p.Base64)" alt="..." />
+            </div>
+            <div class="col-md-6">
+                <div class="small mb-1">Categoria: @Html.DisplayTextFor(p => p.oCategoria.Descripcion)</div>
+                <h1 class="display-5 fw-bolder">@Html.DisplayTextFor(p => p.Nombre) </h1>
+                <div class="fs-5 mb-5">
+                    <span>@Html.DisplayTextFor(m => m.Precio) Pesos AR </span>
+                    @* <spam>$40.00</spam>*@
+                </div>
+                <p class="lead">@Html.DisplayTextFor(p => p.Descripcion).</p>
+                <div class="d-flex">
+                    <a href="@Url.Action("Index","Home")", class="btn btn-danger w-50 text-center me-3">
+                        <i class="fas fa-undo-alt"></i>volver
+                    </a>
+
+                    <button class="btn btn-success agregarcarrito flex-shrink-0 w-50" type="button" data-idproducto="@Html.DisplayTextFor(p => p.Id_Producto)">
+                        <i class="fas fa-cart-plus"></i> Agregar al carrito
+
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts
+{
+    <script>
+
+        $(document).on("click", "button.agregarcarrito", function () {
+             console.log($(this).data("idproducto"))
+             jQuery.ajax({
+                 url: 'Url.Action("AgregarCarrito"."Home")',
+                 type: "POST",
+                 data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
+                 dataType: "json",
+                 contentType: "application/json; charset=utf-8",
+                 success: function (data) {
+                     if (data.respuesta) {
+                         MostrarCantidadCarrito();
+                         swal({
+                             title: "Agregado al carrito",
+                             text: "¿Desea ir al carrito?",
+                             type: "success",
+                             showCancelButton: true,
+                             confirmButtonClass: "btn-primary",
+                             confirmButtonText: "Si",
+                             confirmButtonText: "No",
+                             claseOnConfirm: true,
+
+                         }, function () {
+                             window.location.href = '@Url.Action("Carrito","Home")'
+                         })
+                         swall("", "Agregado al carrito", "success");
+                     } else {
+                         swall("", data.mensaje, "warning");
+                     }
+                 }
+             })
+        })
+
+    </script>
+
+}
+

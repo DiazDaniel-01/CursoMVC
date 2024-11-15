@@ -10,65 +10,53 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-9">
-                            
-                                <div class="me-2">
-
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="ms-2 mt-2">Detalle Pedido</h5>
-                                        <a class="btn btn-primary" href="@Url.Action("Index","Home")"><i class="fas fa-cart-plus"></i>Seguir Comprando</a>
-
-                                    </div>
-
-                                    <hr class="mt-2 mb-2">
-                                    <div id="productos-carrito">
-
-
-                                        <div class="card mb-2 card-producto">
-
-                                            <div class="card-body">
-                                                <div class="row">
-
-                                                    <div class="col-sm-2 align-self-center d-flex justify-content-center">
-                                                        <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757.jpg" style="width:100px;height:100px" />
+                            <div class="me-2">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="ms-2 mt-2">Detalle Pedido</h5>
+                                    <a class="btn btn-primary" href="@Url.Action("Index","Home")">
+                                        <i class="fas fa-cart-plus"></i> Seguir Comprando
+                                    </a>
+                                </div>
+                                <hr class="mt-2 mb-2">
+                                <div id="productos-carrito">
+                                    <div class="card mb-2 card-producto">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                                    <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757.jpg" style="width:100px;height:100px" />
+                                                </div>
+                                                <div class="col-sm-4 align-self-center">
+                                                    <span class="font-weight-bold d-block"></span>
+                                                    <span>Nombre Producto</span>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <span>Precio : S/. 1500</span>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <div class="d-flex">
+                                                        <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />
+                                                        <button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
                                                     </div>
-
-                                                    <div class="col-sm-4 align-self-center">
-                                                        <span class="font-weight-bold d-block"></span>
-                                                        <span>Nombre Producto</span>
-                                                    </div>
-
-                                                    <div class="col-sm-2 align-self-center">
-                                                        <span>Precio : S/. 1500</span>
-                                                    </div>
-
-                                                    <div class="col-sm-2 align-self-center">
-                                                        <div class="d-flex">
-
-                                                            <button class="btn btn-outline-secondary btn-restar rounded-0">
-                                                                <i class="fas fa-minus"></i>
-                                                            </button>
-                                                            <input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />
-                                                            <button class="btn btn-outline-secondary btn-sumar rounded-0">
-                                                                <i class="fas fa-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-sm-2 align-self-center">
-
-                                                        <button class="btn btn-outline-danger btn-eliminar"><i class="far fa-trash-alt"></i> Eliminar</button>                                                       
-                                                        
-                                                    </div>
-
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <button class="btn btn-outline-danger btn-eliminar">
+                                                        <i class="far fa-trash-alt"></i> Eliminar
+                                                    </button>
+                                                </div>
                                             </div>
-
                                         </div>
-
-
                                     </div>
                                 </div>
+                                <div class="d-flex justify-content-end">
+                                    <label class="align-self-center"><b>Total: S/. <span id="total">500</span></b></label>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="col-sm-3">
                             <div class="card">
                                 <div class="card-body bg-light">
@@ -99,7 +87,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -107,56 +94,222 @@
     </div>
 </div>
 
-
 @section scripts {
-
     <script>
-
         $(document).ready(function () {
-
             jQuery.ajax({
-                url: "@Url.Action("ObtenerLocalidad","Home")",
+                url: "@Url.Action("ListarProductosCarrito", "Home")",
                 type: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                success: function (data) {
+                success: function (response) {
+                    $("#productos-carrito").html("");
+                    $("#productos-carrito").LoadingOverlay("hide");
+                    $.each(response.data, function (i, item) {
 
+
+                        $("<div>").addClass("card mb-2 card-producto").append(
+                            $("<div>").addClass("cart-body").append(
+                                $("<div>").addClass("row").append(
+
+
+                                    $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                        $("<img>").addClass("rounded")
+                                            .attr({ "src": "data:image/" + item.oProducto.Extension + ";base64," + item.oProducto.Base64 })
+                                            .css({ "width": "100px", "height": "100px" })
+                                    ),
+
+
+                                    $("<div>").addClass("col-sm-4 align-self-center").append(
+                                        $("<span>").addClass("font-weight-bold d-block"),
+                                        $("<span>").text(item.oProducto.Nombre)
+                                    ),
+
+
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<span>").text(item.oProducto.Precio.toFixed(2) + "PESOS")
+                                    ),
+
+
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<div>").addClass("d-flex").append(
+                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                                .css(({ "width": "40px" }))
+                                                .data("oProducto", item.oProducto)
+                                                .val(item.Cantidad),
+                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus"))
+                                        )
+                                    ),
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<button>").addClass("btn btn-outline-danger btn-eliminar").append($("<i>").addClass("fas fa-trash-alt"), "Eliminar")
+                                            .data("idproducto",item.oProducto.Id_Producto),
+
+                                    )
+                                )
+                            )
+                        ).appendTo("#productos-carrito");
+                    });
+                    sumarTotal();
+                },
+                error: function (error) {
+                    $("#productos-carrito").LoadingOverlay("hide");
+                },
+                beforeSend: function () {
+                    $("#productos-carrito").LoadingOverlay("show");
                 }
-
-
-
-            })   
-                 ListarLocalidad()
-            
-        })
+            });
+            ListarLocalidad();
+        });
 
         function ListarLocalidad() {
-
-            $("<option>").attr({ "value": "00", "disabled":"disabled", "selected":"true" }).text("Seleccionar").appendTo("#cbolocalidad");
-
+            $("<option>")
+                .attr({ "value": "00", "disabled": "disabled", "selected": "true" })
+                .text("Seleccionar")
+                .appendTo("#cbolocalidad");
 
             jQuery.ajax({
-                url: "@Url.Action("ObtenerLocalidad","Home")",
+                url: "@Url.Action("ObtenerLocalidad", "Home")",
                 type: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-
                     if (data.lista != null) {
-
-                        $.each(data.lista, function(i, item) {
-
-                            $("<option>").attr({"value": item.Id_Localidad}).text(item.Descripcion).appendTo("#cbolocalidad");
-
-                        })
-
+                        $.each(data.lista, function (i, item) {
+                            $("<option>")
+                                .attr({ "value": item.Id_Localidad })
+                                .text(item.Descripcion)
+                                .appendTo("#cbolocalidad");
+                        });
                     }
                 }
-
-            })
+            });
         }
 
+        function sumarTotal() {
+            var sumaTotal = parseFloat(0);
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").Precio;
+                var cantidad = parseFloat($(this).val());
+                var subtotal = precio * cantidad;
+                sumaTotal += subtotal;
+            });
+            $("#total").text(sumaTotal.toFixed(2));
+            $("#total").data("sumaTotal", sumaTotal);
+        }
+
+        $(document).on("click", ".btn-sumar", function () {
+            var div_contenedor = $(this).parent("div.d-flex");
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+            var btn = $(this);
+            var idproducto = $(input_cantidad).data("oProducto").idproducto;
+
+            jQuery.ajax({
+                url: '@Url.Action("OperacionCarrito","Home")',
+                type: "POST",
+                data: JSON.stringify({ Id_Producto: idproducto, sumar: true, idCliente: null }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(btn).LoadingOverlay("hide");
+
+                    if (data.respuesta) {
+                        var cantidad = parseInt($(input_cantidad).val()) + 1;
+                        $(input_cantidad).val(cantidad);
+                        sumarTotal();
+                    } else {
+                        swal("", data.mensaje, "warning");
+                    }
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show");
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide");
+                }
+            });
+        });
+
+        $(document).on("click", ".btn-restar", function () {
+        var div_contenedor = $(this).parent("div.d-flex");
+        var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+        var btn = $(this);
+        var idproducto = $(input_cantidad).data("oProducto").idproducto;
+
+            var cantidad = parseInt($(input_cantidad).val()) - 1;
+
+            if (cantidad >= 1) {
+
+                jQuery.ajax({
+                    url: '@Url.Action("OperacionCarrito","Home")',
+                    type: "POST",
+                    data: JSON.stringify({ Id_Producto: idproducto, sumar: false, idCliente: null }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+
+                        $(btn).LoadingOverlay("hide");
+
+                        if (data.respuesta) {
+
+                            $(input_cantidad).val(cantidad);
+                            sumarTotal();
+                        } else {
+
+                            swal("", data.mensaje, "warning");
+                        }
+                    },
+                    beforeSend: function () {
+                        $(btn).LoadingOverlay("show");
+                    },
+                    error: function (error) {
+                        $(btn).LoadingOverlay("hide");
+                    }
+                })
+
+            }
+
+
+        })
+
+        $(document).on("click", ".btn-eliminar", function () {
+        
+          var idproducto = $(this).data("idproducto");
+
+            var card_producto = $(this).parents("div.card-producto");
+
+           
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarCarrito","Home")',
+                    type: "POST",
+                    data: JSON.stringify({ Id_Producto: idproducto, }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+
+                        
+                        if (data.respuesta) {
+
+                            card_producto.remove();
+
+                            MostrarCantidadCarrito();
+
+                            sumarTotal();
+
+                        } else {
+
+                            swal("", data.mensaje, "warning");
+                        }
+                    },
+                })
+
+            
+
+
+        })
+
+
+
     </script>
-
 }
-
