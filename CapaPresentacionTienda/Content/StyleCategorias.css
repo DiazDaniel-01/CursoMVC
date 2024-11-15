@@ -1,0 +1,29 @@
+﻿/* Estilos para las categorías en fila */
+#contenedor_categoria {
+    margin-top: 20px;
+}
+
+.categoria-item {
+    background-color: #f8f9fa; /* Color de fondo */
+    padding: 10px 20px; /* Espacio interior */
+    border-radius: 5px;
+    margin: 5px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .categoria-item:hover {
+        background-color: #e9ecef; /* Color al pasar el mouse */
+    }
+/* Centrar la barra de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: center;
+}
+
+    .search-container .input-group {
+        max-width: 400px; /* Ajusta el tamaño máximo según prefieras */
+        width: 100%;
+    }

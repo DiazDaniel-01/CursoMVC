@@ -1,8 +1,5 @@
-﻿@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
+﻿@using CapaEntidad
+@model IEnumerable<Categoria>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -62,32 +59,63 @@
     <br />
     <br />
     <section class="mx-auto">
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-            </div>
-        </form>
-
-        <div class="container-categ">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card mb-3">
-                        <div class="card-header bg-dark text-white">
-                            Categorias
-                        </div>
-                        <div id="contenedor_categoria" class="card-body">
-                        </div>
-                    </div>
+        <!-- Barra de búsqueda -->
+        <div class="search-container text-center mb-4">
+            <form class="d-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar productos..." aria-label="Buscar productos..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
+            </form>
+        </div>
 
-                <div class="col-md-9">
-                    <div id="contenedor_producto" class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+        <!-- Botones de categorías como enlaces de ancla -->
+        <div class="d-flex justify-content-around flex-wrap mb-5" id="contenedor_categoria">
+            @foreach (var categoria in Model)
+            {
+                <a href="#categoria@(categoria.Id_Categoria)" class="btn btn-outline-dark mx-2">@categoria.Nombre</a>
+            }
+        </div>
+
+        <!-- Contenedor de productos organizados por categoría -->
+        <div class="container-fluid px-5 my-5">
+            @foreach (var categoria in Model)
+            {
+                <section id="categoria@(categoria.Id_Categoria)" class="my-5">
+                    <!-- Título de la categoría -->
+                    <h2 class="text-center">@categoria.Nombre</h2>
+
+                    <!-- Productos de la categoría -->
+                    <div class="row">
+                        @foreach (var producto in categoria.Producto)
+                        {
+                            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                                <div class="card h-100">
+                                    <img src="@producto.Ruta_Imagen" class="card-img-top" alt="@producto.Nombre" />
+                                    <div class="card-body text-center">
+                                        <h5 class="fw-bolder">@producto.Nombre</h5>
+                                        <p>Precio: $@producto.Precio</p>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <button class="btn btn-success mt-auto agrearcarrito" data-idproducto="@producto.Id_Producto">
+                                            Agregar al carrito
+                                        </button>
+                                        <a href='@Url.Action("DetalleProducto", "Home", new { idproducto = producto.Id_Producto })' class="btn btn-dark mt-auto">
+                                            Ver detalle
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                </div>
-            </div>
+                </section>
+            }
         </div>
     </section>
+
+
 </main>
 
 @section scripts{
@@ -98,101 +126,106 @@
 
         $(document).ready(function(){
             MostrarCategoria();
-        })
+        });
 
-
-
-
-        function MostrarCategoria(){
-
+        function MostrarCategoria() {
             jQuery.ajax({
-                url: "@Url.Action("ListaCategorias", "Home")",
+                url: '@Url.Action("ListaCategorias", "Home")',
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                success: function (response) {
-
+                success: function(response) {
                     $("#contenedor_categoria").LoadingOverlay("hide");
+                    $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
 
-                    $("<div>").addClass("form-check").append(
+                    // Generar enlaces de categorías
+                    $.each(response.data, function(i, element) {
+                        $("<a>")
+                            .addClass("btn btn-outline-primary m-1")
+                            .text(element.Descripcion)
+                            .attr("href", "#categoria_" + element.Id_Categoria)
+                            .on("click", function(e) {
+                                e.preventDefault();
+                                MostrarProductoporCategoria(element.Id_Categoria);
+                                $('html, body').animate({
+                                    scrollTop: $("#categoria_" + element.Id_Categoria).offset().top
+                                }, 800);
+                            })
+                            .appendTo("#contenedor_categoria");
+                    });
 
-                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": "0", "id": "cx", "checked": "checked" }),
-                        $("<label>").addClass("form-check-label").text("Todos").attr({"for":"cx"})
-                    ).appendTo("#contenedor_categoria")
-
-
-                    $.each(response.data, function (i, element) {
-
-                        $("<div>").addClass("form-check").append(
-
-                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": element.Id_Categoria, "id": "c" + i }),
-                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "c" + i })
-                        ).appendTo("#contenedor_categoria")
-                    })
-
+                    // Mostrar todos los productos en secciones al cargar
                     MostrarProductoporCategoria();
                 },
-                beforeSend: function () {
+                beforeSend: function() {
                     $("#contenedor_categoria").LoadingOverlay("show");
-
                 }
-            })
+            });
         }
 
-        function MostrarProductoporCategoria() {
-            var _idcategoria = $("input[name='categoria']:checked").val();
-
+        function MostrarProductoporCategoria(idCategoria = 0) {
             jQuery.ajax({
-                url: "@Url.Action("ListarProductoporCategorias", "Home")",
+                url: '@Url.Action("ListarProductoporCategorias", "Home")',
                 type: "POST",
-                data: JSON.stringify({ idcategoria: _idcategoria }),
+                data: JSON.stringify({ idcategoria: idCategoria }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    $("#contenedor_producto").html(""); // Limpiar el contenedor antes de mostrar los productos nuevos
-                    $("#contenedor_producto").LoadingOverlay("hide");
+                success: function(response) {
+                    $("#contenedor_secciones_producto").LoadingOverlay("hide");
+                    $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
 
                     // Verificar si hay productos para mostrar
                     if (response.data.length > 0) {
-                        $.each(response.data, function (i, element) {
-                            // Crear la tarjeta de producto
+                        let currentCategory = null;
+                        let sectionContainer = null;
 
-                            $("<div>").addClass("card h-100").append(
-                                $("<img>").addClass("card-img-top").attr({ "src": element.Ruta_Imagen }),
-                                $("<div>").addClass("card-body p-4").append(
-                                    $("<div>").addClass("text-center").append(
-                                        $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                        "$" + element.Precio.toFixed(2) + " PESO"
+                        // Iterar sobre productos para agruparlos por categoría
+                        $.each(response.data, function(i, element) {
+                            // Si cambia de categoría, crear nueva sección
+                            if (currentCategory !== element.Nombre_Categoria) {
+                                currentCategory = element.Nombre_Categoria;
+                                sectionContainer = $("<div>").attr("id", "categoria_" + element.Id_Categoria)
+                                    .addClass("mb-5")
+                                    .append($("<h3>").addClass("fw-bold").text(currentCategory));
+
+                                // Agregar la nueva sección al contenedor principal
+                                sectionContainer.appendTo("#contenedor_secciones_producto");
+                            }
+
+                            // Crear tarjeta de producto
+                            $("<div>").addClass("card h-100 mb-4")
+                                .append(
+                                    $("<img>").addClass("card-img-top").attr("src", element.Ruta_Imagen),
+                                    $("<div>").addClass("card-body p-4").append(
+                                        $("<div>").addClass("text-center").append(
+                                            $("<h5>").addClass("fw-bolder").text(element.Nombre),
+                                            "$" + element.Precio.toFixed(2) + " PESO"
+                                        )
+                                    ),
+                                    $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
+                                        $("<div>").addClass("d-grid gap-2").append(
+                                            $("<button>").addClass("btn btn-success mt-auto agrearcarrito")
+                                                .data("idproducto", element.Id_Producto)
+                                                .text("Agregar a carrito"),
+                                            $("<a>").addClass("btn btn-dark mt-auto")
+                                                .attr({"href": '@Url.Action("DetalleProducto","Home")' + "?idproducto=" + element.Id_Producto})
+                                                .text("Ver detalle")
+                                        )
                                     )
-                                ),
-                                $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
-                                    $("<div>").addClass("d-grid gap-2").append(
-                                        $("<button>").addClass("btn btn-success mt-auto agrearcarrito")
-                                            .data("idproducto", element.Id_Producto)
-                                            .text("Agregar a carrito"),
-                                        $("<a>").addClass("btn btn-dark mt-auto")
-                                            .attr({ "href": "@Url.Action("DetalleProducto","Home")" + "?idproducto=" + element.Id_Producto })
-                                            .text("Ver detalle")
-
-                                    )
-                                )
-                            ).appendTo("#contenedor_producto");
-
+                                ).appendTo(sectionContainer);  // Añadir producto a la sección de la categoría actual
                         });
                     } else {
-                        // Mostrar mensaje si no hay productos en la categoría seleccionada
-                        $("<div>").addClass("alert alert-warning").text("No hay productos disponibles para esta categoría.").appendTo("#contenedor_producto");
+                        $("<div>").addClass("alert alert-warning")
+                            .text("No hay productos disponibles para esta categoría.")
+                            .appendTo("#contenedor_secciones_producto");
                     }
                 },
-                beforeSend: function () {
-                    $("#contenedor_producto").LoadingOverlay("show");
+                beforeSend: function() {
+                    $("#contenedor_secciones_producto").LoadingOverlay("show");
                 }
             });
-
-            $(document).on("change", "input[name=categoria]", function () {
-                MostrarProductoporCategoria();  // Llama a la función al cambiar la categoría
-            });
         }
+
 
     </script>
 }
