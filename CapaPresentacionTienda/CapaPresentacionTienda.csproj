@@ -152,7 +152,10 @@
     <Content Include="Content\icono\IMG-20240920-WA0038-fotor-bg-remover-20240921181742.png" />
     <Content Include="Content\icono\pngwing.com %281%29.png" />
     <Content Include="Content\icono\Screenshot_20240630-124646-fotor-bg-remover-20240921174945.png" />
-    <Content Include="Content\imag\Screenshot_20240922-180653-fotor-bg-remover-2024092218838.png" />
+    <Content Include="Content\imag\hamburguesa_1.jpg" />
+    <Content Include="Content\imag\hamburguesa_2.jpg" />
+    <Content Include="Content\imag\hamburguesa_3.jpg" />
+    <Content Include="Content\imag\hamburguesa_4.png" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
     <Content Include="Content\Site.css" />

@@ -6667,24 +6667,16 @@ textarea.form-control-lg {
     }
 
 .carousel-item {
-    position: relative;
-    display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    height: 100%; /* Asegura que el carrusel ocupe toda la altura */
-    float: left;
-    width: 100%;
-    margin-right: -100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transition: transform 0.6s ease-in-out;
+    height: 32rem;
 }
 
-.carousel-item img {
-        max-width: 100%; /* Evita que la imagen exceda el ancho del contenedor */
-        max-height: 100%; /* Evita que la imagen exceda la altura del contenedor */
-        object-fit: contain; /* Ajusta la imagen sin cortarla */
-}
+    .carousel-item > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        height: 32rem;
+    }
 
 @media (prefers-reduced-motion: reduce) {
     .carousel-item {

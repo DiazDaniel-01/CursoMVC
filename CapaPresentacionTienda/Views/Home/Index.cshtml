@@ -1,6 +1,4 @@
-﻿@using CapaEntidad
-@model IEnumerable<Categoria>
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -9,51 +7,64 @@
 <main>
     <div class="row justify-content-center">
 
-        <div id="carouselExampleIndicators" class="carousel slide carousel-dark mx-auto" data-bs-ride="carousel">
-
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
+
             <div class="carousel-inner">
-
+                <!-- Primera imagen -->
                 <div class="carousel-item active">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>rdeses</h5>
-                        <p>cvfds cliente</p>
+                    <img src="~/Content/imag/hamburguesa_1.jpg" alt="cafe" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption text-start">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
                     </div>
-                    <img src="~/Content/imag/Screenshot_20240922-180653-fotor-bg-remover-2024092218838.png" class="d-block w-50 mx-auto" alt="cafe" />
                 </div>
 
+                <!-- Segunda imagen -->
                 <div class="carousel-item">
-                    <img src="~/Content/icono/pngwing.com (1).png" class="d-block w-50 mx-auto" alt="sorve" />
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>4535</h5>
-                        <p>cvfds cliente</p>
+                    <img src="~/Content/imag/hamburguesa_2.jpg" alt="sorve" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
                     </div>
                 </div>
 
+                <!-- Tercera imagen -->
                 <div class="carousel-item">
-                    <img src="~/Content/icono/Screenshot_20240630-124646-fotor-bg-remover-20240921174945.png" class="d-block w-50 mx-auto" alt="sorve" />
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>rdeses empanada</h5>
-                        <p> cliente</p>
+                    <img src="~/Content/imag/hamburguesa_3.jpg" alt="sorve" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption text-end">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
                     </div>
                 </div>
-
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon text-black" aria-hidden="true"></span>
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon text-black" aria-hidden="true"></span>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-
         </div>
+
 
     </div>
     <br />
@@ -72,47 +83,19 @@
         </div>
 
         <!-- Botones de categorías como enlaces de ancla -->
-        <div class="d-flex justify-content-around flex-wrap mb-5" id="contenedor_categoria">
-            @foreach (var categoria in Model)
-            {
-                <a href="#categoria@(categoria.Id_Categoria)" class="btn btn-outline-dark mx-2">@categoria.Nombre</a>
-            }
+        <div class="container">
+            <!-- Contenedor para las categorías -->
+            <div id="contenedor_categoria" class="mb-4">
+                <h2 class="fw-bold">Categorías</h2>
+                <!-- Las categorías se agregarán dinámicamente aquí -->
+            </div>
+
+            <!-- Contenedor para productos agrupados por categorías -->
+            <div id="contenedor_secciones_producto">
+                <!-- Las secciones de productos por categoría se agregarán dinámicamente aquí -->
+            </div>
         </div>
 
-        <!-- Contenedor de productos organizados por categoría -->
-        <div class="container-fluid px-5 my-5">
-            @foreach (var categoria in Model)
-            {
-                <section id="categoria@(categoria.Id_Categoria)" class="my-5">
-                    <!-- Título de la categoría -->
-                    <h2 class="text-center">@categoria.Nombre</h2>
-
-                    <!-- Productos de la categoría -->
-                    <div class="row">
-                        @foreach (var producto in categoria.Producto)
-                        {
-                            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                                <div class="card h-100">
-                                    <img src="@producto.Ruta_Imagen" class="card-img-top" alt="@producto.Nombre" />
-                                    <div class="card-body text-center">
-                                        <h5 class="fw-bolder">@producto.Nombre</h5>
-                                        <p>Precio: $@producto.Precio</p>
-                                    </div>
-                                    <div class="card-footer p-2 bg-transparent text-center">
-                                        <button class="btn btn-success mt-auto agrearcarrito" data-idproducto="@producto.Id_Producto">
-                                            Agregar al carrito
-                                        </button>
-                                        <a href='@Url.Action("DetalleProducto", "Home", new { idproducto = producto.Id_Producto })' class="btn btn-dark mt-auto">
-                                            Ver detalle
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </section>
-            }
-        </div>
     </section>
 
 
@@ -123,8 +106,7 @@
     <script>
 
         //funciona todo ahora voy por reparar detalle
-
-        $(document).ready(function(){
+        $(document).ready(function() {
             MostrarCategoria();
         });
 
@@ -142,14 +124,11 @@
                     $.each(response.data, function(i, element) {
                         $("<a>")
                             .addClass("btn btn-outline-primary m-1")
-                            .text(element.Descripcion)
+                            .text(element.Nombre)
                             .attr("href", "#categoria_" + element.Id_Categoria)
                             .on("click", function(e) {
                                 e.preventDefault();
                                 MostrarProductoporCategoria(element.Id_Categoria);
-                                $('html, body').animate({
-                                    scrollTop: $("#categoria_" + element.Id_Categoria).offset().top
-                                }, 800);
                             })
                             .appendTo("#contenedor_categoria");
                     });
@@ -225,6 +204,7 @@
                 }
             });
         }
+
 
 
     </script>
