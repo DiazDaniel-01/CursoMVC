@@ -20,7 +20,6 @@ namespace CapaEntidad
         public string Base64 { get; set; }
         public string Extension { get; set; }
         public object Extra_Producto { get; set; }
-    
-        
+        public int Stock { get; set; }
     }
 }

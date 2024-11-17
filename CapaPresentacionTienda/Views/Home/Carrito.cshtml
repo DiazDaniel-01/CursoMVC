@@ -44,7 +44,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
-                                                    <button class="btn btn-outline-danger btn-eliminar">
+                                                    <button aria-label="Eliminar producto del carrito" class="btn btn-outline-danger btn-eliminar">
                                                         <i class="far fa-trash-alt"></i> Eliminar
                                                     </button>
                                                 </div>
@@ -93,6 +93,14 @@
 
                                                 if (carrito.length === 0) {
                                                     alert("El carrito está vacío. Por favor, agrega productos antes de finalizar el pedido.");
+                                                    return;
+                                                }
+                                                const nombre = document.getElementById('txtnombrecontacto').value.trim();
+                                                const direccion = document.getElementById('txtdireccion').value.trim();
+                                                const telefono = document.getElementById('txttelefono').value.trim();
+
+                                                if (!nombre || !direccion || !telefono) {
+                                                    alert("Por favor completa todos los datos de contacto antes de finalizar el pedido.");
                                                     return;
                                                 }
 
@@ -235,12 +243,12 @@
             var div_contenedor = $(this).parent("div.d-flex");
             var input_cantidad = $(div_contenedor).find("input.input-cantidad");
             var btn = $(this);
-            var idproducto = $(input_cantidad).data("oProducto").idproducto;
+            var idproducto = $(input_cantidad).data("oProducto").Id_Producto;
 
             jQuery.ajax({
                 url: '@Url.Action("OperacionCarrito","Home")',
                 type: "POST",
-                data: JSON.stringify({ Id_Producto: idproducto, sumar: true, idCliente: null }),
+                data: JSON.stringify({ Id_Producto: idproducto, sumar: true, Id_Cliente: null }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
@@ -267,7 +275,7 @@
         var div_contenedor = $(this).parent("div.d-flex");
         var input_cantidad = $(div_contenedor).find("input.input-cantidad");
         var btn = $(this);
-        var idproducto = $(input_cantidad).data("oProducto").idproducto;
+        var idproducto = $(input_cantidad).data("oProducto").Id_Producto;
 
             var cantidad = parseInt($(input_cantidad).val()) - 1;
 
@@ -276,7 +284,7 @@
                 jQuery.ajax({
                     url: '@Url.Action("OperacionCarrito","Home")',
                     type: "POST",
-                    data: JSON.stringify({ Id_Producto: idproducto, sumar: false, idCliente: null }),
+                    data: JSON.stringify({ Id_Producto: idproducto, sumar: false, Id_Cliente: null }),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {

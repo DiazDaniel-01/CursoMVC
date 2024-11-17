@@ -38,7 +38,7 @@
         $(document).on("click", "button.agregarcarrito", function () {
              console.log($(this).data("idproducto"))
              jQuery.ajax({
-                 url: 'Url.Action("AgregarCarrito"."Home")',
+                 url: '@Url.Action("AgregarCarrito","Home")'
                  type: "POST",
                  data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
                  dataType: "json",
