@@ -24,10 +24,7 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
-        public ActionResult Extra_Producto()
-        {
-            return View();
-        }
+
         //Se crean los metodos para listar, registar, editar y eliminar CATEGORIAS
         #region CATEGORIA
 
@@ -94,16 +91,19 @@ namespace CapaPresentacionAdmin.Controllers
 
             decimal precio;
 
-            if (decimal.TryParse(oProducto.PrecioTexto,NumberStyles.AllowDecimalPoint,new CultureInfo("es-AR"), out precio)) { 
+            if (decimal.TryParse(oProducto.PrecioTexto, NumberStyles.AllowDecimalPoint, new CultureInfo("es-AR"), out precio))
+            {
                 oProducto.Precio = precio;
             }
 
-            else{
-                return Json(new { operacionExitosa = false, mensaje = "El formato del precio debe ser ##.##" },JsonRequestBehavior.AllowGet);
+            else
+            {
+                return Json(new { operacionExitosa = false, mensaje = "El formato del precio debe ser ##.##" }, JsonRequestBehavior.AllowGet);
 
             }
 
-            if (oProducto.Id_Producto == 0){
+            if (oProducto.Id_Producto == 0)
+            {
 
                 int idProductoGenerado = new CN_Producto().Registrar(oProducto, out mensaje);
 
@@ -111,11 +111,13 @@ namespace CapaPresentacionAdmin.Controllers
                 {
                     oProducto.Id_Producto = idProductoGenerado;
                 }
-                else { 
+                else
+                {
                     operacion_exitosa = false;
                 }
             }
-            else{
+            else
+            {
 
                 operacion_exitosa = new CN_Producto().Editar(oProducto, out mensaje);
             }
@@ -156,7 +158,7 @@ namespace CapaPresentacionAdmin.Controllers
                     }
                 }
             }
-            return Json(new { operacionExitosa = operacion_exitosa,idGenerado = oProducto.Id_Producto, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { operacionExitosa = operacion_exitosa, idGenerado = oProducto.Id_Producto, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -196,11 +198,13 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
+    }
+}
 
         #endregion
 
         //Se crean los metodos para listar, registar, editar y eliminar EXTRA_PRODUCTO
-        #region EXTRA_PRODUCTO
+       /* #region EXTRA_PRODUCTO
 
         [HttpGet]
         public JsonResult ListarExtraP()
@@ -240,4 +244,4 @@ namespace CapaPresentacionAdmin.Controllers
 
         #endregion
     }
-}
+}*/
