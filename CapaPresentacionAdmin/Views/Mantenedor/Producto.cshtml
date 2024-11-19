@@ -117,7 +117,6 @@
 
 @section scripts{
     <script>
-
         var tabladata;
         var filaSeleccionada;
 
@@ -153,6 +152,7 @@
                     }
                 },
                 { "data": "Precio" },
+
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
@@ -196,7 +196,7 @@
         });
 
         jQuery.validator.addMethod("preciodecimal", function (value, element) {
-            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+            return this.optional(element) || /^\d{0,8}(\,\d{0,2})?$/i.test(value);
         }, "El formato correcto del precio es ##.##");
 
         $("#contenedor").validate({
@@ -207,6 +207,7 @@
                 descripcion: {
                     required: true
                 },
+
                 precio: {
                     required: true,
                     preciodecimal: true
@@ -215,6 +216,7 @@
             messages: {
                 nombre: "- El campo nombre es obligatorio",
                 descripcion: "- El campo descripcion es obligatorio",
+
                 precio: { required: "- El campo precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.##" }
             },
             errorElement: "div",
@@ -223,6 +225,7 @@
 
 
         function abrirModal(json) {
+
             $("#txtid").val(0);
             $("#img_producto").removeAttr("src");
             $("#fileProducto").val("");
@@ -230,45 +233,51 @@
             $("#txtdescripcion").val("");
             $("#cbocategoria").val($("#cbocategoria option:first").val());
             $("#txtprecio").val("");
+
             $("#cboactivo").val(1);
+
             $("#mensajeError").hide();
 
+
             if (json != null) {
+
                 $("#txtid").val(json.Id_Producto);
                 $("#txtnombre").val(json.Nombre);
                 $("#txtdescripcion").val(json.Descripcion);
                 $("#cbocategoria").val(json.oCategoria.Id_Categoria);
                 $("#txtprecio").val(json.Precio);
+
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
 
-                // Aquí es donde se configura la imagen
-                var rutaImagen = '@Url.Content("~/Content/img-product/")' + json.Nombre_Imagen; // Asegúrate de que json.Nombre_Imagen contenga el nombre correcto
-                $("#img_producto").attr("src", rutaImagen);
-
-                // Si necesitas cargar la imagen desde el servidor, puedes hacer una llamada AJAX aquí
                 jQuery.ajax({
                     url: '@Url.Action("ImagenProducto", "Mantenedor")',
                     type: "POST",
-                    data: JSON.stringify({ id: json.Id_Producto }),
+                    data: JSON.stringify({ id : json.Id_Producto }),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
+
+                        console.log(data); // Verifica la respuesta aquí
+
                         $("#img_producto").LoadingOverlay("hide");
                         if (data.conversion) {
-                            var rutaImagen = '@Url.Content("~/Content/img-product/")' + data.nombreImagen; // Asegúrate de que data.nombreImagen contiene el nombre del archivo
-                            $("#img_producto").attr("src", rutaImagen);
+                            $("#img_producto").attr({ "src": "data:image/" + data.extension + ";base64," + data.textoBase64 });
+
                         }
                     },
                     error: function (error) {
                         $("#img_producto").LoadingOverlay("hide");
+
                         $("#mensajeError").show();
                         $("#mensajeError").text("Error al mostrar imagen");
                     },
                     beforeSend: function () {
-                        $("#img_producto").LoadingOverlay("show");
+                        $("#img_producto").LoadingOverlay("show")
                     }
-                });
+
+                })
             }
+
 
             $("#FormModal").modal("show");
         }
@@ -348,6 +357,7 @@
                 },
                 PrecioTexto: $("#txtprecio").val(),
                 Precio: $("#txtprecio").val(),
+
                 Activo: $("#cboactivo").val() == 1 ? true : false,
             };
 

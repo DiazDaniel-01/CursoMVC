@@ -4,14 +4,51 @@
 body {
     padding-top: 0rem;
     padding-bottom: 0rem;
-    color: white;
+    background: linear-gradient(to bottom, #ffeaea, #feb47b); /* Gradiente de color */
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+h4 {
+    display: block;
+    font-size: 1em;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+/* Estilo para los títulos de las categorías */
+.text-black {
+    color: black;
 }
 
 /* HEADER STYLES */
 .header {
-    background-color: #fff4b8;
+    background-color: #ffcec3;
     padding: 10px 0;
-    border-bottom: 4px solid #ffc107;
+    border-bottom: 4px solid #FF5733;
 }
 
 /* MAIN CONTAINER */
@@ -28,6 +65,7 @@ body {
     display: flex;
     align-items: center;
     margin-right: auto;
+    margin: 0px 30px;
 }
 
     .logo img {
@@ -79,17 +117,181 @@ body {
             color: #e17055;
         }
 
-/* CONTAINER CUSTOMIZATION */
-.container-categ {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-bottom: 2rem;
-    width: 100%;
-    box-sizing: border-box;
+.content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 30vw;
+    column-gap: 50px;
+    margin: -50px 70px 15px;
+    padding: 40px 50px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 9px #a1999980;
+    background: linear-gradient(to bottom, #ffffff, #e9e9e9);
 }
 
-/* MAIN ADJUSTABLE CONTAINER */
-.container-main {
+.orden {
+    position: sticky;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    top: 40px;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 9px #a199994d;
+    background-color: #fff;
+}
+
+    .orden h2 {
+        color: black;
+        font-size: 20px;
+        padding-bottom: 15px;
+        margin: 5px 0 0;
+        position: relative;
+        border-bottom: solid 1px rgba(180, 180, 180, .4);
+    }
+
+.orde-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    max-width: 400px;
+    margin: auto;
+}
+
+.order h2, .order-summary h3 {
+    color: black;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+
+/* MI PEDIDO */
+
+.additions {
+    margin-top: 10px;
+}
+
+    .additions .item {
+        padding: 0px 15px;
+    }
+
+    .additions h3 {
+        color: black;
+
+    }
+
+    .additions comment {
+        color: black;
+    }
+    .additions span {
+        color: #FF5733;
+        font-weight: 650;
+        text-transform: uppercase;
+    }
+    .additions p {
+        color: #808080;
+        margin: 5px 0px;
+        overflow-wrap: anywhere;
+        font-size: 14px;
+        line-height: 1.3
+    }
+
+.price {
+    color: #FF5733;
+    font-weight: 650;
+    text-transform: uppercase;
+}
+
+.subtotal {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 5px;
+    align-items: center;
+}
+
+    .subtotal span {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+.total {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 5px;
+    align-items: center;
+}
+    .total span {
+        color: #FF5733;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+
+.pricing {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-tacho {
+    cursor: pointer;
+    background-color: #b4b4b49c;
+    border: solid 1px #b4b4b4;
+    border-radius: 3px;
+}
+
+    .btn-tacho img {
+        height: 1.3em;
+    }
+
+
+.cart-item-grid {
+    padding: 10px 0;
+}
+
+.cart-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cart-item-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center; /* Centra verticalmente los botones */
+    align-items: center; /* Desplaza los botones a la derecha */
+    height: 100%;
+    padding-left: 70px;
+}
+
+.cart-item-grid-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+pricing span {
+    color: black;
+}
+
+/* CONTAINER CUSTOMIZATION */
+.container-categ, .container-main {
     padding-left: 1rem;
     padding-right: 1rem;
     margin-bottom: 2rem;
@@ -100,17 +302,17 @@ body {
 /* CUSTOMIZE THE CAROUSEL */
 /* Carousel base class */
 .carousel {
-    margin-bottom: 2rem; /* Ajusta según sea necesario */
-    width: 100%; /* Asegura que el carrusel ocupe el ancho completo */
-    overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    margin-bottom: 2rem;
+    width: 100%;
+    overflow: hidden;
 }
-/* Since positioning the image, we need to help out the caption */
+
 .carousel-caption {
     bottom: 3rem;
     z-index: 10;
 }
 
-/* Declare heights because of positioning of img element */
+/* Carousel item styling */
 .carousel-item {
     height: 32rem;
     position: relative;
@@ -118,28 +320,25 @@ body {
 
     .carousel-item > img {
         position: absolute;
-        top: 0;
-        left: 0;
-        min-width: 100%;
-        height: 32rem; /* Maintain consistent height */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
     }
 
-
-
-/* Carousel caption adjustments */
-.carousel-caption {
-    bottom: 3rem;
-    z-index: 10;
+/* Contenedor del carousel */
+.carousel-inner {
+    border-radius: 40px;
 }
 
-/* Adjustments for the custom carousel */
-.custom-carousel-slide.custom-carousel-dark.custom-mx-auto {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
-    padding: 0 10px;
+.container-carusel {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* MARKETING CONTENT */
@@ -171,22 +370,310 @@ body {
     letter-spacing: -0.05rem;
 }
 
-/* RESPONSIVE CSS */
-@media (min-width: 40em) {
-    /* Bump up size of carousel content */
-    .carousel-caption p {
-        margin-bottom: 1.25rem;
-        font-size: 1.25rem;
-        line-height: 1.4;
-    }
-
+.search-container {
+    width: 100%;
 }
 
-/* RESPONSIVE ADJUSTMENTS */
+    .search-container form {
+        width: 100%;
+    }
+
+    .search-container .input-group {
+        width: 100%;
+    }
+
+    .search-container .form-control {
+        width: 100%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+.category-divider {
+    border: 0;
+    border-top: 2px solid #1d1d1d78; /* Puedes cambiar el color aquí */
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.inverted-hover {
+    background-color: #FF5733; /* Color de fondo normal */
+    color: white; /* Texto blanco */
+    border-color: #ffc107;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+    .inverted-hover:hover {
+        background-color: white; /* Fondo blanco al hacer hover */
+        color: #050505; /* Texto amarillo al hacer hover */
+        border-color: #ffc107;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra más prominente en hover */
+    }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 10px;
+}
+
+.products h3 {
+    color: black;
+    margin: 10px 0;
+    scroll-margin-top: 220px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.product {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+}
+
+    .product p {
+        color: #808080;
+        margin: 5px 0;
+        overflow-wrap: anywhere;
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+    .product h4 {
+        color: black;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin: 15px 0px 5px 0px;
+    }
+
+    .product img {
+        width: 80px;
+        height: 80px;
+        margin-left: 15px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+.cart {
+    background: #fff;
+    border: 1px solid #FF5733;
+    padding: 10px 20px 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    margin: 4px 2px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+}
+
+
+.container-categoria {
+    display: flex;
+    justify-content: center; /* Centra las categorías horizontalmente */
+    flex-wrap: wrap; /* Permite que las categorías se acomoden en varias líneas si es necesario */
+    gap: 10px; /* Espacio entre los enlaces */
+}
+
+    .container-categoria a {
+        margin: 5px; /* Espacio entre las categorías */
+    }
+
+/* Modal de Productos */
+
+.modal.show .modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Asegura que el modal se centre verticalmente */
+}
+
+.modal__content {
+    position: relative;
+    background: #fff;
+    width: 450px;
+    border-radius: 15px;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.product-select .back {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 1px 0 8px #3d3d3d66;
+    z-index: 1051; /* Asegúrate de que esté por encima del contenido del modal */
+    cursor: pointer; /* Asegura que el cursor cambie cuando esté sobre el botón */
+}
+
+.product-select .image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+.product-select .content .title h3 {
+    margin: 5px 0;
+}
+.product-details .descripcion {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0px 0px 35px 25px;
+    color: #757575;
+    text-align: left;
+}
+
+.button-minus, .button-plus {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.contenedor-button {
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    box-shadow: 1px 0 8px #6b6b6b66;
+}
+
+/* Eliminar flechas en el input de tipo number en todos los navegadores */
+input.cantidad {
+    -webkit-appearance: none; /* Chrome, Safari, Opera */
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none; /* Estándar para otros navegadores */
+    border: none;
+    outline: none;
+    padding: 0;
+    text-align: center;
+}
+
+    /* Eliminar las flechas en Chrome y otros navegadores basados en Webkit */
+    input.cantidad::-webkit-outer-spin-button,
+    input.cantidad::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+
+
+.add-to-cart {
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+textarea.form-control {
+    width: 100%;
+}
+
+/* Estilo por defecto para pantallas grandes (por encima de 1080px) */
+.menu {
+    display: block; /* El menú de productos se muestra */
+}
+
+.orden-container {
+    display: block; /* El pedido se muestra normalmente */
+}
+
+
+.floating-button-container {
+    background-color: white; /* Fondo blanco */
+    padding: 10px 0;
+    position: relative; /* Relativo para mantenerlo dentro del contenedor */
+    border-top: 1px solid #ddd; /* Línea divisoria para separar el botón */
+    width: 100%;
+}
+
+
+.floating-button {
+    display: block;
+    width: 100%; /* Abarca todo el ancho del contenedor */
+    padding: 15px;
+    font-size: 18px;
+    background-color: #FF6347; /* Color de fondo del botón */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Media query para pantallas pequeñas (por debajo de 1080px) */
+@media (max-width: 1080px) {
+    /* Mostrar el menú de productos en pantallas pequeñas */
+    .menu {
+        display: block; /* El menú de productos se muestra */
+        width: 100%; /* Aseguramos que ocupe todo el ancho de la pantalla */
+        padding: 0; /* Quitamos cualquier espaciado */
+    }
+
+    /* Eliminar cualquier grid o espaciado del contenedor */
+    .content {
+        margin: -50px 70px 15px;
+        padding: 40px 50px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 9px #a1999980;
+        background: linear-gradient(to bottom, #ffffff, #e9e9e9);
+        display: block;
+    }
+
+    /* Ocultar el pedido en pantallas pequeñas */
+    .orden-container {
+        display: none; /* El pedido se oculta en pantallas pequeñas */
+    }
+
+    /* Hacer el botón fijo solo dentro del contenedor del menú */
+    .floating-button-container {
+        position: -webkit-sticky; /* Para navegadores Webkit */
+        position: sticky; /* El botón se queda pegado en la parte inferior */
+        bottom: 0; /* Se pega al fondo de la pantalla */
+        left: 0;
+        width: 100%; /* Abarca todo el ancho */
+        z-index: 10; /* Asegura que el botón esté encima de otros elementos */
+    }
+
+    .floating-button {
+        width: 100%; /* El botón ocupa todo el ancho */
+        padding: 15px;
+    }
+
+        /* Hacer que el botón flotante sea más visible */
+        .floating-button:hover {
+            background-color: #cf4325;
+        }
+}
+
+
+
+
 /* Adjustments for screens 1280px or smaller */
 @media (max-width: 1280px) {
     .container-categ,
-    .container-main {
+    .container-main,
+    .container {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
         margin-bottom: 1.5rem;
@@ -197,7 +684,7 @@ body {
     }
 
     .carousel-item {
-        max-height: 500px;
+        height: 28rem; /* Ajusta la altura para pantallas medianas */
     }
 
     .carousel {
@@ -205,17 +692,27 @@ body {
     }
 }
 
-/* Adjustments for medium screens */
+/* Adjustments for screens 768px or smaller */
 @media (max-width: 768px) {
     .container-categ,
-    .container-main {
+    .container-main,
+    .container {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
         margin-bottom: 1.5rem;
     }
 
+    .contact-info {
+        font-size: 0.85em;
+    }
+
     .carousel-item {
-        max-height: 450px;
+        height: 24rem; /* Ajusta la altura para pantallas pequeñas */
+    }
+
+    .carousel-caption {
+        font-size: 0.9rem;
+        padding: 1rem;
     }
 
     .carousel {
@@ -223,10 +720,11 @@ body {
     }
 }
 
-/* Adjustments for small screens */
+/* Adjustments for screens 576px or smaller */
 @media (max-width: 576px) {
     .container-categ,
-    .container-main {
+    .container-main,
+    .container {
         padding-left: 0.5rem;
         padding-right: 0.5rem;
         margin-bottom: 1rem;
@@ -235,46 +733,23 @@ body {
     .contact-info {
         flex-direction: column;
         gap: 10px;
+        font-size: 0.8em;
     }
 
     .carousel-item {
-        max-height: 300px;
+        height: 20rem; /* Ajusta la altura para pantallas muy pequeñas */
+    }
+
+    .carousel-caption {
+        font-size: 0.8rem;
+        padding: 0.8rem;
     }
 
     .carousel {
         padding: 0 5px;
     }
-}
 
-/* .container adjustments */
-.container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-bottom: 2rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-@media (max-width: 1280px) {
-    .container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .container {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        margin-bottom: 1rem;
+    .grid-container {
+        grid-template-columns: 1fr; /* Solo una columna */
     }
 }
