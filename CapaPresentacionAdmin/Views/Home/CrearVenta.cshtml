@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "CrearVenta";
 }
 <div class="modal-body mt-3">
@@ -10,7 +9,6 @@
         <label for="selectCliente" class="form-label">Seleccionar Cliente</label>
         <select id="selectCliente" class="form-select">
             <option value="">Seleccione un Cliente</option>
-            <!-- Opciones de clientes serán llenadas por JavaScript -->
         </select>
     </div>
 
@@ -19,34 +17,39 @@
         <label for="selectLocalidad" class="form-label">Seleccionar Localidad</label>
         <select id="selectLocalidad" class="form-select">
             <option value="">Seleccione una Localidad</option>
-            <!-- Opciones de localidades serán llenadas por JavaScript -->
         </select>
     </div>
 
     <!-- Seleccionar Producto -->
     <div class="mb-3">
-        <label for="selectProducto" class="form-label">Seleccionar Productos</label>
+        <label for="selectProducto" class="form-label">Seleccionar Producto</label>
         <select id="selectProducto" class="form-select">
             <option value="">Seleccione un Producto</option>
-            <!-- Opciones de productos serán llenadas por JavaScript -->
         </select>
     </div>
 
     <!-- Cantidad de Productos -->
     <div class="mb-3">
-        <label for="txtTotalProductos" class="form-label">Total de Productos</label>
-        <input type="number" class="form-control" id="txtTotalProductos" min="1" value="1">
+        <label for="txtCantidad" class="form-label">Cantidad</label>
+        <input type="number" class="form-control" id="txtCantidad" min="1" value="1">
     </div>
 
+    <!-- Botón para agregar producto -->
     <div class="mb-3">
-        <!-- Título para el campo Total Pago -->
+        <button type="button" class="btn btn-secondary" onclick="agregarProductoSeleccionado()">Agregar Producto</button>
+    </div>
+
+    <!-- Total Pago -->
+    <div class="mb-3">
         <label for="visibleTotalPago" class="form-label">Total Pago</label>
-
-        <!-- Input visible para mostrar el total al usuario -->
         <input type="text" id="visibleTotalPago" class="form-control" readonly />
-
-        <!-- Input oculto para almacenar el valor a enviar al servidor -->
         <input type="hidden" id="hiddenTotalPago" name="hiddenTotalPago" />
+    </div>
+
+    <!-- Listado de Productos Seleccionados -->
+    <div class="mb-3">
+        <h6>Productos Seleccionados:</h6>
+        <ul id="listaProductosSeleccionados"></ul>
     </div>
 
     <!-- Botón para crear venta -->
@@ -55,46 +58,27 @@
     </div>
 </div>
 
-@section scripts{
+@section scripts {
     <script>
+        var productosSeleccionados = []; // Array para almacenar productos seleccionados
+
         $(document).ready(function () {
             cargarProductos();
             cargarLocalidades();
-            cargarClientes(); // Cargar clientes primero
-
-            // Preseleccionar el último cliente si existe en el ViewBag
-            var ultimoClienteId = '@ViewBag.UltimoClienteId';
-            if (ultimoClienteId) {
-                $("#selectCliente").val(ultimoClienteId);
-            }
-            var ultimaLocalidadId = '@ViewBag.UltimaLocalidadId';
-            if (ultimaLocalidadId) {
-                $("#selectLocalidad").val(ultimaLocalidadId);
-            }
-
-            $("#selectProducto, #txtTotalProductos").on('change', calcularTotalPago);
+            cargarClientes();
         });
 
         function cargarClientes() {
             $.ajax({
-                url: '@Url.Action("ListarClientes", "Home")', // URL para obtener la lista de clientes
+                url: '@Url.Action("ListarClientes", "Home")',
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
-                    // Limpiar el select antes de agregar opciones
                     $("#selectCliente").empty();
                     $("#selectCliente").append('<option value="">Seleccione un Cliente</option>');
-
-                    // Iterar sobre la lista de clientes y añadir opciones al select
                     $.each(response.data, function (index, item) {
                         $("<option>").attr({ "value": item.Id_Cliente }).text(item.Nombre).appendTo("#selectCliente");
                     });
-
-                    // Preseleccionar el cliente si hay uno guardado en el ViewBag
-                    var ultimoClienteId = '@ViewBag.UltimoClienteId';
-                    if (ultimoClienteId) {
-                        $("#selectCliente").val(ultimoClienteId);
-                    }
                 },
                 error: function (error) {
                     console.log("Error al cargar clientes:", error);
@@ -104,101 +88,124 @@
 
         function cargarLocalidades() {
             $.ajax({
-                url: '@Url.Action("ListarLocalidad", "Home")', // URL para obtener la lista de clientes
+                url: '@Url.Action("ListarLocalidad", "Home")',
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
-                    // Limpiar el select antes de agregar opciones
                     $("#selectLocalidad").empty();
                     $("#selectLocalidad").append('<option value="">Seleccione una Localidad</option>');
-
-                    // Iterar sobre la lista de clientes y añadir opciones al select
                     $.each(response.data, function (index, item) {
                         $("<option>").attr({ "value": item.Id_Localidad }).text(item.Barrio).appendTo("#selectLocalidad");
                     });
-
-                    // Preseleccionar el cliente si hay uno guardado en el ViewBag
-                    var ultimaLocalidadId = '@ViewBag.UltimaLocalidadId';
-                    if (ultimaLocalidadId) {
-                        $("#selectLocalidad").val(ultimaLocalidadId);
-                    }
                 },
                 error: function (error) {
-                    console.log("Error al cargar Localidades:", error);
+                    console.log("Error al cargar localidades:", error);
                 }
             });
         }
 
-
         function cargarProductos() {
-        jQuery.ajax({
-            url: '@Url.Action("ListarProducto", "Mantenedor")',
-            type: "GET",
-            data: null,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $.each(data.data, function (index, item) {
-                    $("<option>").attr({ "value": item.Id_Producto, "data-precio": item.Precio }).text(item.Nombre).appendTo("#selectProducto")
-                })
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        });
+            $.ajax({
+                url: '@Url.Action("ListarProducto", "Mantenedor")',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data.data, function (index, item) {
+                        $("<option>")
+                            .attr({ "value": item.Id_Producto, "data-precio": item.Precio })
+                            .text(item.Nombre)
+                            .appendTo("#selectProducto");
+                    });
+                },
+                error: function (error) {
+                    console.log("Error al cargar productos:", error);
+                }
+            });
         }
 
-        function calcularTotalPago() {
+        function agregarProductoSeleccionado() {
+            var productoId = $("#selectProducto").val();
+            var productoNombre = $("#selectProducto option:selected").text();
             var precioProducto = parseFloat($("#selectProducto option:selected").data('precio')) || 0;
-            var cantidad = parseInt($("#txtTotalProductos").val()) || 1;
-            var totalPago = precioProducto * cantidad;
+            var cantidad = parseInt($("#txtCantidad").val()) || 1;
 
-            $("#visibleTotalPago").val(totalPago.toFixed(2)); // Mostrar el total en el campo de texto visible
-            $("#hiddenTotalPago").val(totalPago.toFixed(2));  // Guardar el total en el input oculto
+            if (!productoId || cantidad <= 0) {
+                alert("Seleccione un producto válido y una cantidad mayor a 0.");
+                return;
+            }
+
+            // Verificar si el producto ya fue seleccionado
+            var productoExistente = productosSeleccionados.find(p => p.Id_Producto === parseInt(productoId));
+            if (productoExistente) {
+                productoExistente.Cantidad += cantidad; // Actualizar la cantidad
+                productoExistente.Subtotal += precioProducto * cantidad; // Actualizar el subtotal
+            } else {
+                // Agregar nuevo producto
+                productosSeleccionados.push({
+                    Id_Producto: parseInt(productoId),
+                    Nombre: productoNombre,
+                    Precio: precioProducto,
+                    Cantidad: cantidad,
+                    Subtotal: precioProducto * cantidad
+                });
+            }
+
+            actualizarListadoProductos();
+        }
+
+        function actualizarListadoProductos() {
+            var totalPago = 0;
+            $("#listaProductosSeleccionados").empty(); // Limpiar la lista visual
+
+            productosSeleccionados.forEach(producto => {
+                totalPago += producto.Subtotal;
+
+                // Mostrar cada producto en la lista
+                $("#listaProductosSeleccionados").append(
+                    `<li>${producto.Nombre} - Cantidad: ${producto.Cantidad} - Precio: $${producto.Precio.toFixed(2)} - Subtotal: $${producto.Subtotal.toFixed(2)}</li>`
+                );
+            });
+
+            // Actualizar el total acumulado
+            $("#visibleTotalPago").val(totalPago.toFixed(2));
+            $("#hiddenTotalPago").val(totalPago.toFixed(2));
         }
 
         function crearVenta() {
-            var idVenta = 0;
             var idCliente = $("#selectCliente").val();
             var idLocalidad = $("#selectLocalidad").val();
-            var idProducto = $("#selectProducto").val();
-            var totalProductos = $("#txtTotalProductos").val();
-            var fechaVenta = new Date().toISOString();
             var totalPago = parseFloat($("#hiddenTotalPago").val()) || 0;
 
-            // Validar que los campos obligatorios estén llenos
-            if (!idCliente || !idLocalidad || !idProducto || totalProductos <= 0) {
+            if (!idCliente || !idLocalidad || productosSeleccionados.length === 0) {
                 alert("Por favor, complete todos los campos obligatorios.");
                 return;
             }
 
-            var venta = {
-                oCliente: { Id_Cliente: parseInt(idCliente) },
-                oLocalidad: { Id_Localidad: parseInt(idLocalidad) },
-                oProducto: { Id_Producto: parseInt(idProducto) },
-                Total_Productos: parseInt(totalProductos),
-                Fecha_Venta: fechaVenta,
-                Total_Pago: parseFloat(totalPago)
+            var ventaViewModel = {
+                Id_Cliente: parseInt(idCliente),
+                Id_Localidad: parseInt(idLocalidad),
+                Productos: productosSeleccionados,
+                Fecha_Venta: new Date().toISOString(),
+                Total_Pago: totalPago
             };
 
             $.ajax({
                 url: '@Url.Action("RegistrarVenta", "Home")',
-                type: 'POST',
-                data: JSON.stringify({ venta: venta }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
+                type: "POST",
+                data: JSON.stringify(ventaViewModel),
+                contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert("Venta creada con éxito.");
+                        alert(response.message);
+                        location.reload();
                     } else {
-                        alert("Error al crear la venta: " + response.message);
+                        alert("Error al registrar la venta.");
                     }
                 },
                 error: function (error) {
-                    console.log("Error en la solicitud AJAX:", error);
+                    console.log("Error al registrar la venta:", error);
                 }
             });
         }
-
     </script>
 }

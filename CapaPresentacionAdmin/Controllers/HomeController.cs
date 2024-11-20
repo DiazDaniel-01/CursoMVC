@@ -95,7 +95,8 @@ namespace CapaPresentacionAdmin.Controllers
         }
 
         [HttpPost]
-        public JsonResult EliminarUsuario(int id) { 
+        public JsonResult EliminarUsuario(int id)
+        {
             bool respuesta = false;
             string mensaje = string.Empty;
 
@@ -119,7 +120,8 @@ namespace CapaPresentacionAdmin.Controllers
 
 
         [HttpGet]
-        public JsonResult VistaDashBoard() { 
+        public JsonResult VistaDashBoard()
+        {
             DashBoard objeto = new CN_Reporte().VerDashBoard();
 
 
@@ -259,50 +261,44 @@ namespace CapaPresentacionAdmin.Controllers
 
 
 
+        public class ProductoVenta
+        {
+            public int Id_Producto { get; set; }
+            public int Cantidad { get; set; }
+        }
+
+        public class Venta
+        {
+            public int Id_Venta { get; set; }
+            public Cliente oCliente { get; set; }
+            public Localidad oLocalidad { get; set; }
+            public List<ProductoVenta> productos { get; set; } = new List<ProductoVenta>();  // Inicializa la lista
+            public DateTime Fecha_Venta { get; set; }
+            public decimal Total_Pago { get; set; }
+        }
+
 
         [HttpPost]
-        public JsonResult RegistrarVenta(Venta venta)
+        public ActionResult RegistrarVenta(VentaViewModel ventaViewModel)
         {
-            string mensaje = string.Empty;
-
-            // Verificar que el objeto Venta y sus sub-objetos no sean nulos
-            if (venta == null)
-    {
-                return Json(new { success = false, message = "Error: Algunos datos obligatorios están incompletos." });
-            }
-
-            // Realizar lógica de inserción solo si es una nueva venta (Id_Venta == 0)
-            if (venta.Id_Venta == 0)
+            if (ModelState.IsValid)
             {
-                try
-                {
-                    // Registrar la venta
-                    var resultado = new CN_VentaExterna().RegistrarVenta(venta, out mensaje);
+                // Aquí realizas el proceso de registrar la venta con los datos recibidos en el ViewModel
+                // Ejemplo de cómo acceder a los valores
+                int idCliente = ventaViewModel.Id_Cliente;
+                int idLocalidad = ventaViewModel.Id_Localidad;
+                decimal totalPago = ventaViewModel.Total_Pago;
+                List<Producto> productos = ventaViewModel.Productos;
 
-                    // Verificar si la operación fue exitosa
-                    if (resultado is int nuevaVentaId && nuevaVentaId > 0)
-                    {
-                        return Json(new { success = true, message = "Venta creada con éxito.", nuevaVentaId });
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Error al registrar la venta: " + mensaje });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Capturar y devolver cualquier error que ocurra durante la inserción
-                    return Json(new { success = false, message = "Excepción al registrar la venta: " + ex.Message });
-                }
+                // Realiza el registro en la base de datos o la lógica que necesites
+
+                return Json(new { success = true, message = "Venta registrada con éxito." });
             }
             else
             {
-                // Si el Id_Venta es distinto de 0, significa que ya existe y se ignora la operación
-                return Json(new { success = false, message = "La venta ya existe y no se puede registrar de nuevo." });
+                return Json(new { success = false, message = "Datos incorrectos." });
             }
         }
-
-        #endregion
-
     }
 }
+#endregion
