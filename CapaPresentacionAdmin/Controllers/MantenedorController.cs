@@ -126,35 +126,33 @@ namespace CapaPresentacionAdmin.Controllers
             {
                 if (archivoImagen != null)
                 {
-                    // Obtiene la ruta física donde se guardarán las imágenes
-                    string ruta_guardar = Server.MapPath(ConfigurationManager.AppSettings["ServidorFotos"]);
+                    string ruta_guardar = ConfigurationManager.AppSettings["ServidorFotos"];
                     string extension = Path.GetExtension(archivoImagen.FileName);
                     string nombre_imagen = string.Concat(oProducto.Id_Producto.ToString(), extension);
 
+
                     try
                     {
-                        // Guarda la imagen en la ruta especificada
                         archivoImagen.SaveAs(Path.Combine(ruta_guardar, nombre_imagen));
                     }
                     catch (Exception ex)
                     {
-                        // Manejo de excepciones
                         string msg = ex.Message;
                         guardar_imagen_exito = false;
                     }
 
                     if (guardar_imagen_exito)
                     {
-                        // Si la imagen se guardó correctamente, actualiza los datos del producto
-                        oProducto.Ruta_Imagen = Path.Combine(ConfigurationManager.AppSettings["ServidorFotos"], nombre_imagen);
-                        oProducto.Nombre_Imagen = nombre_imagen;
 
-                        // Guarda los datos del producto
+                        oProducto.Ruta_Imagen = ruta_guardar;
+                        oProducto.Nombre_Imagen = nombre_imagen;
                         bool rspta = new CN_Producto().GuardarDatosImagen(oProducto, out mensaje);
+
                     }
                     else
                     {
-                        mensaje = "Se guardó el producto, pero hubo problemas con la imagen";
+                        mensaje = "Se guardo el producto pero hubo problemas con la imagen";
+
                     }
                 }
             }
@@ -165,26 +163,22 @@ namespace CapaPresentacionAdmin.Controllers
         [HttpPost]
         public JsonResult ImagenProducto(int id)
         {
-            Producto oproducto = new CN_Producto().Listar().FirstOrDefault(p => p.Id_Producto == id);
+            bool conversion;
+            Producto oproducto = new CN_Producto().Listar().Where(p => p.Id_Producto == id).FirstOrDefault();
 
-            // Verifica que se haya encontrado el producto
-            if (oproducto == null)
-            {
-                return Json(new
-                {
-                    conversion = false,
-                    mensaje = "Producto no encontrado"
-                }, JsonRequestBehavior.AllowGet);
-            }
+            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oproducto.Ruta_Imagen, oproducto.Nombre_Imagen), out conversion);
 
-            // Retorna el nombre de la imagen y la información necesaria
+
             return Json(new
             {
-                conversion = true,
-                nombreImagen = oproducto.Nombre_Imagen, // Asegúrate de que este campo contenga el nombre del archivo
+                conversion = conversion,
+                textoBase64 = textoBase64,
                 extension = Path.GetExtension(oproducto.Nombre_Imagen)
+
             },
-            JsonRequestBehavior.AllowGet);
+            JsonRequestBehavior.AllowGet
+            );
+
         }
 
 

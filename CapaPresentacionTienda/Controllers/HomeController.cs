@@ -40,7 +40,7 @@ namespace CapaPresentacionTienda.Controllers
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult ListarTodosProductos()
         {
             CN_Producto objCN_Producto = new CN_Producto();

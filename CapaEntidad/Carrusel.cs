@@ -10,8 +10,8 @@ namespace CapaEntidad
     public class Carrusel
     {
         public int Id_Carrusel { get; set; }
-        public Oferta oOferta { get; set; }
-        public Producto oProducto { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
         public bool Activo { get; set; }
     }
 }

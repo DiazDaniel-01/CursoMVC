@@ -64,35 +64,59 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-
-
     </div>
     <br />
     <br />
     <section class="mx-auto">
-        <!-- Barra de búsqueda -->
-        <div class="search-container text-center mb-4">
-            <form class="d-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar productos..." aria-label="Buscar productos..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-
         <!-- Botones de categorías como enlaces de ancla -->
-        <div class="container">
-            <!-- Contenedor para las categorías -->
-            <div id="contenedor_categoria" class="mb-4">
-                <h2 class="fw-bold">Categorías</h2>
-                <!-- Las categorías se agregarán dinámicamente aquí -->
-            </div>
+        <div class="content">
+            <div class="menu">
+                <!-- Barra de búsqueda -->
+                <div class="search-container text-center mb-4">
+                    <form class="d-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="productSearch" placeholder="Buscar productos..." aria-label="Buscar productos..." aria-describedby="btnNavbarSearch" autocomplete="off" />
+                        </div>
+                    </form>
+                </div>
+                <!-- Contenedor para las categorías -->
+                <div id="contenedor_categoria" class="container-categoria mb-4">
+                    <h2 class="fw-bold">Categorías</h2>
+                    <!-- Las categorías se agregarán dinámicamente aquí -->
+                </div>
+                <div class="no-product-message" style="display:none;">No se encontró el producto</div>
+                <!-- Contenedor para productos agrupados por categorías -->
+                <div id="contenedor_secciones_producto">
+                    <!-- Las secciones de productos por categoría se agregarán dinámicamente aquí -->
+                </div>
+                <!-- Botón flotante dentro del menu -->
+                <div class="floating-button-container">
+                    <button class="floating-button add-to-cart" id="continueButton">Continuar</button>
+                </div>
 
-            <!-- Contenedor para productos agrupados por categorías -->
-            <div id="contenedor_secciones_producto">
-                <!-- Las secciones de productos por categoría se agregarán dinámicamente aquí -->
+            </div>
+            <div class="orden-container">
+                <div class="orden">
+                    <h2>Mi pedido</h2>
+                    <div class="additions">
+                        <!-- Los productos se agregarán dinámicamente aquí -->
+                    </div>
+                    <div class="order-summary">
+                        <h3>Resumen</h3>
+                        <div class="item subtotal">
+                            <p>Subtotal</p>
+                            <span id="subtotal">$&nbsp;0.00</span>
+                        </div>
+                        <hr>
+                        <div class="item total">
+                            <h3>Total</h3>
+                            <span id="total">$&nbsp;0.00</span>
+                        </div>
+                    </div>
+                    <div class="action">
+                        <button class="add-to-cart">Continuar</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -104,115 +128,461 @@
 @section scripts{
 
     <script>
+    document.getElementById('continueButton').addEventListener('click', function () {
+        // Desplazar la página hacia la sección de "Mi Pedido"
+        document.querySelector('.orden-container').scrollIntoView({ behavior: 'smooth' });
+    });
 
-        //funciona todo ahora voy por reparar detalle
-        $(document).ready(function() {
-            MostrarCategoria();
+    $(document).ready(function () {
+        MostrarCategoria();
+        MostrarProductos();
+        // Filtro en tiempo real
+        $("#productSearch").on("input", function () {
+            var searchQuery = $(this).val().toLowerCase(); // Obtener el texto de búsqueda en minúsculas
+            filtrarProductos(searchQuery);
+        });
+        // Decrementar cantidad
+        $("#decreaseQuantity").click(function () {
+            var input = $("#quantityInput");
+            var currentValue = parseInt(input.val());
+
+            // Asegurarse de que el valor no sea menor que el mínimo (1)
+            if (currentValue > 1) {
+                input.val(currentValue - 1);
+            }
         });
 
-        function MostrarCategoria() {
-            jQuery.ajax({
-                url: '@Url.Action("ListaCategorias", "Home")',
-                type: "GET",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function(response) {
-                    $("#contenedor_categoria").LoadingOverlay("hide");
-                    $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
+        // Incrementar cantidad
+        $("#increaseQuantity").click(function () {
+            var input = $("#quantityInput");
+            var currentValue = parseInt(input.val());
 
-                    // Generar enlaces de categorías
+            // Incrementar el valor
+            input.val(currentValue + 1);
+        });
+
+        // Evento al hacer clic en un producto para abrir el modal
+        $(document).on('click', '.product-card', function () {
+            // Obtener datos del producto
+            const productName = $(this).find('.product-name').text();
+            const productDescription = $(this).find('p').text();
+            const productPrice = $(this).find('.cart').text();
+            const productImage = $(this).find('img').attr('src');
+
+            // Rellenar los datos en el modal
+            $('#productName').text(productName);
+            $('#productPrice').text(productPrice);
+            $('#productDescription').text(productDescription);
+            $('#productImage').attr('src', productImage);
+
+            // Restablecer valores predeterminados
+            $('#quantityInput').val(1);
+            $('#productComment').val('');
+
+            // Abrir el modal
+            $('#productModal').modal('show');
+        });
+    });
+
+    //Funcionalidad del Carrito
+        // Variables globales
+        // Inicializa el ID del carrito
+        let idCarrito = 0;
+        // Lista para almacenar los productos del carrito
+        let productosEnCarrito = [];
+
+        // Función para abrir el modal del producto
+        function abrirModalProducto(producto) {
+            // Comprobar que el objeto producto tenga las propiedades necesarias
+            if (!producto || !producto.nombre || !producto.precio) {
+                console.error("El objeto producto no tiene las propiedades esperadas:", producto);
+                return; // Detén la ejecución si el objeto no es válido
+            }
+
+            // Configurar los datos del producto en el modal
+            document.querySelector('#productName').innerText = producto.nombre;
+            document.querySelector('#productDescription').innerText = producto.descripcion;
+            document.querySelector('#productPrice').innerText = `$ ${producto.precio}`;
+            document.querySelector('#productImage').src = producto.imagen;
+
+            // Ajustar cantidad inicial y comentario
+            document.querySelector('#quantityInput').value = 1;
+            document.querySelector('#productComment').value = '';
+
+            // Guardar temporalmente el producto actual para usarlo en el carrito
+            window.productoSeleccionado = producto;
+
+            // Mostrar el modal
+            $('#productModal').modal('show');
+        }
+
+        // Función para agregar el producto al carrito
+        function agregarProductoAlCarrito() {
+            // Obtener datos del producto seleccionado
+            const producto = window.productoSeleccionado;
+            const cantidad = parseInt(document.querySelector('#quantityInput').value);
+            const comentario = document.querySelector('#productComment').value;
+
+            // Buscar si el producto ya existe en el carrito
+            const productoExistente = productosEnCarrito.find(item => item.nombre === producto.nombre);
+
+            if (productoExistente) {
+                // Si ya existe, actualiza la cantidad y el comentario
+                productoExistente.cantidad += cantidad;
+                productoExistente.comentario = comentario;
+                productoExistente.subtotal = productoExistente.precio * productoExistente.cantidad;
+            } else {
+                // Si no existe, crear un nuevo producto en el carrito
+                idCarrito++; // Incrementa el ID del carrito
+                const nuevoProducto = {
+                    id: idCarrito,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: cantidad,
+                    comentario: comentario,
+                    subtotal: producto.precio * cantidad
+                };
+                productosEnCarrito.push(nuevoProducto);
+            }
+
+            // Actualizar la vista del carrito
+            actualizarCarrito();
+            // Cerrar el modal
+            $('#productModal').modal('hide');
+        }
+
+        // Función para actualizar la vista del carrito
+        function actualizarCarrito() {
+            const contenedorCarrito = document.querySelector('.additions');
+            contenedorCarrito.innerHTML = ''; // Limpiar el contenido actual
+
+            let totalPago = 0;
+
+            // Agregar cada producto en el carrito al contenedor
+            productosEnCarrito.forEach((producto, index) => {
+                // Crear el contenedor de un producto en el carrito
+                const divProducto = document.createElement('div');
+                divProducto.className = 'producto-carrito';
+                divProducto.innerHTML = `
+            <p><strong>${producto.nombre}</strong></p>
+            <p>Comentario: ${producto.comentario}</p>
+            <p>Precio: $ ${producto.precio}</p>
+            <p>Cantidad: ${producto.cantidad}</p>
+            <p>Subtotal: $ ${producto.subtotal}</p>
+            <button onclick="editarProducto(${index})" class="edit-button">Editar</button>
+        `;
+
+                // Agregar el producto al contenedor del carrito
+                contenedorCarrito.appendChild(divProducto);
+                // Calcular el total del pago
+                totalPago += producto.subtotal;
+            });
+
+            // Actualizar el subtotal y el total
+            document.querySelector('#subtotal').innerText = `$ ${totalPago.toFixed(2)}`;
+            document.querySelector('#total').innerText = `$ ${totalPago.toFixed(2)}`;
+        }
+
+        // Función para editar un producto en el carrito
+        function editarProducto(index) {
+            const producto = productosEnCarrito[index];
+
+            // Abrir el modal con la información del producto a editar
+            abrirModalProducto(producto);
+
+            // Actualizar el modal con la cantidad y comentario actuales
+            document.querySelector('#quantityInput').value = producto.cantidad;
+            document.querySelector('#productComment').value = producto.comentario;
+
+            // Reemplazar la función de agregar con una de edición
+            document.querySelector('#addToOrderButton').onclick = function () {
+                actualizarProductoEnCarrito(index);
+            };
+        }
+
+        // Función para actualizar un producto en el carrito
+        function actualizarProductoEnCarrito(index) {
+            const cantidad = parseInt(document.querySelector('#quantityInput').value);
+            const comentario = document.querySelector('#productComment').value;
+
+            if (cantidad <= 0) {
+                alert("La cantidad debe ser mayor a 0");
+                return;
+            }
+
+            // Actualizar el producto en la lista del carrito
+            productosEnCarrito[index].cantidad = cantidad;
+            productosEnCarrito[index].comentario = comentario;
+            productosEnCarrito[index].subtotal = productosEnCarrito[index].precio * cantidad;
+
+            // Actualizar la vista del carrito
+            actualizarCarrito();
+            // Cerrar el modal
+            $('#productModal').modal('hide');
+        }
+
+        // Asigna la función al botón de agregar en el modal
+        document.querySelector('#addToOrderButton').onclick = agregarProductoAlCarrito;
+
+
+    //Fin funcionalidad del Carrito
+
+    //Funcionalidad al cambiar de tamaño 1080px
+    document.addEventListener('DOMContentLoaded', function () {
+        // Elementos HTML relevantes
+        const continueButton = document.getElementById('continueButton');
+        const ordenContainer = document.querySelector('.orden-container');
+        const menu = document.querySelector('.menu');
+        const content = document.querySelector('.content');
+
+        // Detectar cambio de tamaño de pantalla para mostrar u ocultar el botón flotante
+        function checkScreenSize() {
+            if (window.innerWidth >= 1080) {
+                // Mostrar botón flotante en pantallas grandes
+                continueButton.classList.add('show-floating-button');
+            } else {
+                // Ocultar contenedor de orden y botón flotante en pantallas pequeñas
+                ordenContainer.classList.remove('show-order');
+                continueButton.classList.remove('show-floating-button');
+            }
+        }
+
+        // Función para mostrar la sección "Mi Pedido"
+        function showOrder() {
+            // Ocultar el menú y mostrar el contenedor de orden
+            menu.style.display = 'none';
+            ordenContainer.classList.add('show-order');
+        }
+
+        // Evento de clic en el botón "Continuar"
+        continueButton.addEventListener('click', function () {
+            showOrder();
+        });
+
+        // Revisa el tamaño de la pantalla al cargar la página
+        checkScreenSize();
+
+        // Revisa el tamaño de la pantalla al redimensionar la ventana
+        window.addEventListener('resize', checkScreenSize);
+    });
+    //Fin de funcionalidad
+
+
+
+    // Función para eliminar un producto del carrito
+    function deleteProduct(index) {
+        cartItems.splice(index, 1);
+        updateCartDisplay();
+    }
+
+    // Agregar evento de clic para botones de editar y eliminar
+    // Agregar evento de clic para botones de editar y eliminar
+    function attachEventListeners() {
+        document.querySelectorAll('.btn-edit').forEach((editBtn, index) => {
+            editBtn.addEventListener('click', function () {
+                openEditModal(index); // Abre el modal en modo edición
+            });
+        });
+
+        document.querySelectorAll('.btn-tacho').forEach((deleteBtn, index) => {
+            deleteBtn.addEventListener('click', function () {
+                deleteProduct(index); // Elimina el producto del carrito
+            });
+        });
+    }
+
+
+
+    function filtrarProductos(query) {
+        let foundProduct = false; // Variable para saber si hay productos que coinciden
+
+        // Filtrar productos
+        $(".product-card").each(function () {
+            var productName = $(this).find(".product-name").text().toLowerCase();
+            if (productName.includes(query.toLowerCase())) {
+                $(this).show(); // Mostrar producto si coincide
+                foundProduct = true;
+            } else {
+                $(this).hide(); // Ocultar producto si no coincide
+            }
+        });
+
+        // Si no hay búsqueda, mostrar todo
+        if (query === "") {
+            $(".product-card").show(); // Mostrar todos los productos
+            $(".category-container").show(); // Mostrar todas las categorías
+            $(".category-divider").show(); // Mostrar los hr
+            return;
+        }
+
+        // Ocultar categorías sin productos visibles
+        $(".category-container").each(function () {
+            var categoryHasVisibleProducts = $(this).find(".product-card:visible").length > 0;
+            if (!categoryHasVisibleProducts) {
+                $(this).hide(); // Ocultar categoría si no tiene productos visibles
+                $(this).next(".category-divider").hide(); // Ocultar el hr correspondiente
+            } else {
+                $(this).show(); // Mostrar categoría si tiene productos visibles
+                $(this).next(".category-divider").show(); // Mostrar el hr correspondiente
+            }
+        });
+    }
+
+    function MostrarCategoria() {
+        jQuery.ajax({
+            url: '@Url.Action("ListaCategorias", "Home")',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(response) {
+                $("#contenedor_categoria").LoadingOverlay("hide");
+                $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
+
+                // Generar enlaces de categorías
+                $.each(response.data, function(i, element) {
+                    $("<a>")
+                        .addClass("btn btn-outline-warning m-1 inverted-hover")
+                        .text(element.Nombre)
+                        .attr("href", "#categoria_" + element.Id_Categoria)
+                        .on("click", function(e) {
+                            e.preventDefault();
+
+                            // Desplazar al título de la categoría
+                            var categoryTitle = $("#categoria_" + element.Id_Categoria);
+                            if (categoryTitle.length) {
+                                categoryTitle[0].scrollIntoView({ behavior: "smooth" });
+                            }
+                        })
+                        .appendTo("#contenedor_categoria");
+                });
+
+                // Mostrar todos los productos en secciones al cargar
+                //MostrarProductoporCategoria();
+            },
+            beforeSend: function() {
+                $("#contenedor_categoria").LoadingOverlay("show");
+            }
+        });
+    }
+
+
+    function MostrarProductos() {
+        jQuery.ajax({
+            url: '@Url.Action("ListarTodosProductos", "Home")',
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                $("#contenedor_secciones_producto").LoadingOverlay("hide");
+                $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
+
+                // Verificar si hay productos para mostrar
+                if (response.data.length > 0) {
+                    let currentCategory = null;
+                    let sectionContainer = null;
+
+                    // Iterar sobre productos para agruparlos por categoría
+                    var productsByCategory = {};
+
+                    // Agrupar productos por categoría
                     $.each(response.data, function(i, element) {
-                        $("<a>")
-                            .addClass("btn btn-outline-primary m-1")
-                            .text(element.Nombre)
-                            .attr("href", "#categoria_" + element.Id_Categoria)
-                            .on("click", function(e) {
-                                e.preventDefault();
-                                MostrarProductoporCategoria(element.Id_Categoria);
-                            })
-                            .appendTo("#contenedor_categoria");
+                        var categoryId = element.oCategoria.Id_Categoria;
+
+                        if (!productsByCategory[categoryId]) {
+                            productsByCategory[categoryId] = {
+                                categoryName: element.oCategoria.Nombre,
+                                products: []
+                            };
+                        }
+
+                        productsByCategory[categoryId].products.push(element);
                     });
 
-                    // Mostrar todos los productos en secciones al cargar
-                    MostrarProductoporCategoria();
-                },
-                beforeSend: function() {
-                    $("#contenedor_categoria").LoadingOverlay("show");
-                }
-            });
-        }
+                    // Renderizar las categorías y productos
+                    $.each(productsByCategory, function (categoryId, categoryData) {
+                        var sectionContainer = $("<div>").attr("id", "categoria_" + categoryId).addClass("category-container products mb-5")
+                            .append($("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName));
 
-        function MostrarProductoporCategoria(idCategoria = 0) {
-            jQuery.ajax({
-                url: '@Url.Action("ListarProductoporCategorias", "Home")',
-                type: "POST",
-                data: JSON.stringify({ idcategoria: idCategoria }),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function(response) {
-                    $("#contenedor_secciones_producto").LoadingOverlay("hide");
-                    $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
+                        var rowContainer = $("<div>").addClass("grid-container"); // Usamos grid-container para los productos
+                        sectionContainer.append(rowContainer);
 
-                    // Verificar si hay productos para mostrar
-                    if (response.data.length > 0) {
-                        let currentCategory = null;
-                        let sectionContainer = null;
-
-                        // Iterar sobre productos para agruparlos por categoría
-                        $.each(response.data, function(i, element) {
-                            // Si cambia de categoría, crear nueva sección
-                            if (currentCategory !== element.Nombre_Categoria) {
-                                currentCategory = element.Nombre_Categoria;
-                                sectionContainer = $("<div>").attr("id", "categoria_" + element.Id_Categoria)
-                                    .addClass("mb-5")
-                                    .append($("<h3>").addClass("fw-bold").text(currentCategory));
-
-                                // Agregar la nueva sección al contenedor principal
-                                sectionContainer.appendTo("#contenedor_secciones_producto");
-                            }
-
-                            // Crear tarjeta de producto
-                            $("<div>").addClass("card h-100 mb-4")
+                        // Añadir productos a la fila
+                        $.each(categoryData.products, function (i, product) {
+                            var productCard = $("<div>").addClass("product product-card") // Usamos grid-item para cada producto
                                 .append(
-                                    $("<img>").addClass("card-img-top").attr("src", element.Ruta_Imagen),
-                                    $("<div>").addClass("card-body p-4").append(
-                                        $("<div>").addClass("text-center").append(
-                                            $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                            "$" + element.Precio.toFixed(2) + " PESO"
-                                        )
-                                    ),
-                                    $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
-                                        $("<div>").addClass("d-grid gap-2").append(
-                                            $("<button>").addClass("btn btn-success mt-auto agrearcarrito")
-                                                .data("idproducto", element.Id_Producto)
-                                                .text("Agregar a carrito"),
-                                            $("<a>").addClass("btn btn-dark mt-auto")
-                                                .attr({"href": '@Url.Action("DetalleProducto","Home")' + "?idproducto=" + element.Id_Producto})
-                                                .text("Ver detalle")
-                                        )
-                                    )
-                                ).appendTo(sectionContainer);  // Añadir producto a la sección de la categoría actual
+                                    $("<div>").append(
+                                        $("<h4>").addClass("product-name").text(product.Nombre),
+                                        $("<p>").text(product.Descripcion),
+                                        $("<button>").addClass("cart text-black").text("$" + product.Precio).data("idproducto", product.Id_Producto)),
+                                    $("<img>").attr("src", product.Ruta_Imagen, product.Nombre_Imagen).attr("alt", product.Nombre)
+                                );
+                            rowContainer.append(productCard);  // Añadir producto a la fila
                         });
-                    } else {
-                        $("<div>").addClass("alert alert-warning")
-                            .text("No hay productos disponibles para esta categoría.")
-                            .appendTo("#contenedor_secciones_producto");
-                    }
-                },
-                beforeSend: function() {
-                    $("#contenedor_secciones_producto").LoadingOverlay("show");
+
+                        sectionContainer.appendTo("#contenedor_secciones_producto");  // Añadir la sección al contenedor general
+                        $("#contenedor_secciones_producto").append("<hr class='category-divider' />");  // Línea divisora después de cada categoría
+                    });
+
+
+
+
+                } else {
+                    $("<div>").addClass("alert alert-warning")
+                        .text("No hay productos disponibles.")
+                        .appendTo("#contenedor_secciones_producto");
                 }
-            });
-        }
-
-
-
+            },
+            beforeSend: function() {
+                $("#contenedor_secciones_producto").LoadingOverlay("show");
+            }
+        });
+    }
     </script>
 }
 
-<!-- Footer-->
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
-
+<!-- Modal para Detalles del Producto -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Agrega el botón de "volver" aquí -->
+            <div class="product-select">
+                <div class="back">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="text-center">
+                    <!-- Imagen del Producto -->
+                    <img id="productImage" class="img-fluid mb-3" src="" alt="Imagen del Producto" style="max-height: 300px; object-fit: contain;">
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- Información del Producto -->
+                <div class="product-details">
+                    <div class="d-grid gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 id="productName"></h3>
+                            <button id="productPrice" class="cart w-auto text-black">
+                                <img src="/Content/icono/changuito.svg" alt="Changuito">
+                            </button>
+                        </div>
+                        <!-- Descripción del Producto -->
+                        <p id="productDescription" class="descripcion"></p>
+                    </div>
+                </div>
+                <!-- Cantidad-->
+                <div class="mb-3">
+                    <div class="contenedor-button d-flex justify-content-between align-items-center">
+                        <button type="button" class="button-minus" id="decreaseQuantity">-</button>
+                        <input type="number" value="1" min="1" class="cantidad" id="quantityInput">
+                        <button type="button" class="button-plus" id="increaseQuantity">+</button>
+                    </div>
+                </div>
+                <hr>
+                <!-- Comentarios -->
+                <h4>Comentarios</h4>
+                <textarea id="productComment" class="form-control" rows="3" placeholder="Escribe un comentario..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="add-to-cart" id="addToOrderButton">Agregar a mi pedido</button>
+            </div>
+        </div>
+    </div>
+</div>
