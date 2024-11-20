@@ -86,41 +86,9 @@
                                             </button>
                                         </div>
 
-                                        <script>
-                                            function RealizarPedido() {
-                                                // Recupera el carrito desde localStorage (o tu fuente de datos)
-                                                const carrito = JSON.parse(localStorage.getItem("carrito")) || []; // Ajusta según cómo guardes el carrito
-
-                                                if (carrito.length === 0) {
-                                                    alert("El carrito está vacío. Por favor, agrega productos antes de finalizar el pedido.");
-                                                    return;
-                                                }
-                                                const nombre = document.getElementById('txtnombrecontacto').value.trim();
-                                                const direccion = document.getElementById('txtdireccion').value.trim();
-                                                const telefono = document.getElementById('txttelefono').value.trim();
-
-                                                if (!nombre || !direccion || !telefono) {
-                                                    alert("Por favor completa todos los datos de contacto antes de finalizar el pedido.");
-                                                    return;
-                                                }
-
-                                                const numeroTelefono = "541168167235"; // Número de WhatsApp del vendedor (con código de país, sin '+')
-                                                let mensaje = "¡Hola! Me gustaría realizar el siguiente pedido:\n\n";
-
-                                                // Construye el mensaje con los datos del carrito
-                                                carrito.forEach(producto => {
-                                                    mensaje += `- ${producto.nombre} x ${producto.cantidad} = $${(producto.cantidad * producto.precio).toFixed(2)}\n`;
-                                                });
-
-                                                mensaje += "\n¡Gracias!";
-
-                                                // Construye la URL de WhatsApp
-                                                const urlWhatsApp = `https://wa.me/${1168167235}?text=${encodeURIComponent(mensaje)}`;
-
-                                                // Redirige al cliente a WhatsApp
-                                                window.open(urlWhatsApp, "_blank");
-                                            }
-                                        </script>
+                                        
+                                            
+                                        
 
 
 
@@ -349,6 +317,41 @@
 
 
         })
+
+
+        function RealizarPedido() {
+            // Recupera el carrito desde localStorage (o tu fuente de datos)
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || []; // Ajusta según cómo guardes el carrito
+
+            if (carrito.length === 0) {
+                alert("El carrito está vacío. Por favor, agrega productos antes de finalizar el pedido.");
+                return;
+            }
+            const nombre = document.getElementById('txtnombrecontacto').value.trim();
+            const direccion = document.getElementById('txtdireccion').value.trim();
+            const telefono = document.getElementById('txttelefono').value.trim();
+
+            if (!nombre || !direccion || !telefono) {
+                alert("Por favor completa todos los datos de contacto antes de finalizar el pedido.");
+                return;
+            }
+
+            const numeroTelefono = "541168167235"; // Número de WhatsApp del vendedor (con código de país, sin '+')
+            let mensaje = "¡Hola! Me gustaría realizar el siguiente pedido:\n\n";
+
+            // Construye el mensaje con los datos del carrito
+            carrito.forEach(producto => {
+                mensaje += `- ${producto.nombre} x ${producto.cantidad} = $${(producto.cantidad * producto.precio).toFixed(2)}\n`;
+            });
+
+            mensaje += "\n¡Gracias!";
+
+            // Construye la URL de WhatsApp
+            const urlWhatsApp = `https://wa.me/${1168167235}?text=${encodeURIComponent(mensaje)}`;
+
+            // Redirige al cliente a WhatsApp
+            window.open(urlWhatsApp, "_blank");
+        }
 
 
 

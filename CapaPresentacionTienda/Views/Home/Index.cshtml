@@ -265,7 +265,7 @@ else
 
         function MostrarProductos(_idcategoria, _idproducto) {
 
-            //var _idcategoria = $("input[name=Categoria:checkd").val()
+            var _idcategoria = $("input[name=Categoria:checkd").val()
 
 
             jQuery.ajax({
@@ -289,7 +289,7 @@ else
                                 $("<div>").addClass("card-body p-4").append(
                                     $("<div>").addClass("text-center").append(
                                         $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                        "$" + element.Precio.toFixed(2) + "PESO"
+                                        "$" + element.Precio.toFixed(2) + "PESOS"
 
                                     )
 
