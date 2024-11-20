@@ -1,34 +1,63 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Title - La Bondioleta</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Estilos generales */
+        .nav-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #bbb; /* Gris por defecto */
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #007bff; /* Azul al pasar el cursor */
+            }
+
+        .sb-nav-link-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .sb-sidenav-footer {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+            .sb-sidenav-footer .small {
+                font-weight: bold;
+            }
+    </style>
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Mi Tienda</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <!-- Navbar Search-->
-        @*<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </form>*@
-        <!-- Navbar-->
-        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+        <!-- Navbar Brand -->
+        <a class="navbar-brand ps-3" href="#">La Bondioleta</a>
+        <!-- Sidebar Toggle -->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <!-- Navbar -->
+        <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user fa-fw"></i>
+                </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Correo del usuario</a></li>
+                    <li><a class="dropdown-item" href="#">Correo del usuario</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion","Acceso")">Cerrar Sesion</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion", "Acceso")">Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -38,43 +67,37 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Resumen</div>
-                        <a class="nav-link" href="@Url.Action("Index","Home")">
+                        <div class="sb-sidenav-menu-heading">Funcionalidades</div>
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Reporte de Ventas
                         </a>
-                        <a class="nav-link" href="@Url.Action("Usuario","Home")">
+                        <a class="nav-link" href="@Url.Action("Usuario", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Usuarios
                         </a>
-                        <a class="nav-link" href="@Url.Action("Cliente","Home")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Cliente
+                        <a class="nav-link" href="@Url.Action("Cliente", "Home")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-friends"></i></div>
+                            Clientes
                         </a>
-                        <a class="nav-link" href="@Url.Action("CrearVenta","Home")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        <a class="nav-link" href="@Url.Action("CrearVenta", "Home")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
                             Crear Venta Externa
                         </a>
-                        <a class="nav-link" href="@Url.Action("Localidad","Home")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        <a class="nav-link" href="@Url.Action("Localidad", "Home")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Localidad
                         </a>
-                        <div class="sb-sidenav-menu-heading">Mantenimiento</div>
-                        <a class="nav-link" href="@Url.Action("Categoria","Mantenedor")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Categorias
+                        <a class="nav-link" href="@Url.Action("Categoria", "Mantenedor")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
+                            Categorías
                         </a>
-                        <a class="nav-link" href="@Url.Action("Producto","Mantenedor")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-boxes"></i></div>
+                        <a class="nav-link" href="@Url.Action("Producto", "Mantenedor")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-box-open"></i></div>
                             Productos
                         </a>
-
                     </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
-                </div>
+              
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -86,26 +109,18 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+
+
                         </div>
                     </div>
                 </div>
             </footer>
-            @*@<li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
-                <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>*@
         </div>
     </div>
-
-
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/complementos")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 </html>
+

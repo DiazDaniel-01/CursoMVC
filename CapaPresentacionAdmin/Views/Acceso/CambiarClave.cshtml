@@ -28,7 +28,7 @@
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Cambiar Contraseña</h3></div>
                                 <div class="card-body">
                                     <form action="@Url.Action("CambiarClave","Acceso")" method="post">
-                                        <input class="form-control" type="text" value="@TempData["Id_Usuario"]" name="idusuario">
+                                        <input class="form-control" type="hidden" value="@TempData["Id_Usuario"]" name="idusuario">
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-floating mb-3 mb-md-0">
@@ -83,11 +83,8 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+
+
                         </div>
                     </div>
                 </div>
