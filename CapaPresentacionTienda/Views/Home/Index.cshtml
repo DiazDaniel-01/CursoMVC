@@ -89,34 +89,23 @@
                 <div id="contenedor_secciones_producto">
                     <!-- Las secciones de productos por categoría se agregarán dinámicamente aquí -->
                 </div>
-                <!-- Botón flotante dentro del menu -->
-                <div class="floating-button-container">
-                    <button class="floating-button add-to-cart" id="continueButton">Continuar</button>
-                </div>
-
             </div>
             <div class="orden-container">
+                <button class="back-to-menu-button">Volver al Menú</button>
                 <div class="orden">
                     <h2>Mi pedido</h2>
-                    <div class="additions">
+                    <div class="additions" id="order-list">
                         <!-- Los productos se agregarán dinámicamente aquí -->
                     </div>
-                    <div class="order-summary">
-                        <h3>Resumen</h3>
-                        <div class="item subtotal">
-                            <p>Subtotal</p>
-                            <span id="subtotal">$&nbsp;0.00</span>
-                        </div>
-                        <hr>
-                        <div class="item total">
-                            <h3>Total</h3>
-                            <span id="total">$&nbsp;0.00</span>
-                        </div>
-                    </div>
-                    <div class="action">
-                        <button class="add-to-cart">Continuar</button>
-                    </div>
+                    <h3 id="totalPago">Total a pagar: $0.00</h3>
                 </div>
+            </div>
+            <!-- Botón flotante dentro del menu -->
+            <div class="floating-button-container">
+                <button class="floating-button add-to-cart" id="continueButton">
+                    <span class="button-text">Ir a la orden</span>
+                    <span class="button-price" id="totalPrice">0</span>
+                </button>
             </div>
         </div>
 
@@ -128,414 +117,402 @@
 @section scripts{
 
     <script>
-    document.getElementById('continueButton').addEventListener('click', function () {
-        // Desplazar la página hacia la sección de "Mi Pedido"
-        document.querySelector('.orden-container').scrollIntoView({ behavior: 'smooth' });
-    });
+        // Variable global para mantener el total del pago
+        let totalPagoGlobal = 0;
 
-    $(document).ready(function () {
-        MostrarCategoria();
-        MostrarProductos();
-        // Filtro en tiempo real
-        $("#productSearch").on("input", function () {
-            var searchQuery = $(this).val().toLowerCase(); // Obtener el texto de búsqueda en minúsculas
-            filtrarProductos(searchQuery);
+        document.getElementById('continueButton').addEventListener('click', function () {
+            // Desplazar la página hacia la sección de "Mi Pedido"
+            document.querySelector('.orden-container').scrollIntoView({ behavior: 'smooth' });
         });
-        // Decrementar cantidad
-        $("#decreaseQuantity").click(function () {
-            var input = $("#quantityInput");
-            var currentValue = parseInt(input.val());
 
-            // Asegurarse de que el valor no sea menor que el mínimo (1)
-            if (currentValue > 1) {
-                input.val(currentValue - 1);
+        // Función para actualizar el contenido del botón flotante con el pago total
+        function actualizarBotonFlotante() {
+            const botonFlotante = document.querySelector('#continueButton');
+            if (botonFlotante) {
+                const botonPrecio = botonFlotante.querySelector('.button-price');
+                if (botonPrecio) {
+                    botonPrecio.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+                }
             }
-        });
-
-        // Incrementar cantidad
-        $("#increaseQuantity").click(function () {
-            var input = $("#quantityInput");
-            var currentValue = parseInt(input.val());
-
-            // Incrementar el valor
-            input.val(currentValue + 1);
-        });
-
-        // Evento al hacer clic en un producto para abrir el modal
-        $(document).on('click', '.product-card', function () {
-            // Obtener datos del producto
-            const productName = $(this).find('.product-name').text();
-            const productDescription = $(this).find('p').text();
-            const productPrice = $(this).find('.cart').text();
-            const productImage = $(this).find('img').attr('src');
-
-            // Rellenar los datos en el modal
-            $('#productName').text(productName);
-            $('#productPrice').text(productPrice);
-            $('#productDescription').text(productDescription);
-            $('#productImage').attr('src', productImage);
-
-            // Restablecer valores predeterminados
-            $('#quantityInput').val(1);
-            $('#productComment').val('');
-
-            // Abrir el modal
-            $('#productModal').modal('show');
-        });
-    });
-
-    //Funcionalidad del Carrito
-        // Variables globales
-        // Inicializa el ID del carrito
-        let idCarrito = 0;
-        // Lista para almacenar los productos del carrito
-        let productosEnCarrito = [];
-
-        // Función para abrir el modal del producto
-        function abrirModalProducto(producto) {
-            // Comprobar que el objeto producto tenga las propiedades necesarias
-            if (!producto || !producto.nombre || !producto.precio) {
-                console.error("El objeto producto no tiene las propiedades esperadas:", producto);
-                return; // Detén la ejecución si el objeto no es válido
-            }
-
-            // Configurar los datos del producto en el modal
-            document.querySelector('#productName').innerText = producto.nombre;
-            document.querySelector('#productDescription').innerText = producto.descripcion;
-            document.querySelector('#productPrice').innerText = `$ ${producto.precio}`;
-            document.querySelector('#productImage').src = producto.imagen;
-
-            // Ajustar cantidad inicial y comentario
-            document.querySelector('#quantityInput').value = 1;
-            document.querySelector('#productComment').value = '';
-
-            // Guardar temporalmente el producto actual para usarlo en el carrito
-            window.productoSeleccionado = producto;
-
-            // Mostrar el modal
-            $('#productModal').modal('show');
         }
 
-        // Función para agregar el producto al carrito
-        function agregarProductoAlCarrito() {
-            // Obtener datos del producto seleccionado
-            const producto = window.productoSeleccionado;
-            const cantidad = parseInt(document.querySelector('#quantityInput').value);
-            const comentario = document.querySelector('#productComment').value;
-
-            // Buscar si el producto ya existe en el carrito
-            const productoExistente = productosEnCarrito.find(item => item.nombre === producto.nombre);
-
-            if (productoExistente) {
-                // Si ya existe, actualiza la cantidad y el comentario
-                productoExistente.cantidad += cantidad;
-                productoExistente.comentario = comentario;
-                productoExistente.subtotal = productoExistente.precio * productoExistente.cantidad;
-            } else {
-                // Si no existe, crear un nuevo producto en el carrito
-                idCarrito++; // Incrementa el ID del carrito
-                const nuevoProducto = {
-                    id: idCarrito,
-                    nombre: producto.nombre,
-                    precio: producto.precio,
-                    cantidad: cantidad,
-                    comentario: comentario,
-                    subtotal: producto.precio * cantidad
-                };
-                productosEnCarrito.push(nuevoProducto);
-            }
-
-            // Actualizar la vista del carrito
-            actualizarCarrito();
-            // Cerrar el modal
-            $('#productModal').modal('hide');
+        // Función para agregar un monto al pago total
+        function agregarPago(monto) {
+            totalPagoGlobal += monto;
+            actualizarBotonFlotante();
         }
 
-        // Función para actualizar la vista del carrito
-        function actualizarCarrito() {
-            const contenedorCarrito = document.querySelector('.additions');
-            contenedorCarrito.innerHTML = ''; // Limpiar el contenido actual
+        // Función para restar un monto del pago total
+        function restarPago(monto) {
+            totalPagoGlobal -= monto;
+            actualizarBotonFlotante();
+        }
 
-            let totalPago = 0;
+        $(document).ready(function () {
+            MostrarCategoria();
+            MostrarProductos();
+            // Filtro en tiempo real
+            $("#productSearch").on("input", function () {
+                var searchQuery = $(this).val().toLowerCase(); // Obtener el texto de búsqueda en minúsculas
+                filtrarProductos(searchQuery);
+            });
+            // Decrementar cantidad
+            $("#decreaseQuantity").click(function () {
+                var input = $("#quantityInput");
+                var currentValue = parseInt(input.val());
 
-            // Agregar cada producto en el carrito al contenedor
-            productosEnCarrito.forEach((producto, index) => {
-                // Crear el contenedor de un producto en el carrito
-                const divProducto = document.createElement('div');
-                divProducto.className = 'producto-carrito';
-                divProducto.innerHTML = `
-            <p><strong>${producto.nombre}</strong></p>
-            <p>Comentario: ${producto.comentario}</p>
-            <p>Precio: $ ${producto.precio}</p>
-            <p>Cantidad: ${producto.cantidad}</p>
-            <p>Subtotal: $ ${producto.subtotal}</p>
-            <button onclick="editarProducto(${index})" class="edit-button">Editar</button>
-        `;
-
-                // Agregar el producto al contenedor del carrito
-                contenedorCarrito.appendChild(divProducto);
-                // Calcular el total del pago
-                totalPago += producto.subtotal;
+                // Asegurarse de que el valor no sea menor que el mínimo (1)
+                if (currentValue > 1) {
+                    input.val(currentValue - 1);
+                }
             });
 
-            // Actualizar el subtotal y el total
-            document.querySelector('#subtotal').innerText = `$ ${totalPago.toFixed(2)}`;
-            document.querySelector('#total').innerText = `$ ${totalPago.toFixed(2)}`;
+            // Incrementar cantidad
+            $("#increaseQuantity").click(function () {
+                var input = $("#quantityInput");
+                var currentValue = parseInt(input.val());
+
+                // Incrementar el valor
+                input.val(currentValue + 1);
+            });
+
+            // Evento al hacer clic en un producto para abrir el modal
+            $(document).on('click', '.product-card', function () {
+                // Obtener datos del producto
+                const productName = $(this).find('.product-name').text();
+                const productDescription = $(this).find('p').text();
+                const productPrice = $(this).find('.cart').text();
+                const productImage = $(this).find('img').attr('src');
+
+                // Rellenar los datos en el modal
+                $('#productName').text(productName);
+                $('#productPrice').text(productPrice);
+                $('#productDescription').text(productDescription);
+                $('#productImage').attr('src', productImage);
+
+                // Restablecer valores predeterminados
+                $('#quantityInput').val(1);
+                $('#productComment').val('');
+
+                // Abrir el modal
+                $('#productModal').modal('show');
+            });
+
+            // Manejar el clic en el botón flotante para mostrar orden-container
+            $(".floating-button").click(function () {
+                if ($(window).width() <= 1080) {
+                    $(".menu").hide();
+                    $(".orden-container").css("display", "block");
+                }
+            });
+
+            // Manejar el clic en el botón "Volver al Menú"
+            $(".back-to-menu-button").click(function () {
+                if ($(window).width() <= 1080) {
+                    $(".orden-container").hide(); // Ocultar orden-container
+                    $(".menu").show(); // Mostrar menú
+                }
+            });
+
+            // Restaurar visibilidad al redimensionar
+            $(window).resize(function () {
+                if ($(window).width() > 1080) {
+                    $(".menu").css("display", "block");
+                    $(".orden-container").css("display", "block");
+                } else {
+                    $(".menu").css("display", "block");
+                    $(".orden-container").css("display", "none");
+                }
+            });
+        });
+
+        //Funcionalidad del Carrito
+        let currentOrderId = 1; // Inicializamos el ID de orden
+
+        $(document).ready(function () {
+            // Evento al hacer clic en "Agregar a mi pedido"
+            $("#addToOrderButton").click(function () {
+                // Capturar datos del modal
+                const productName = $("#productName").text();
+                const productQuantity = parseInt($("#quantityInput").val());
+                const productComment = $("#productComment").val();
+                const productPrice = parseFloat($("#productPrice").text().replace("$", "")); // Convertir a número
+                const productTotal = productPrice * productQuantity;
+
+                // Crear un nuevo elemento para la orden
+                const orderItem = `
+                    <div class="order-item" id="order-${currentOrderId}">
+                        <h5>${productName}</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p>Cantidad: <span class="order-quantity">${productQuantity}</span></p>
+                                <p>Comentario: <span class="order-comment">${productComment}</span></p>
+                            </div>
+                            <div>
+                                <p>Precio unitario: $<span class="order-price">${productPrice.toFixed(2)}</span></p>
+                                <p>Total: $<span class="order-total">${productTotal.toFixed(2)}</span></p>
+                            </div>
+                            <button class="btn btn-danger btn-sm remove-order" data-order-id="${currentOrderId}">Eliminar</button>
+                        </div>
+                        <hr>
+                    </div>
+                `;
+
+                // Agregar el nuevo elemento a la sección de "Mi Pedido"
+                $(".additions").append(orderItem);
+
+                // Incrementar el ID de orden para el próximo producto
+                currentOrderId++;
+
+                // Actualizar el total del pedido general
+                actualizarTotalPago();
+
+                // Cerrar el modal
+                $('#productModal').modal('hide');
+            });
+
+            // Evento para eliminar un producto de la orden
+            $(document).on('click', '.remove-order', function () {
+                const orderId = $(this).data("order-id");
+                $(`#order-${orderId}`).remove(); // Eliminar la orden
+                actualizarTotalPago(); // Recalcular el total
+            });
+
+            // Función para actualizar el total del pedido general
+            function actualizarTotalPago() {
+                totalPagoGlobal = 0;
+                $(".order-total").each(function () {
+                    totalPagoGlobal += parseFloat($(this).text());
+                });
+
+                // Usar la misma variable global para actualizar ambos elementos
+                actualizarTotalGlobal();
+            }
+
+            // Función para actualizar tanto el total en #totalPago como en el botón flotante
+            function actualizarTotalGlobal() {
+                // Actualizar el texto en el total del pago
+                $("#totalPago").text(`Total a pagar: $${totalPagoGlobal.toFixed(2)}`);
+
+                // Actualizar el texto en el botón flotante con el mismo valor
+                const botonFlotante = document.querySelector('#continueButton .button-price');
+                if (botonFlotante) {
+                    botonFlotante.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+                }
+            }
+
+        });
+        //Fin funcionalidad del Carrito
+
+        //Funcionalidad al cambiar de tamaño 1080px
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elementos HTML relevantes
+            const continueButton = document.getElementById('continueButton');
+            const ordenContainer = document.querySelector('.orden-container');
+            const menu = document.querySelector('.menu');
+            const content = document.querySelector('.content');
+
+            // Detectar cambio de tamaño de pantalla para mostrar u ocultar el botón flotante
+            function checkScreenSize() {
+                if (window.innerWidth >= 1080) {
+                    // Mostrar botón flotante en pantallas grandes
+                    continueButton.classList.add('show-floating-button');
+                } else {
+                    // Ocultar contenedor de orden y botón flotante en pantallas pequeñas
+                    ordenContainer.classList.remove('show-order');
+                    continueButton.classList.remove('show-floating-button');
+                }
+            }
+
+            // Función para mostrar la sección "Mi Pedido"
+            function showOrder() {
+                // Ocultar el menú y mostrar el contenedor de orden
+                menu.style.display = 'none';
+                ordenContainer.classList.add('show-order');
+            }
+
+            // Evento de clic en el botón "Continuar"
+            continueButton.addEventListener('click', function () {
+                showOrder();
+            });
+
+            // Revisa el tamaño de la pantalla al cargar la página
+            checkScreenSize();
+
+            // Revisa el tamaño de la pantalla al redimensionar la ventana
+            window.addEventListener('resize', checkScreenSize);
+        });
+        //Fin de funcionalidad
+
+
+
+        // Función para eliminar un producto del carrito
+        function deleteProduct(index) {
+            cartItems.splice(index, 1);
+            updateCartDisplay();
         }
 
-        // Función para editar un producto en el carrito
-        function editarProducto(index) {
-            const producto = productosEnCarrito[index];
+        // Agregar evento de clic para botones de editar y eliminar
+        // Agregar evento de clic para botones de editar y eliminar
+        function attachEventListeners() {
+            document.querySelectorAll('.btn-edit').forEach((editBtn, index) => {
+                editBtn.addEventListener('click', function () {
+                    openEditModal(index); // Abre el modal en modo edición
+                });
+            });
 
-            // Abrir el modal con la información del producto a editar
-            abrirModalProducto(producto);
-
-            // Actualizar el modal con la cantidad y comentario actuales
-            document.querySelector('#quantityInput').value = producto.cantidad;
-            document.querySelector('#productComment').value = producto.comentario;
-
-            // Reemplazar la función de agregar con una de edición
-            document.querySelector('#addToOrderButton').onclick = function () {
-                actualizarProductoEnCarrito(index);
-            };
+            document.querySelectorAll('.btn-tacho').forEach((deleteBtn, index) => {
+                deleteBtn.addEventListener('click', function () {
+                    deleteProduct(index); // Elimina el producto del carrito
+                });
+            });
         }
 
-        // Función para actualizar un producto en el carrito
-        function actualizarProductoEnCarrito(index) {
-            const cantidad = parseInt(document.querySelector('#quantityInput').value);
-            const comentario = document.querySelector('#productComment').value;
 
-            if (cantidad <= 0) {
-                alert("La cantidad debe ser mayor a 0");
+
+        function filtrarProductos(query) {
+            let foundProduct = false; // Variable para saber si hay productos que coinciden
+
+            // Filtrar productos
+            $(".product-card").each(function () {
+                var productName = $(this).find(".product-name").text().toLowerCase();
+                if (productName.includes(query.toLowerCase())) {
+                    $(this).show(); // Mostrar producto si coincide
+                    foundProduct = true;
+                } else {
+                    $(this).hide(); // Ocultar producto si no coincide
+                }
+            });
+
+            // Si no hay búsqueda, mostrar todo
+            if (query === "") {
+                $(".product-card").show(); // Mostrar todos los productos
+                $(".category-container").show(); // Mostrar todas las categorías
+                $(".category-divider").show(); // Mostrar los hr
                 return;
             }
 
-            // Actualizar el producto en la lista del carrito
-            productosEnCarrito[index].cantidad = cantidad;
-            productosEnCarrito[index].comentario = comentario;
-            productosEnCarrito[index].subtotal = productosEnCarrito[index].precio * cantidad;
-
-            // Actualizar la vista del carrito
-            actualizarCarrito();
-            // Cerrar el modal
-            $('#productModal').modal('hide');
-        }
-
-        // Asigna la función al botón de agregar en el modal
-        document.querySelector('#addToOrderButton').onclick = agregarProductoAlCarrito;
-
-
-    //Fin funcionalidad del Carrito
-
-    //Funcionalidad al cambiar de tamaño 1080px
-    document.addEventListener('DOMContentLoaded', function () {
-        // Elementos HTML relevantes
-        const continueButton = document.getElementById('continueButton');
-        const ordenContainer = document.querySelector('.orden-container');
-        const menu = document.querySelector('.menu');
-        const content = document.querySelector('.content');
-
-        // Detectar cambio de tamaño de pantalla para mostrar u ocultar el botón flotante
-        function checkScreenSize() {
-            if (window.innerWidth >= 1080) {
-                // Mostrar botón flotante en pantallas grandes
-                continueButton.classList.add('show-floating-button');
-            } else {
-                // Ocultar contenedor de orden y botón flotante en pantallas pequeñas
-                ordenContainer.classList.remove('show-order');
-                continueButton.classList.remove('show-floating-button');
-            }
-        }
-
-        // Función para mostrar la sección "Mi Pedido"
-        function showOrder() {
-            // Ocultar el menú y mostrar el contenedor de orden
-            menu.style.display = 'none';
-            ordenContainer.classList.add('show-order');
-        }
-
-        // Evento de clic en el botón "Continuar"
-        continueButton.addEventListener('click', function () {
-            showOrder();
-        });
-
-        // Revisa el tamaño de la pantalla al cargar la página
-        checkScreenSize();
-
-        // Revisa el tamaño de la pantalla al redimensionar la ventana
-        window.addEventListener('resize', checkScreenSize);
-    });
-    //Fin de funcionalidad
-
-
-
-    // Función para eliminar un producto del carrito
-    function deleteProduct(index) {
-        cartItems.splice(index, 1);
-        updateCartDisplay();
-    }
-
-    // Agregar evento de clic para botones de editar y eliminar
-    // Agregar evento de clic para botones de editar y eliminar
-    function attachEventListeners() {
-        document.querySelectorAll('.btn-edit').forEach((editBtn, index) => {
-            editBtn.addEventListener('click', function () {
-                openEditModal(index); // Abre el modal en modo edición
+            // Ocultar categorías sin productos visibles
+            $(".category-container").each(function () {
+                var categoryHasVisibleProducts = $(this).find(".product-card:visible").length > 0;
+                if (!categoryHasVisibleProducts) {
+                    $(this).hide(); // Ocultar categoría si no tiene productos visibles
+                    $(this).next(".category-divider").hide(); // Ocultar el hr correspondiente
+                } else {
+                    $(this).show(); // Mostrar categoría si tiene productos visibles
+                    $(this).next(".category-divider").show(); // Mostrar el hr correspondiente
+                }
             });
-        });
-
-        document.querySelectorAll('.btn-tacho').forEach((deleteBtn, index) => {
-            deleteBtn.addEventListener('click', function () {
-                deleteProduct(index); // Elimina el producto del carrito
-            });
-        });
-    }
-
-
-
-    function filtrarProductos(query) {
-        let foundProduct = false; // Variable para saber si hay productos que coinciden
-
-        // Filtrar productos
-        $(".product-card").each(function () {
-            var productName = $(this).find(".product-name").text().toLowerCase();
-            if (productName.includes(query.toLowerCase())) {
-                $(this).show(); // Mostrar producto si coincide
-                foundProduct = true;
-            } else {
-                $(this).hide(); // Ocultar producto si no coincide
-            }
-        });
-
-        // Si no hay búsqueda, mostrar todo
-        if (query === "") {
-            $(".product-card").show(); // Mostrar todos los productos
-            $(".category-container").show(); // Mostrar todas las categorías
-            $(".category-divider").show(); // Mostrar los hr
-            return;
         }
 
-        // Ocultar categorías sin productos visibles
-        $(".category-container").each(function () {
-            var categoryHasVisibleProducts = $(this).find(".product-card:visible").length > 0;
-            if (!categoryHasVisibleProducts) {
-                $(this).hide(); // Ocultar categoría si no tiene productos visibles
-                $(this).next(".category-divider").hide(); // Ocultar el hr correspondiente
-            } else {
-                $(this).show(); // Mostrar categoría si tiene productos visibles
-                $(this).next(".category-divider").show(); // Mostrar el hr correspondiente
-            }
-        });
-    }
+        function MostrarCategoria() {
+            jQuery.ajax({
+                url: '@Url.Action("ListaCategorias", "Home")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $("#contenedor_categoria").LoadingOverlay("hide");
+                    $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
 
-    function MostrarCategoria() {
-        jQuery.ajax({
-            url: '@Url.Action("ListaCategorias", "Home")',
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function(response) {
-                $("#contenedor_categoria").LoadingOverlay("hide");
-                $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
-
-                // Generar enlaces de categorías
-                $.each(response.data, function(i, element) {
-                    $("<a>")
-                        .addClass("btn btn-outline-warning m-1 inverted-hover")
-                        .text(element.Nombre)
-                        .attr("href", "#categoria_" + element.Id_Categoria)
-                        .on("click", function(e) {
-                            e.preventDefault();
-
-                            // Desplazar al título de la categoría
-                            var categoryTitle = $("#categoria_" + element.Id_Categoria);
-                            if (categoryTitle.length) {
-                                categoryTitle[0].scrollIntoView({ behavior: "smooth" });
-                            }
-                        })
-                        .appendTo("#contenedor_categoria");
-                });
-
-                // Mostrar todos los productos en secciones al cargar
-                //MostrarProductoporCategoria();
-            },
-            beforeSend: function() {
-                $("#contenedor_categoria").LoadingOverlay("show");
-            }
-        });
-    }
-
-
-    function MostrarProductos() {
-        jQuery.ajax({
-            url: '@Url.Action("ListarTodosProductos", "Home")',
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                $("#contenedor_secciones_producto").LoadingOverlay("hide");
-                $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
-
-                // Verificar si hay productos para mostrar
-                if (response.data.length > 0) {
-                    let currentCategory = null;
-                    let sectionContainer = null;
-
-                    // Iterar sobre productos para agruparlos por categoría
-                    var productsByCategory = {};
-
-                    // Agrupar productos por categoría
+                    // Generar enlaces de categorías
                     $.each(response.data, function(i, element) {
-                        var categoryId = element.oCategoria.Id_Categoria;
+                        $("<a>")
+                            .addClass("btn btn-outline-warning m-1 inverted-hover")
+                            .text(element.Nombre)
+                            .attr("href", "#categoria_" + element.Id_Categoria)
+                            .on("click", function(e) {
+                                e.preventDefault();
 
-                        if (!productsByCategory[categoryId]) {
-                            productsByCategory[categoryId] = {
-                                categoryName: element.oCategoria.Nombre,
-                                products: []
-                            };
-                        }
-
-                        productsByCategory[categoryId].products.push(element);
+                                // Desplazar al título de la categoría
+                                var categoryTitle = $("#categoria_" + element.Id_Categoria);
+                                if (categoryTitle.length) {
+                                    categoryTitle[0].scrollIntoView({ behavior: "smooth" });
+                                }
+                            })
+                            .appendTo("#contenedor_categoria");
                     });
 
-                    // Renderizar las categorías y productos
-                    $.each(productsByCategory, function (categoryId, categoryData) {
-                        var sectionContainer = $("<div>").attr("id", "categoria_" + categoryId).addClass("category-container products mb-5")
-                            .append($("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName));
+                    // Mostrar todos los productos en secciones al cargar
+                    //MostrarProductoporCategoria();
+                },
+                beforeSend: function() {
+                    $("#contenedor_categoria").LoadingOverlay("show");
+                }
+            });
+        }
 
-                        var rowContainer = $("<div>").addClass("grid-container"); // Usamos grid-container para los productos
-                        sectionContainer.append(rowContainer);
 
-                        // Añadir productos a la fila
-                        $.each(categoryData.products, function (i, product) {
-                            var productCard = $("<div>").addClass("product product-card") // Usamos grid-item para cada producto
-                                .append(
-                                    $("<div>").append(
-                                        $("<h4>").addClass("product-name").text(product.Nombre),
-                                        $("<p>").text(product.Descripcion),
-                                        $("<button>").addClass("cart text-black").text("$" + product.Precio).data("idproducto", product.Id_Producto)),
-                                    $("<img>").attr("src", product.Ruta_Imagen, product.Nombre_Imagen).attr("alt", product.Nombre)
-                                );
-                            rowContainer.append(productCard);  // Añadir producto a la fila
+        function MostrarProductos() {
+            jQuery.ajax({
+                url: '@Url.Action("ListarTodosProductos", "Home")',
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    $("#contenedor_secciones_producto").LoadingOverlay("hide");
+                    $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
+
+                    // Verificar si hay productos para mostrar
+                    if (response.data.length > 0) {
+                        let currentCategory = null;
+                        let sectionContainer = null;
+
+                        // Iterar sobre productos para agruparlos por categoría
+                        var productsByCategory = {};
+
+                        // Agrupar productos por categoría
+                        $.each(response.data, function(i, element) {
+                            var categoryId = element.oCategoria.Id_Categoria;
+
+                            if (!productsByCategory[categoryId]) {
+                                productsByCategory[categoryId] = {
+                                    categoryName: element.oCategoria.Nombre,
+                                    products: []
+                                };
+                            }
+
+                            productsByCategory[categoryId].products.push(element);
                         });
 
-                        sectionContainer.appendTo("#contenedor_secciones_producto");  // Añadir la sección al contenedor general
-                        $("#contenedor_secciones_producto").append("<hr class='category-divider' />");  // Línea divisora después de cada categoría
-                    });
+                        // Renderizar las categorías y productos
+                        $.each(productsByCategory, function (categoryId, categoryData) {
+                            var sectionContainer = $("<div>").attr("id", "categoria_" + categoryId).addClass("category-container products mb-5")
+                                .append($("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName));
+
+                            var rowContainer = $("<div>").addClass("grid-container"); // Usamos grid-container para los productos
+                            sectionContainer.append(rowContainer);
+
+                            // Añadir productos a la fila
+                            $.each(categoryData.products, function (i, product) {
+                                var productCard = $("<div>").addClass("product product-card") // Usamos grid-item para cada producto
+                                    .append(
+                                        $("<div>").append(
+                                            $("<h4>").addClass("product-name").text(product.Nombre),
+                                            $("<p>").text(product.Descripcion),
+                                            $("<button>").addClass("cart text-black").text("$" + product.Precio).data("idproducto", product.Id_Producto)),
+                                        $("<img>").attr("src", product.Ruta_Imagen, product.Nombre_Imagen).attr("alt", product.Nombre)
+                                    );
+                                rowContainer.append(productCard);  // Añadir producto a la fila
+                            });
+
+                            sectionContainer.appendTo("#contenedor_secciones_producto");  // Añadir la sección al contenedor general
+                            $("#contenedor_secciones_producto").append("<hr class='category-divider' />");  // Línea divisora después de cada categoría
+                        });
 
 
 
 
-                } else {
-                    $("<div>").addClass("alert alert-warning")
-                        .text("No hay productos disponibles.")
-                        .appendTo("#contenedor_secciones_producto");
+                    } else {
+                        $("<div>").addClass("alert alert-warning")
+                            .text("No hay productos disponibles.")
+                            .appendTo("#contenedor_secciones_producto");
+                    }
+                },
+                beforeSend: function() {
+                    $("#contenedor_secciones_producto").LoadingOverlay("show");
                 }
-            },
-            beforeSend: function() {
-                $("#contenedor_secciones_producto").LoadingOverlay("show");
-            }
-        });
-    }
+            });
+        }
     </script>
 }
 
