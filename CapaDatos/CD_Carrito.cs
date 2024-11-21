@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
+using System.Data;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CapaEntidad;
+using System.Globalization;
 
 namespace CapaDatos
 {
     public class CD_Carrito
     {
-        private Conexion conexion = new Conexion();
-
-        public bool ExisteCarrito(int Id_Cliente, int Id_Producto)
+        public bool ExisteCarrito(int Id_Producto)
         {
             bool resultado = true;
 
@@ -21,9 +21,8 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_ExisteCarrito", oconexion);
-                    cmd.Parameters.AddWithValue("IdCliente", Id_Cliente);
-                    cmd.Parameters.AddWithValue("IdProducto", Id_Producto);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("Id_Producto", Id_Producto); // Corregido nombre del parámetro
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();
@@ -34,14 +33,13 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
-                
                 resultado = false;
             }
 
             return resultado;
         }
 
-        public bool OperacionCarrito(int Id_Cliente, int Id_Producto, bool sumar, out string Mensaje)
+        public bool OperacionCarrito(int Id_Producto, bool sumar, out string Mensaje)
         {
             bool resultado = true;
             Mensaje = string.Empty;
@@ -51,10 +49,9 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_OperacionCarrito", oconexion);
-                    cmd.Parameters.AddWithValue("IdCliente", Id_Cliente);
-                    cmd.Parameters.AddWithValue("IdProducto", Id_Producto);
-                    cmd.Parameters.AddWithValue("Sumar", sumar);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@Id_Producto", Id_Producto);
+                    cmd.Parameters.AddWithValue("@Sumar", sumar);
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -68,13 +65,13 @@ namespace CapaDatos
             catch (Exception ex)
             {
                 resultado = false;
-                Mensaje = ex.Message; // Capturar el mensaje de error
+                Mensaje = ex.Message;
             }
 
             return resultado;
         }
 
-        public int CantidadEnCarrito(int Id_Cliente)
+        public int CantidadEnCarrito()
         {
             int resultado = 0;
 
@@ -82,8 +79,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("select count(*) from carrito where Id_Cliente = @Id_Cliente", oconexion);
-                    cmd.Parameters.AddWithValue("@Id_Cliente", Id_Cliente);
+                    SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM CARRITO", oconexion);
                     cmd.CommandType = CommandType.Text;
 
                     oconexion.Open();
@@ -93,13 +89,12 @@ namespace CapaDatos
             catch (Exception ex)
             {
                 resultado = 0;
-
             }
 
             return resultado;
         }
 
-        public List<Carrito> ListarProducto(int Id_Cliente)
+        public List<Carrito> ListarProducto()
         {
             List<Carrito> lista = new List<Carrito>();
 
@@ -107,13 +102,13 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "select * from fn_obtenerCarritoCliente(@Id_Cliente)";
-                    
+                    string query = "SELECT * FROM fn_obtenerCarrito()"; // Eliminada la referencia a @idcliente
 
                     SqlCommand cmd = new SqlCommand(query, oconexion);
-                    cmd.Parameters.AddWithValue("@Id_Cliente", Id_Cliente);
                     cmd.CommandType = CommandType.Text;
+
                     oconexion.Open();
+
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
@@ -126,10 +121,11 @@ namespace CapaDatos
                                     Nombre = dr["Nombre"].ToString(),
                                     Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
                                     Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
-                                    Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
-                                    
+                                    Nombre_Imagen = dr["Nombre_Imagen"].ToString()
                                 },
+
                                 Cantidad = Convert.ToInt32(dr["Cantidad"]),
+
                             });
                         }
                     }
@@ -139,10 +135,10 @@ namespace CapaDatos
             {
                 lista = new List<Carrito>();
             }
+
             return lista;
         }
-
-        public bool EliminarCarrito(int Id_Cliente, int Id_Producto)
+        public bool EliminarCarrito(int Id_Producto)
         {
             bool resultado = true;
 
@@ -151,9 +147,8 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_EliminarCarrito", oconexion);
-                    cmd.Parameters.AddWithValue("IdCliente", Id_Cliente);
-                    cmd.Parameters.AddWithValue("IdProducto", Id_Producto);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("Id_Producto", Id_Producto); // Corregido nombre del parámetro
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();
@@ -164,12 +159,14 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
-
                 resultado = false;
             }
 
             return resultado;
         }
-
     }
+
+
 }
+
+

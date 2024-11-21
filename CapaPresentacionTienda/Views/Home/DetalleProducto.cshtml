@@ -13,19 +13,20 @@
                 <div class="small mb-1">Categoria: @Html.DisplayTextFor(p => p.oCategoria.Descripcion)</div>
                 <h1 class="display-5 fw-bolder">@Html.DisplayTextFor(p => p.Nombre) </h1>
                 <div class="fs-5 mb-5">
-                    <span>@Html.DisplayTextFor(m => m.Precio) Pesos AR </span>
+                    <spam>@Html.DisplayTextFor(m => m.Precio) Pesos AR </spam>
                     @* <spam>$40.00</spam>*@
                 </div>
                 <p class="lead">@Html.DisplayTextFor(p => p.Descripcion).</p>
                 <div class="d-flex">
-                    <a href="@Url.Action("Index","Home")", class="btn btn-danger w-50 text-center me-3">
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger w-50 text-center me-3">
                         <i class="fas fa-undo-alt"></i>volver
                     </a>
 
-                    <button class="btn btn-success agregarcarrito flex-shrink-0 w-50" type="button" data-idproducto="@Html.DisplayTextFor(p => p.Id_Producto)">
+                    <button class="btn btn-success mt-auto agregarcarrito flex-shrink-0 w-50" type="button" data-idproducto="@Html.DisplayFor(p => p.Id_Producto)">
                         <i class="fas fa-cart-plus"></i> Agregar al carrito
 
                     </button>
+
                 </div>
             </div>
         </div>
@@ -36,38 +37,37 @@
     <script>
 
         $(document).on("click", "button.agregarcarrito", function () {
-             console.log($(this).data("idproducto"))
-             jQuery.ajax({
-                 url: '@Url.Action("AgregarCarrito","Home")'
-                 type: "POST",
-                 data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
-                 dataType: "json",
-                 contentType: "application/json; charset=utf-8",
-                 success: function (data) {
-                     if (data.respuesta) {
-                         MostrarCantidadCarrito();
-                         swal({
-                             title: "Agregado al carrito",
-                             text: "¿Desea ir al carrito?",
-                             type: "success",
-                             showCancelButton: true,
-                             confirmButtonClass: "btn-primary",
-                             confirmButtonText: "Si",
-                             confirmButtonText: "No",
-                             claseOnConfirm: true,
+            console.log($(this).data("idproducto"));
+            jQuery.ajax({
+                url: '@Url.Action("AgregarCarrito","Home")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.respuesta) {
+                        MostrarCantidadCarrito();
+                        Swal.fire({
+                            title: "Agregado al carrito",
+                            text: "¿Desea ir al carrito?",
+                            icon: "success",
+                            showCancelButton: true,
+                            confirmButtonClass:"btn-primary",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Carrito","Home")';
+                            }
+                        });
+                    } else {
+                        Swal.fire("", data.mensaje, "warning");
+                    }
+                }
+            });
+        });
 
-                         }, function () {
-                             window.location.href = '@Url.Action("Carrito","Home")'
-                         })
-                         swall("", "Agregado al carrito", "success");
-                     } else {
-                         swall("", data.mensaje, "warning");
-                     }
-                 }
-             })
-        })
 
     </script>
 
 }
-

@@ -42,6 +42,7 @@ namespace CapaNegocio
                 Mensaje = "Debe ingresar el precio del producto";
             }
 
+
             if (string.IsNullOrEmpty(Mensaje))
             {
                 return objCapaDato.Registrar(obj, out Mensaje);
@@ -101,6 +102,7 @@ namespace CapaNegocio
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+
         public List<Producto> ListarProductoporCategorias(int idcategoria)
         {
             return objCapaDato.ListarProductoporCategorias(idcategoria);

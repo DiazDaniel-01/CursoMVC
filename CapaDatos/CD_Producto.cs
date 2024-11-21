@@ -1,4 +1,5 @@
 ﻿using CapaEntidad;
+
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -26,11 +27,12 @@ namespace CapaDatos
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    sb.AppendLine("select p.Id_Producto, p.Nombre, p.Descripcion,");
-                    sb.AppendLine("c.Id_Categoria, c.Nombre[NomCategoria],");
+                    sb.AppendLine("SELECT p.Id_Producto, p.Nombre, p.Descripcion,");
+                    sb.AppendLine("c.Id_Categoria, c.Nombre AS NomCategoria, c.Descripcion [DesCategoria],");
+                    // cambio de Nombre por discripcion
                     sb.AppendLine("p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo");
-                    sb.AppendLine("from PRODUCTO p");
-                    sb.AppendLine("inner join CATEGORIA c on c.Id_Categoria = p.Id_Categoria");
+                    sb.AppendLine("FROM PRODUCTO p");
+                    sb.AppendLine("INNER JOIN CATEGORIA c ON c.Id_Categoria = p.Id_Categoria");
 
                     SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
                     cmd.CommandType = CommandType.Text;
@@ -44,8 +46,10 @@ namespace CapaDatos
                                 Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
                                 Nombre = dr["Nombre"].ToString(),
                                 Descripcion = dr["Descripcion"].ToString(),
+                                // Asegúrate de que esta columna esté presente
                                 oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
                                 Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
+                                // Asegúrate de que esta columna esté presente
                                 Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
                                 Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
                                 Activo = Convert.ToBoolean(dr["Activo"])
@@ -54,6 +58,7 @@ namespace CapaDatos
                     }
                 }
             }
+
             catch
             {
                 lista = new List<Producto>();
@@ -73,7 +78,9 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
+
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
+
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -107,6 +114,8 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("Descripcion", obj.Descripcion);
                     cmd.Parameters.AddWithValue("Id_Categoria", obj.oCategoria.Id_Categoria);
+
+
                     cmd.Parameters.AddWithValue("Precio", obj.Precio);
                     cmd.Parameters.AddWithValue("Activo", obj.Activo);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -126,9 +135,11 @@ namespace CapaDatos
             return resultado;
         }
 
-        public bool GuardarDatosImagen(Producto obj, out string Mensaje) { 
+        public bool GuardarDatosImagen(Producto obj, out string Mensaje)
+        {
             bool resultado = false;
             Mensaje = string.Empty;
+
 
             try
             {
@@ -162,6 +173,8 @@ namespace CapaDatos
             return (resultado);
         }
 
+
+
         public bool Eliminar(int id, out string Mensaje)
         {
             bool resultado = false;
@@ -188,48 +201,48 @@ namespace CapaDatos
             }
             return resultado;
         }
-    
-    public List<Producto> ListarProductoporCategorias(int idcategoria)
-    {
-        List<Producto> lista = new List<Producto>();
 
-        try
+        public List<Producto> ListarProductoporCategorias(int idcategoria)
         {
-            using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+            List<Producto> lista = new List<Producto>();
+
+            try
             {
-                StringBuilder sb = new StringBuilder();
-
-                sb.AppendLine("SELECT DISTINCT p.Id_Producto, p.Descripcion FROM PRODUCTO p");
-                sb.AppendLine("INNER JOIN CATEGORIA c ON c.Id_Categoria = p.Id_Categoria AND c.Activo = 1");
-                sb.AppendLine("WHERE c.Id_Categoria = iif(@Id_Categoria = 0, c.Id_Categoria = @Id_Categoria");
-
-
-                SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
-                cmd.Parameters.AddWithValue("@idcategoria", idcategoria);
-                cmd.CommandType = CommandType.Text;
-                oconexion.Open();
-
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    while (dr.Read())
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.AppendLine("SELECT  distinct p.Id_Producto, p.Descripcion FROM PRODUCTO p ");
+
+                    sb.AppendLine("INNER JOIN CATEGORIA c ON c.Id_Categoria = p.Id_Categoria ");
+
+
+                    sb.AppendLine("where c.Id_Categoria = iif(@Id_Categoria = 0, c.Id_Categoria, @Id_Categoria)");
+
+                    SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
+                    cmd.Parameters.AddWithValue("@Id_Categoria", idcategoria);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        lista.Add(new Producto()
+                        while (dr.Read())
                         {
-                            Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
+                            lista.Add(new Producto()
+                            {
+                                Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
+                                Descripcion = dr["Descripcion"].ToString()
 
-                            Descripcion = dr["Descripcion"].ToString(),
-
-                        });
+                            });
+                        }
                     }
                 }
             }
+            catch
+            {
+                lista = new List<Producto>(); // En caso de error, devolver una lista vacía
+            }
+            return lista;
         }
-
-        catch
-        {
-            lista = new List<Producto>();
-        }
-        return lista;
     }
-}
 }

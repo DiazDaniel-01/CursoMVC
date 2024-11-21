@@ -5,35 +5,39 @@
 
 <div class="container my-5">
     <div class="row">
+
         <div class="col-sm-12">
+
             <div class="card">
+
                 <div class="card-body">
+
                     <div class="row">
+                        <!--Detalle producto-->
                         <div class="col-sm-9">
                             <div class="me-2">
                                 <div class="d-flex justify-content-between">
-                                    <h5 class="ms-2 mt-2">Detalle Pedido</h5>
-                                    <a class="btn btn-primary" href="@Url.Action("Index","Home")">
-                                        <i class="fas fa-cart-plus"></i> Seguir Comprando
-                                    </a>
+                                    <h5 class="ms-2 mt-2">Detalle del Carrito</h5>
+                                    <a class="btn btn-primary" href="@Url.Action("Index","Home")"><i class="fas fa-cart-plus"></i>Seguir Comprando</a>
                                 </div>
-                                <hr class="mt-2 mb-2">
+                                <hr class="mt-2 mb-2" />
                                 <div id="productos-carrito">
                                     <div class="card mb-2 card-producto">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-sm-2 align-self-center d-flex justify-content-center">
-                                                    <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757.jpg" style="width:100px;height:100px" />
+                                                    <img class="rounded" src="" style="width:100px;height:100px" />
                                                 </div>
                                                 <div class="col-sm-4 align-self-center">
-                                                    <span class="font-weight-bold d-block"></span>
                                                     <span>Nombre Producto</span>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
-                                                    <span>Precio : S/. 1500</span>
+                                                    <span>Precio : AR/. 1500</span>
                                                 </div>
+
                                                 <div class="col-sm-2 align-self-center">
                                                     <div class="d-flex">
+
                                                         <button class="btn btn-outline-secondary btn-restar rounded-0">
                                                             <i class="fas fa-minus"></i>
                                                         </button>
@@ -44,39 +48,55 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
-                                                    <button aria-label="Eliminar producto del carrito" class="btn btn-outline-danger btn-eliminar">
-                                                        <i class="far fa-trash-alt"></i> Eliminar
-                                                    </button>
+                                                    <button class="btn btn-outline-danger btn-eliminar"><i class="far fa-trash-alt"></i>Eliminar</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <label class="align-self-center"><b>Total: S/. <span id="total">500</span></b></label>
+                                    <label class="align-self-center"><b>Total: S/.<sapn id="total">0</sapn></b></label>
                                 </div>
+
                             </div>
+
                         </div>
+
+
+
+                        <!--Detalle Envio-->
                         <div class="col-sm-3">
                             <div class="card">
                                 <div class="card-body bg-light">
-                                    <h5 class="card-title">Datos</h5>
+                                    <h5 class="card title">Detalles del Cliente</h5>
                                     <form>
                                         <div class="mb-2">
-                                            <label for="cbolocalidad" class="form-label">Localidad</label>
-                                            <select class="form-select form-select-sm" id="cbolocalidad"></select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="txtnombrecontacto" class="form-label">Nombre Contacto</label>
-                                            <input type="text" class="form-control form-control-sm" id="txtnombrecontacto" autocomplete="off">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="txtdireccion" class="form-label">Dirección</label>
-                                            <input type="text" class="form-control form-control-sm" id="txtdireccion" autocomplete="off">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="txttelefono" class="form-label">Teléfono</label>
-                                            <input type="text" class="form-control form-control-sm" id="txttelefono" autocomplete="off">
+                                            <label for="exampleInputEmail1" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtnombre" autocomplete="off" />
+
+                                            <label for="exampleInputEmail1" class="form-label">Apellido</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtapellido" autocomplete="off" />
+
+                                            <label for="txttelefono" class="form-label">Telefono</label>
+                                            <input type="text" class="form-control form-control-sm" id="txttelefono" autocomplete="off" />
+
+
+                                            <label for="cbobarrio" class="form-label">Barrio</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtbarrio" autocomplete="off" />
+
+                                            <label for="txtDepartamento" class="form-label">Departamento</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtdepartamento" autocomplete="off" />
+
+                                            <label for="exampleInputEmail1" class="form-label">Piso</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtpiso" autocomplete="off" />
+
+                                            <label for="exampleInputEmail1" class="form-label">Calle</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtcalle" autocomplete="off" />
+
+                                            <label for="exampleInputEmail1" class="form-label">2°Calle</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtcalle2" autocomplete="off" />
+
+
                                         </div>
 
 
@@ -86,9 +106,6 @@
                                             </button>
                                         </div>
 
-                                        
-                                            
-                                        
 
 
 
@@ -97,263 +114,320 @@
                             </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@section scripts {
+@section scripts{
+
     <script>
+
+
+
         $(document).ready(function () {
-            jQuery.ajax({
-                url: "@Url.Action("ListarProductosCarrito", "Home")",
-                type: "POST",
+            // Mostrar overlay al inicio
+            $("#productos-carrito").LoadingOverlay("show");
+            actualizarLocalStorage();
+
+            $.ajax({
+                url: '@Url.Action("ListarProductosCarrito", "Home")',
+                type: "GET", // Cambiar a "GET" si el método en el controlador es HttpGet
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    $("#productos-carrito").html("");
+
+                    // Ocultar overlay tras recibir respuesta
                     $("#productos-carrito").LoadingOverlay("hide");
-                    $.each(response.data, function (i, item) {
 
+                    // Limpiar contenedor de productos
+                    $("#productos-carrito").html("");
 
-                        $("<div>").addClass("card mb-2 card-producto").append(
-                            $("<div>").addClass("cart-body").append(
-                                $("<div>").addClass("row").append(
+                    // Validar que la respuesta contenga datos
+                    if (response.data && response.data.length > 0) {
+                        $.each(response.data, function (i, item) {
+                            // Crear tarjeta de producto con datos reales
+                            $("<div>").addClass("card mb-2 card-producto").append(
+                                $("<div>").addClass("card-body").append(
+                                    $("<div>").addClass("row").append(
+                                        $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                            $("<img>").addClass("rounded").attr("src", "data:image/" + item.oProducto.Extension + ";base64," + item.oProducto.Base64).css({ width: "100px", height: "100px" })
 
+                                        ),
+                                        $("<div>").addClass("col-sm-4 align-self-center").append(
+                                            $("<span>").text(item.oProducto.Nombre)
+                                        ),
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<span>").text("Precio: S/. " + item.oProducto.Precio)
+                                        ),
 
-                                    $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
-                                        $("<img>").addClass("rounded")
-                                            .attr({ "src": "data:image/" + item.oProducto.Extension + ";base64," + item.oProducto.Base64 })
-                                            .css({ "width": "100px", "height": "100px" })
-                                    ),
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<div>").addClass("d-flex").append(
+                                                $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+                                                $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ disabled: "disabled" }).css({ width: "40px" })
+                                                    .val(item.Cantidad).data("oProducto", item.oProducto),
 
+                                                $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus"))
 
-                                    $("<div>").addClass("col-sm-4 align-self-center").append(
-                                        $("<span>").addClass("font-weight-bold d-block"),
-                                        $("<span>").text(item.oProducto.Nombre)
-                                    ),
-
-
-                                    $("<div>").addClass("col-sm-2 align-self-center").append(
-                                        $("<span>").text(item.oProducto.Precio.toFixed(2) + "PESOS")
-                                    ),
-
-
-                                    $("<div>").addClass("col-sm-2 align-self-center").append(
-                                        $("<div>").addClass("d-flex").append(
-                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
-                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
-                                                .css(({ "width": "40px" }))
-                                                .data("oProducto", item.oProducto)
-                                                .val(item.Cantidad),
-                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus"))
+                                            )
+                                        ),
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<button>").addClass("btn btn-outline-danger btn-eliminar").text("Eliminar").data("idproducto",item.oProducto.Id_Producto)
                                         )
-                                    ),
-                                    $("<div>").addClass("col-sm-2 align-self-center").append(
-                                        $("<button>").addClass("btn btn-outline-danger btn-eliminar").append($("<i>").addClass("fas fa-trash-alt"), "Eliminar")
-                                            .data("idproducto",item.oProducto.Id_Producto),
-
                                     )
                                 )
-                            )
-                        ).appendTo("#productos-carrito");
-                    });
+                            ).appendTo("#productos-carrito");
+                        });
+                    } else {
+                        $("#productos-carrito").html("<p>No hay productos en el carrito</p>");
+                    }
                     sumarTotal();
                 },
-                error: function (error) {
+                error: function () {
                     $("#productos-carrito").LoadingOverlay("hide");
-                },
-                beforeSend: function () {
-                    $("#productos-carrito").LoadingOverlay("show");
+                    alert("Error al cargar los productos del carrito");
                 }
+
             });
-            ListarLocalidad();
         });
 
-        function ListarLocalidad() {
-            $("<option>")
-                .attr({ "value": "00", "disabled": "disabled", "selected": "true" })
-                .text("Seleccionar")
-                .appendTo("#cbolocalidad");
-
-            jQuery.ajax({
-                url: "@Url.Action("ObtenerLocalidad", "Home")",
-                type: "POST",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    if (data.lista != null) {
-                        $.each(data.lista, function (i, item) {
-                            $("<option>")
-                                .attr({ "value": item.Id_Localidad })
-                                .text(item.Descripcion)
-                                .appendTo("#cbolocalidad");
-                        });
-                    }
-                }
-            });
-        }
 
         function sumarTotal() {
-            var sumaTotal = parseFloat(0);
-            $("input.input-cantidad").each(function (i) {
+            var sumarTotal = 0;
+            $("input.input-cantidad").each(function () {
                 var precio = $(this).data("oProducto").Precio;
-                var cantidad = parseFloat($(this).val());
+                var cantidad = parseFloat($(this).val()) || 0;
                 var subtotal = precio * cantidad;
-                sumaTotal += subtotal;
+                sumarTotal += subtotal;
             });
-            $("#total").text(sumaTotal.toFixed(2));
-            $("#total").data("sumaTotal", sumaTotal);
+            $("#total").text(sumarTotal.toFixed(2));
+            $("#total").data("sumatotal", sumarTotal);
         }
-
         $(document).on("click", ".btn-sumar", function () {
             var div_contenedor = $(this).parent("div.d-flex");
             var input_cantidad = $(div_contenedor).find("input.input-cantidad");
-            var btn = $(this);
+            var btn = $(this)
             var idproducto = $(input_cantidad).data("oProducto").Id_Producto;
-
             jQuery.ajax({
                 url: '@Url.Action("OperacionCarrito","Home")',
                 type: "POST",
-                data: JSON.stringify({ Id_Producto: idproducto, sumar: true, Id_Cliente: null }),
+                data: JSON.stringify({idproducto : idproducto, sumar :true}),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    $(btn).LoadingOverlay("hide");
+
+                    $(btn).LoadingOverlay("hide")
 
                     if (data.respuesta) {
                         var cantidad = parseInt($(input_cantidad).val()) + 1;
-                        $(input_cantidad).val(cantidad);
-                        sumarTotal();
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal()
+                        actualizarLocalStorage();
                     } else {
-                        swal("", data.mensaje, "warning");
+                        swal("",data.mensaje,"warning")
                     }
                 },
                 beforeSend: function () {
-                    $(btn).LoadingOverlay("show");
+                    $(btn).LoadingOverlay("show")
                 },
                 error: function (error) {
-                    $(btn).LoadingOverlay("hide");
-                }
-            });
-        });
-
+                $(btn).LoadingOverlay("hide")}
+            })
+        })
         $(document).on("click", ".btn-restar", function () {
-        var div_contenedor = $(this).parent("div.d-flex");
-        var input_cantidad = $(div_contenedor).find("input.input-cantidad");
-        var btn = $(this);
-        var idproducto = $(input_cantidad).data("oProducto").Id_Producto;
-
+            var div_contenedor = $(this).parent("div.d-flex");
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+            var btn = $(this)
+            var idproducto = $(input_cantidad).data("oProducto").Id_Producto;
             var cantidad = parseInt($(input_cantidad).val()) - 1;
+                if (cantidad >= 1) {
+                    jQuery.ajax({
+                        url: '@Url.Action("OperacionCarrito","Home")',
+                        type: "POST",
+                        data: JSON.stringify({idproducto : idproducto, sumar :false}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
 
-            if (cantidad >= 1) {
+                            $(btn).LoadingOverlay("hide")
 
-                jQuery.ajax({
-                    url: '@Url.Action("OperacionCarrito","Home")',
-                    type: "POST",
-                    data: JSON.stringify({ Id_Producto: idproducto, sumar: false, Id_Cliente: null }),
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
+                            if (data.respuesta) {
 
-
-                        $(btn).LoadingOverlay("hide");
-
-                        if (data.respuesta) {
-
-                            $(input_cantidad).val(cantidad);
-                            sumarTotal();
-                        } else {
-
-                            swal("", data.mensaje, "warning");
-                        }
-                    },
-                    beforeSend: function () {
-                        $(btn).LoadingOverlay("show");
-                    },
-                    error: function (error) {
-                        $(btn).LoadingOverlay("hide");
-                    }
-                })
-
-            }
-
+                                $(input_cantidad).val(cantidad)
+                                sumarTotal()
+                                actualizarLocalStorage();
+                            } else {
+                                swal("",data.mensaje,"warning")
+                            }
+                        },
+                        beforeSend: function () {
+                            $(btn).LoadingOverlay("show")
+                        },
+                        error: function (error) {
+                        $(btn).LoadingOverlay("hide")}
+                    })
+                }
 
         })
-
         $(document).on("click", ".btn-eliminar", function () {
-        
-          var idproducto = $(this).data("idproducto");
 
+            var idproducto = $(this).data("idproducto");
             var card_producto = $(this).parents("div.card-producto");
+            jQuery.ajax({
+                url: '@Url.Action("EliminarCarrito","Home")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
 
-           
-                jQuery.ajax({
-                    url: '@Url.Action("EliminarCarrito","Home")',
-                    type: "POST",
-                    data: JSON.stringify({ Id_Producto: idproducto, }),
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
 
 
-                        
-                        if (data.respuesta) {
+                    if (data.respuesta) {
 
-                            card_producto.remove();
+                        card_producto.remove();
+                        MostrarCantidadCarrito();
+                        sumarTotal();
+                        actualizarLocalStorage();
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+                }
 
-                            MostrarCantidadCarrito();
 
-                            sumarTotal();
-
-                        } else {
-
-                            swal("", data.mensaje, "warning");
-                        }
-                    },
-                })
-
-            
-
+            })
 
         })
 
-
+        // Envio de orden
+        // Envío de orden
         function RealizarPedido() {
-            // Recupera el carrito desde localStorage (o tu fuente de datos)
-            const carrito = JSON.parse(localStorage.getItem("carrito")) || []; // Ajusta según cómo guardes el carrito
+            // Obtener datos del cliente
+            const nombre = $("#txtnombre").val().trim();
+            const apellido = $("#txtapellido").val().trim();
+            const telefono = $("#txttelefono").val().trim();
+            const calle = $("#txtcalle").val().trim();
+            const barrio = $("#txtbarrio").val().trim();
 
+            // Validar datos del cliente
+            if (!nombre || !apellido || !telefono || !calle || !barrio) {
+                swal("Datos incompletos", "Por favor, complete todos los campos obligatorios antes de finalizar el pedido.", "warning");
+                return;
+            }
+
+            // Validar si hay productos en el carrito
+            actualizarLocalStorage();
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
             if (carrito.length === 0) {
-                alert("El carrito está vacío. Por favor, agrega productos antes de finalizar el pedido.");
-                return;
-            }
-            const nombre = document.getElementById('txtnombrecontacto').value.trim();
-            const direccion = document.getElementById('txtdireccion').value.trim();
-            const telefono = document.getElementById('txttelefono').value.trim();
-
-            if (!nombre || !direccion || !telefono) {
-                alert("Por favor completa todos los datos de contacto antes de finalizar el pedido.");
+                swal("Carrito vacío", "No hay productos en el carrito para realizar el pedido.", "warning");
                 return;
             }
 
-            const numeroTelefono = "541168167235"; // Número de WhatsApp del vendedor (con código de país, sin '+')
-            let mensaje = "¡Hola! Me gustaría realizar el siguiente pedido:\n\n";
+            // Número de WhatsApp del vendedor
+            const numeroTelefono = "541168167235";
+            let mensaje = `¡Hola! Me gustaría realizar el siguiente pedido:\n\n`;
 
-            // Construye el mensaje con los datos del carrito
-            carrito.forEach(producto => {
-                mensaje += `- ${producto.nombre} x ${producto.cantidad} = $${(producto.cantidad * producto.precio).toFixed(2)}\n`;
+            // Crear mensaje con los detalles del carrito
+            carrito.forEach((item) => {
+                mensaje += `Producto: ${item.oProducto.Nombre}\n`;
+                mensaje += `Cantidad: ${item.Cantidad}\n`;
+                mensaje += `Precio: S/. ${item.oProducto.Precio}\n`;
+                mensaje += `Subtotal: S/. ${(item.oProducto.Precio * item.Cantidad).toFixed(2)}\n\n`;
             });
 
-            mensaje += "\n¡Gracias!";
+            // Obtener el total
+            const total = $("#total").data("sumatotal");
+            mensaje += `Total: S/. ${total.toFixed(2)}\n`;
 
-            // Construye la URL de WhatsApp
-            const urlWhatsApp = `https://wa.me/${1168167235}?text=${encodeURIComponent(mensaje)}`;
+            // Capturar datos del cliente
+            const direccion = `${calle}, ${barrio}, ${$("#txtdepartamento").val()}, Piso: ${$("#txtpiso").val()}`;
 
-            // Redirige al cliente a WhatsApp
+            // Agregar datos del cliente al mensaje
+            mensaje += `\nCliente: ${nombre} ${apellido}\n`;
+            mensaje += `Teléfono: ${telefono}\n`;
+            mensaje += `Dirección: ${direccion}\n`;
+
+            // Crear el enlace para enviar el mensaje por WhatsApp
+            const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
             window.open(urlWhatsApp, "_blank");
         }
 
 
 
+
+        function cargarCarrito() {
+            $.get('/Home/ListarProductosCarrito', function (response) {
+                if (response.data) {
+                    // Guardar los productos del carrito en el localStorage
+                    const carritoProductos = response.data.map(item => ({
+                        idProducto: item.oProducto.Id_Producto,
+                        nombre: item.oProducto.Nombre,
+                        precio: item.oProducto.Precio,
+                        cantidad: item.Cantidad,
+                        imagen: "data:image/" + item.oProducto.Extension + ";base64," + item.oProducto.Base64
+                    }));
+
+                    localStorage.setItem('carrito', JSON.stringify(carritoProductos));
+                    mostrarCarrito(carritoProductos);
+                }
+            });
+        }
+
+        function mostrarCarrito(carrito) {
+            let carritoHTML = '';
+            carrito.forEach(item => {
+                carritoHTML += `
+            <div class="producto-carrito">
+                <img src="${item.imagen}" alt="${item.nombre}" width="50">
+                <span>${item.nombre}</span>
+                <span>Precio: ${item.precio}</span>
+                <span>Cantidad: ${item.cantidad}</span>
+            </div>`;
+            });
+            document.getElementById('contenido-carrito').innerHTML = carritoHTML;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito.length > 0) {
+                mostrarCarrito(carrito);
+            } else {
+                cargarCarrito(); // Sincroniza el carrito con los datos del servidor
+            }
+        });
+
+
+        function eliminarDelCarrito(idProducto) {
+            $.post('/Home/EliminarCarrito', { idproducto: idProducto }, function (response) {
+                if (response.respuesta) {
+                    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                    carrito = carrito.filter(item => item.idProducto !== idProducto);
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                    mostrarCarrito(carrito);
+                    alert(response.mensaje);
+                } else {
+                    alert(response.mensaje);
+                }
+            });
+        }
+        //funcion para actualisar las operciones del carrito
+        function actualizarLocalStorage() {
+            const carrito = [];
+            $("input.input-cantidad").each(function () {
+                const producto = $(this).data("oProducto");
+                const cantidad = parseInt($(this).val());
+                carrito.push({ oProducto: producto, Cantidad: cantidad });
+            });
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+        }
+
+
+
+
     </script>
+
+
 }
