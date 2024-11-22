@@ -1,4 +1,5 @@
 ﻿using CapaEntidad;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -151,35 +152,43 @@ namespace CapaDatos
         {
             int idautogenerado = 0;
             Mensaje = string.Empty;
+
             try
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_RegistrarVenta", oconexion);
-                    cmd.Parameters.AddWithValue("Id_Cliente", obj.oCliente.Id_Cliente);
-                    cmd.Parameters.AddWithValue("Id_Producto", obj.oProducto.Id_Producto);
-                    cmd.Parameters.AddWithValue("Id_Localidad", obj.oLocalidad.Id_Localidad);
-                    cmd.Parameters.AddWithValue("Total_Productos", obj.Total_Productos);
-                    cmd.Parameters.AddWithValue("Fecha_Venta", obj.Fecha_Venta);
-                    cmd.Parameters.AddWithValue("Total_Pago", obj.Total_Pago);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    SqlCommand cmd = new SqlCommand("InsertarVenta", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    oconexion.Open();
+                    // Parámetros de entrada
+                    cmd.Parameters.AddWithValue("IdCliente", obj.oCliente.Id_Cliente);
+                    cmd.Parameters.AddWithValue("IdLocalidad", obj.oLocalidad.Id_Localidad);
+                    cmd.Parameters.AddWithValue("FechaVenta", obj.Fecha_Venta);
+                    cmd.Parameters.AddWithValue("TotalPago", obj.Total_Pago);
+                    cmd.Parameters.AddWithValue("TotalProductos",obj.Total_Productos);
+                   
 
+                    // Parámetros de salida
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+                    oconexion.Open();
                     cmd.ExecuteNonQuery();
-                    idautogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
-                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+
+                    // Obtener valores de salida
+                    idautogenerado = cmd.Parameters["Resultado"].Value != DBNull.Value
+                        ? Convert.ToInt32(cmd.Parameters["Resultado"].Value)
+                        : 0;
+                    Mensaje = cmd.Parameters["Mensaje"].Value?.ToString() ?? string.Empty;
                 }
             }
             catch (Exception ex)
             {
                 idautogenerado = 0;
-                Mensaje += ex.Message;
+                Mensaje = "Error al registrar la venta: " + ex.Message;
             }
+
             return idautogenerado;
         }
-
     }
 }

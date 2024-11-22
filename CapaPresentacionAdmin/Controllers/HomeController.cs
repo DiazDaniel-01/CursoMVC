@@ -259,46 +259,37 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-
-
-        public class ProductoVenta
-        {
-            public int Id_Producto { get; set; }
-            public int Cantidad { get; set; }
-        }
-
-        public class Venta
-        {
-            public int Id_Venta { get; set; }
-            public Cliente oCliente { get; set; }
-            public Localidad oLocalidad { get; set; }
-            public List<ProductoVenta> productos { get; set; } = new List<ProductoVenta>();  // Inicializa la lista
-            public DateTime Fecha_Venta { get; set; }
-            public decimal Total_Pago { get; set; }
-        }
-
-
         [HttpPost]
-        public ActionResult RegistrarVenta(VentaViewModel ventaViewModel)
+        public JsonResult RegistrarVenta(VentaViewModel ventaViewModel, ProductoViewModel productoviewmodel)
         {
-            if (ModelState.IsValid)
+            string mensaje = string.Empty;
+
+            // Validar que los datos sean correctos
+            if (ventaViewModel == null || ventaViewModel.Productos == null || ventaViewModel.Productos.Count == 0)
             {
-                // Aquí realizas el proceso de registrar la venta con los datos recibidos en el ViewModel
-                // Ejemplo de cómo acceder a los valores
-                int idCliente = ventaViewModel.Id_Cliente;
-                int idLocalidad = ventaViewModel.Id_Localidad;
-                decimal totalPago = ventaViewModel.Total_Pago;
-                List<Producto> productos = ventaViewModel.Productos;
+                return Json(new { success = false, message = "Datos incompletos. Verifique los campos." });
+            }
 
-                // Realiza el registro en la base de datos o la lógica que necesites
+            // Asignar datos de cliente y localidad
+            productoviewmodel.oCliente = new Cliente { Id_Cliente = ventaViewModel.Id_Cliente };
+            productoviewmodel.oLocalidad = new Localidad { Id_Localidad = ventaViewModel.Id_Localidad };
 
-                return Json(new { success = true, message = "Venta registrada con éxito." });
+            // Calcular el total de productos
+            productoviewmodel.Total_Productos = ventaViewModel.Productos.Count;
+
+            // Registrar la venta
+            int idVenta = ventaExternaNegocio.RegistrarVenta(ventaViewModel, out mensaje);
+
+            if (idVenta > 0)
+            {
+                return Json(new { success = true, message = "Venta registrada correctamente.", idVenta });
             }
             else
             {
-                return Json(new { success = false, message = "Datos incorrectos." });
+                return Json(new { success = false, message = mensaje });
             }
         }
     }
 }
+
 #endregion

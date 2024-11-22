@@ -197,45 +197,4 @@ namespace CapaPresentacionAdmin.Controllers
 
         #endregion
 
-        //Se crean los metodos para listar, registar, editar y eliminar EXTRA_PRODUCTO
-       /* #region EXTRA_PRODUCTO
-
-        [HttpGet]
-        public JsonResult ListarExtraP()
-        {
-            List<Extra_Producto> oLista = new List<Extra_Producto>();
-            oLista = new CN_ExtraP().ListarExtraP();
-            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public JsonResult RegistrarExtraP(Extra_Producto objeto)
-        {
-            object resultado;
-            string mensaje = string.Empty;
-            if (objeto.Id_ExtraP == 0)
-            {
-                resultado = new CN_ExtraP().RegistrarExtraP(objeto, out mensaje);
-            }
-            else
-            {
-                resultado = new CN_ExtraP().EditarExtraP(objeto, out mensaje);
-            }
-
-            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public JsonResult EliminarExtraP(int id)
-        {
-            bool respuesta = false;
-            string mensaje = string.Empty;
-
-            respuesta = new CN_ExtraP().EliminarExtraP(id, out mensaje);
-
-            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        }
-
-        #endregion
-    }
-}*/
+       
