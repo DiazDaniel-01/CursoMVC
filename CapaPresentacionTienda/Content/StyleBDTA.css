@@ -193,6 +193,10 @@ h4 {
         font-size: 14px;
         line-height: 1.3
     }
+.order-item {
+    padding-left: 5px;
+    padding-right: 5px;
+}
 
 .price {
     color: #FF5733;
@@ -589,15 +593,32 @@ textarea.form-control {
     width: 100%;
 }
 
-/* Estilo por defecto para pantallas grandes (por encima de 1080px) */
-.menu {
+
+/* Suavizar las transiciones entre visibilidad */
+.back-to-menu-button {
+    display: none; /* Oculto por defecto */
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: sticky; /* Se mantiene visible al desplazarse */
+    top: 0;
+    z-index: 10; /* Asegura que esté por encima del contenido */
+    width: calc(100% - 20px); /* Ocupa todo el ancho con un margen */
+}
+
+.menu, .orden-container {
     display: block; /* El menú de productos se muestra */
+    transition: visibility 0.3s ease, opacity 0.3s ease;
 }
 
-.orden-container {
-    display: block; /* El pedido se muestra normalmente */
-}
-
+    .menu.hidden, .orden-container.hidden {
+        display: none; /* Elementos ocultos no ocupan espacio */
+    }
 
 .floating-button-container {
     background-color: white; /* Fondo blanco */
@@ -610,7 +631,9 @@ textarea.form-control {
 
 .floating-button {
     display: block;
-    width: 100%; /* Abarca todo el ancho del contenedor */
+    grid-template-columns: auto auto; /* Dos columnas: texto y precio */
+    justify-content: space-between; /* Espaciado entre las áreas */
+    align-items: center; /* Centra verticalmente */
     padding: 15px;
     font-size: 18px;
     background-color: #FF6347; /* Color de fondo del botón */
@@ -620,10 +643,27 @@ textarea.form-control {
     text-align: center;
     border-radius: 5px;
 }
+/* Estilo para el texto del botón */
+.button-text {
+    font-weight: bold;
+}
+/* Estilo para el precio */
+.totalPrice {
+    background-color: #fff; /* Fondo blanco */
+    color: #FF6347; /* Color del texto */
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
 
 /* Media query para pantallas pequeñas (por debajo de 1080px) */
 @media (max-width: 1080px) {
     /* Mostrar el menú de productos en pantallas pequeñas */
+    .back-to-menu-button {
+        display: block;
+    }
+
     .menu {
         display: block; /* El menú de productos se muestra */
         width: 100%; /* Aseguramos que ocupe todo el ancho de la pantalla */
