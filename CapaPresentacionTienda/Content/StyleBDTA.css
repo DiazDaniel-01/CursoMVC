@@ -626,7 +626,9 @@ textarea.form-control {
     position: relative; /* Relativo para mantenerlo dentro del contenedor */
     border-top: 1px solid #ddd; /* Línea divisoria para separar el botón */
     width: 100%;
+    display: none; /* Oculto por defecto */
 }
+
 
 
 .floating-button {
@@ -687,6 +689,7 @@ textarea.form-control {
 
     /* Hacer el botón fijo solo dentro del contenedor del menú */
     .floating-button-container {
+        display: block;
         position: -webkit-sticky; /* Para navegadores Webkit */
         position: sticky; /* El botón se queda pegado en la parte inferior */
         bottom: 0; /* Se pega al fondo de la pantalla */
@@ -758,6 +761,10 @@ textarea.form-control {
     .carousel {
         padding: 0 5px;
     }
+
+    .grid-container {
+        grid-template-columns: 1fr; /* Solo una columna */
+    }
 }
 
 /* Adjustments for screens 576px or smaller */
@@ -789,7 +796,4 @@ textarea.form-control {
         padding: 0 5px;
     }
 
-    .grid-container {
-        grid-template-columns: 1fr; /* Solo una columna */
-    }
 }
