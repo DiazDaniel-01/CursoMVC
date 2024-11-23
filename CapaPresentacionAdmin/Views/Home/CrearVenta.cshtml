@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "CrearVenta";
+﻿
+@{
+    ViewBag.Title = "Crear Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="modal-body mt-3">
     <h5>Crear Venta Externa</h5>
@@ -29,10 +31,10 @@
     </div>
 
     <!-- Cantidad de Productos -->
-    @*<div class="mb-3">
+    <div class="mb-3">
         <label for="txtCantidad" class="form-label">Cantidad</label>
         <input type="number" class="form-control" id="txtCantidad" min="1" value="1">
-    </div>*@
+    </div>
 
     <!-- Botón para agregar producto -->
     <div class="mb-3">
@@ -68,6 +70,7 @@
             cargarClientes();
         });
 
+        // Cargar clientes desde el backend
         function cargarClientes() {
             $.ajax({
                 url: '@Url.Action("ListarClientes", "Home")',
@@ -86,6 +89,7 @@
             });
         }
 
+        // Cargar localidades desde el backend
         function cargarLocalidades() {
             $.ajax({
                 url: '@Url.Action("ListarLocalidad", "Home")',
@@ -104,6 +108,7 @@
             });
         }
 
+        // Cargar productos desde el backend
         function cargarProductos() {
             $.ajax({
                 url: '@Url.Action("ListarProducto", "Mantenedor")',
@@ -123,6 +128,7 @@
             });
         }
 
+        // Agregar producto seleccionado a la lista
         function agregarProductoSeleccionado() {
             var productoId = $("#selectProducto").val();
             var productoNombre = $("#selectProducto option:selected").text();
@@ -153,6 +159,7 @@
             actualizarListadoProductos();
         }
 
+        // Actualizar el listado de productos seleccionados y el total
         function actualizarListadoProductos() {
             var totalPago = 0;
             $("#listaProductosSeleccionados").empty(); // Limpiar la lista visual
@@ -169,43 +176,90 @@
             // Actualizar el total acumulado
             $("#visibleTotalPago").val(totalPago.toFixed(2));
             $("#hiddenTotalPago").val(totalPago.toFixed(2));
+            productosSeleccionados.push({
+                Total_Pago: totalPago
+            });
         }
 
+        // Función para guardar la venta
         function crearVenta() {
-            var idCliente = $("#selectCliente").val();
-            var idLocalidad = $("#selectLocalidad").val();
-            var totalPago = parseFloat($("#hiddenTotalPago").val()) || 0;
-
-            if (!idCliente || !idLocalidad || productosSeleccionados.length === 0) {
-                alert("Por favor, complete todos los campos obligatorios.");
-                return;
-            }
-
-            var ventaViewModel = {
-                Id_Cliente: parseInt(idCliente),
-                Id_Localidad: parseInt(idLocalidad),
-                Productos: productosSeleccionados,
-                Fecha_Venta: new Date().toISOString(),
-                Total_Pago: totalPago
+            var venta = {
+                Id_VentaViewModel: 0,  // O el valor adecuado
+                oCliente: {
+                    Id_Cliente: $("#selectCliente").val()
+                },
+                oLocalidad: {
+                    Id_Localidad: $("#selectLocalidad").val()
+                },
+                Fecha_Venta: new Date().toISOString()
+                // Agrega otros campos según sea necesario
             };
-
+            // Enviar la venta al backend
             $.ajax({
-                url: '@Url.Action("RegistrarVenta", "Home")',
+                url: '@Url.Action("InsertarVenta", "Home")',  // Cambia esto por tu URL real
                 type: "POST",
-                data: JSON.stringify(ventaViewModel),
+                data: JSON.stringify(venta),
+                dataType: "json",
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert(response.message);
-                        location.reload();
+                        var ventaId = response.data ? response.data.Id_Venta : null;  // Verifica que data e Id_Venta existan
+                        if (ventaId) {
+                            insertarDetallesVenta(ventaId);
+                        } else {
+                            alert("Error: No se pudo obtener el ID de la venta.");
+                        }
                     } else {
-                        alert("Error al registrar la venta.");
+                        alert("Error al crear la venta: " + response.message);
                     }
                 },
                 error: function (error) {
-                    console.log("Error al registrar la venta:", error);
+                    console.log("Error al guardar la venta:", error);
                 }
             });
         }
+
+        // Función para insertar los detalles de la venta
+        function insertarDetallesVenta(ventaId) {
+            // Crear los detalles de la venta (productos seleccionados)
+            var detallesVenta = productosSeleccionados.map(function (producto) {
+                return {
+                    Id_DetalleVenta: 0,
+                    oVentaViewModel: {
+                        Id_Venta: ventaId
+                    },
+                    Id_Producto: producto.Id_Producto,
+                    Cantidad: producto.Cantidad,
+                    Precio: producto.Precio,
+                    Subtotal: producto.Subtotal,
+                    Total_Pago: producto.Total_Pago
+                };
+            });
+
+            // Enviar los detalles de la venta al backend
+            $.ajax({
+                url: '@Url.Action("InsertarDetalleVenta", "Home")',  // Cambia esto por tu URL real
+                type: "POST",
+                data: JSON.stringify(detallesVenta),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        alert("Venta creada con éxito.");
+                        // Limpiar la lista de productos seleccionados
+                        productosSeleccionados = [];
+                        actualizarListadoProductos();
+                    } else {
+                        alert("Error al agregar los detalles de la venta: " + response.message);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error al guardar los detalles de la venta:", error);
+                }
+            });
+        }
+
+
+
+
     </script>
 }

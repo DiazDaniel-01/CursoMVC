@@ -260,35 +260,51 @@ namespace CapaPresentacionAdmin.Controllers
         }
 
         [HttpPost]
-        public JsonResult RegistrarVenta(VentaViewModel ventaViewModel, ProductoViewModel productoviewmodel)
+        public ActionResult InsertarVenta(VentaViewModel objeto)
         {
+            object resultado;
             string mensaje = string.Empty;
 
-            // Validar que los datos sean correctos
-            if (ventaViewModel == null || ventaViewModel.Productos == null || ventaViewModel.Productos.Count == 0)
+            if (objeto.Id_VentaViewModel == 0)
             {
-                return Json(new { success = false, message = "Datos incompletos. Verifique los campos." });
-            }
-
-            // Asignar datos de cliente y localidad
-            productoviewmodel.oCliente = new Cliente { Id_Cliente = ventaViewModel.Id_Cliente };
-            productoviewmodel.oLocalidad = new Localidad { Id_Localidad = ventaViewModel.Id_Localidad };
-
-            // Calcular el total de productos
-            productoviewmodel.Total_Productos = ventaViewModel.Productos.Count;
-
-            // Registrar la venta
-            int idVenta = ventaExternaNegocio.RegistrarVenta(ventaViewModel, out mensaje);
-
-            if (idVenta > 0)
-            {
-                return Json(new { success = true, message = "Venta registrada correctamente.", idVenta });
+                resultado = new CN_VentaExterna().InsertarVenta(objeto, out mensaje);
+                if (resultado != null)
+                {
+                    // Asegúrate de devolver el Id de la venta y success correctamente
+                    return Json(new { success = true, data = new { Id_Venta = resultado }, message = mensaje });
+                }
             }
             else
             {
-                return Json(new { success = false, message = mensaje });
+                return Json(new { success = false, message = "La venta ya existe." });
             }
+
+            return Json(new { success = false, message = "No se pudo crear la venta." });
         }
+
+
+
+        [HttpPost]
+        public ActionResult InsertarDetalleVenta(ProductoViewModel objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if (objeto.Id_DetalleVenta == 0)
+            {
+                // Insertar el detalle de la venta y manejar los errores
+                resultado = new CN_VentaExterna().InsertarDetalleVenta(objeto, out mensaje);
+
+            }
+            else
+            {
+                return View();
+            }
+
+            // Retornar el resultado del proceso
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
 

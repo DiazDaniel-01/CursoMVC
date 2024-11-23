@@ -8,9 +8,12 @@ namespace CapaEntidad
 {
     public class ProductoViewModel
     {
-        public int Id_Producto { get; set; }
+        public int Id_DetalleVenta { get; set; }
+        public VentaViewModel oVentaViewModel { get; set; }
+        public Producto oProducto { get; set; }
         public int Cantidad { get; set; }
-        public decimal Precio { get; set; }
+        public decimal PrecioUnitario { get; set; }
         public decimal Subtotal { get; set; }
+        public decimal Total_Pago { get; set; }
     }
 }
