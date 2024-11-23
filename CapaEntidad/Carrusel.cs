@@ -10,8 +10,10 @@ namespace CapaEntidad
     public class Carrusel
     {
         public int Id_Carrusel { get; set; }
-        public string Nombre { get; set; }
+        public string Nombre_Imagen { get; set; }
         public string Descripcion { get; set; }
-        public bool Activo { get; set; }
+        public string Ruta_Imagen { get; set; }
+        public string Base64 { get; set; }
+        public string Extension { get; set; }
     }
 }

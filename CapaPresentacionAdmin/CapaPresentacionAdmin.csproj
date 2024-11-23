@@ -669,6 +669,7 @@
     <Content Include="Views\Home\Cliente.cshtml" />
     <Content Include="Views\Home\Localidad.cshtml" />
     <Content Include="Views\Home\CrearVenta.cshtml" />
+    <Content Include="Views\Mantenedor\Carrrusel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
