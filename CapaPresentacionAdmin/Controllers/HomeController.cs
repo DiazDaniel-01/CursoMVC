@@ -262,6 +262,16 @@ namespace CapaPresentacionAdmin.Controllers
         [HttpPost]
         public ActionResult InsertarVenta(VentaViewModel objeto)
         {
+            // Verifica si el objeto llega correctamente
+            if (objeto != null)
+            {
+                Console.WriteLine($"Total_Pago recibido: {objeto.Total_Pago}");
+            }
+            else
+            {
+                Console.WriteLine("El objeto es nulo");
+            }
+
             object resultado;
             string mensaje = string.Empty;
 
@@ -270,8 +280,7 @@ namespace CapaPresentacionAdmin.Controllers
                 resultado = new CN_VentaExterna().InsertarVenta(objeto, out mensaje);
                 if (resultado != null)
                 {
-                    // Asegúrate de devolver el Id de la venta y success correctamente
-                    return Json(new { success = true, data = new { Id_Venta = resultado }, message = mensaje });
+                    return Json(new { success = true, data = new { Id_VentaViewModel = resultado }, message = mensaje });
                 }
             }
             else
@@ -284,26 +293,50 @@ namespace CapaPresentacionAdmin.Controllers
 
 
 
+
         [HttpPost]
-        public ActionResult InsertarDetalleVenta(ProductoViewModel objeto)
+        public ActionResult InsertarDetalleVenta(List<ProductoViewModel> detallesVenta)
         {
-            object resultado;
+            bool success = true;
             string mensaje = string.Empty;
 
-            if (objeto.Id_DetalleVenta == 0)
+            try
             {
-                // Insertar el detalle de la venta y manejar los errores
-                resultado = new CN_VentaExterna().InsertarDetalleVenta(objeto, out mensaje);
+                // Verifica que la lista de detalles de la venta no esté vacía
+                if (detallesVenta != null && detallesVenta.Count > 0)
+                {
+                    // Recorre cada detalle de venta enviado desde el frontend
+                    foreach (var detalle in detallesVenta)
+                    {
+                        if (detalle.Id_DetalleVenta == 0)
+                        {
+                            // Insertar el detalle de la venta y manejar los errores
+                            int resultado = new CN_VentaExterna().InsertarDetalleVenta(detalle, out string mensajeDetalle);
 
+                            if (resultado == 0) // Si '0' indica fracaso
+                            {
+                                success = false;
+                                mensaje += $"Error al insertar el producto {detalle.oProducto.Id_Producto}: {mensajeDetalle} ";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    success = false;
+                    mensaje = "No se han proporcionado detalles de venta para insertar.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return View();
+                success = false;
+                mensaje = $"Ocurrió un error al insertar los detalles de la venta: {ex.Message}";
             }
 
             // Retornar el resultado del proceso
-            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = success, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
+
 
     }
 }

@@ -160,7 +160,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Id_Cliente", obj.oCliente.Id_Cliente);
                     cmd.Parameters.AddWithValue("@Id_Localidad", obj.oLocalidad.Id_Localidad);
                     cmd.Parameters.AddWithValue("@Fecha_Venta", obj.Fecha_Venta);
-
+                    cmd.Parameters.AddWithValue("@Total_Pago", obj.Total_Pago);
                     cmd.Parameters.Add("@Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
 
@@ -192,10 +192,9 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Id_Venta", obj.oVentaViewModel.Id_VentaViewModel);
                     cmd.Parameters.AddWithValue("@Id_Producto", obj.oProducto.Id_Producto);
                     cmd.Parameters.AddWithValue("@Cantidad", obj.Cantidad);
+                    cmd.Parameters.AddWithValue("@Observacion", obj.Observacion);
                     cmd.Parameters.AddWithValue("@PrecioUnitario", obj.PrecioUnitario);
                     cmd.Parameters.AddWithValue("@Subtotal", obj.Subtotal);
-                    cmd.Parameters.AddWithValue("@Total_Pago", obj.Subtotal);
-
                     cmd.Parameters.Add("@Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
 

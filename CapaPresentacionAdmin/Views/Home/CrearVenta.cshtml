@@ -29,6 +29,10 @@
             <option value="">Seleccione un Producto</option>
         </select>
     </div>
+    <div class="mb-3">
+        <label for="txtObservacion" class="form-label">Comentarios</label>
+        <input type="text" class="form-control" id="txtObservacion" placeholder="Agregar comentarios del Producto" autocomplete="off">
+    </div>
 
     <!-- Cantidad de Productos -->
     <div class="mb-3">
@@ -44,19 +48,24 @@
     <!-- Total Pago -->
     <div class="mb-3">
         <label for="visibleTotalPago" class="form-label">Total Pago</label>
-        <input type="text" id="visibleTotalPago" class="form-control" readonly />
+        <input type="text" id="visibleTotalPago" placeholder="Se mostrara el total del pago" class="form-control" readonly />
         <input type="hidden" id="hiddenTotalPago" name="hiddenTotalPago" />
     </div>
-
     <!-- Listado de Productos Seleccionados -->
     <div class="mb-3">
         <h6>Productos Seleccionados:</h6>
         <ul id="listaProductosSeleccionados"></ul>
     </div>
 
-    <!-- Botón para crear venta -->
-    <div class="text-end">
-        <button type="button" class="btn btn-primary" onclick="crearVenta()">Guardar Venta</button>
+    <div>
+        <!-- Botón para limpiar productos seleccionados -->
+        <div class="mb-3">
+            <button type="button" class="btn btn-danger" onclick="limpiarProductos()">Limpiar Productos Seleccionados</button>
+        </div>
+        <!-- Botón para crear venta -->
+        <div class="text-end">
+            <button type="button" class="btn btn-primary" onclick="crearVenta()">Guardar Venta</button>
+        </div>
     </div>
 </div>
 
@@ -134,6 +143,7 @@
             var productoNombre = $("#selectProducto option:selected").text();
             var precioProducto = parseFloat($("#selectProducto option:selected").data('precio')) || 0;
             var cantidad = parseInt($("#txtCantidad").val()) || 1;
+            var comentario = $("#txtObservacion").val(); // Obtener el comentario
 
             if (!productoId || cantidad <= 0) {
                 alert("Seleccione un producto válido y una cantidad mayor a 0.");
@@ -152,10 +162,14 @@
                     Nombre: productoNombre,
                     Precio: precioProducto,
                     Cantidad: cantidad,
-                    Subtotal: precioProducto * cantidad
+                    Subtotal: precioProducto * cantidad,
+                    Comentario: comentario // Agregar comentario específico al producto
                 });
             }
 
+            // Limpiar el comentario después de agregar
+            $("#txtObservacion").val('');
+            // Actualizar el total de la venta cada vez que se agregue o actualice un producto
             actualizarListadoProductos();
         }
 
@@ -169,20 +183,26 @@
 
                 // Mostrar cada producto en la lista
                 $("#listaProductosSeleccionados").append(
-                    `<li>${producto.Nombre} - Cantidad: ${producto.Cantidad} - Precio: $${producto.Precio.toFixed(2)} - Subtotal: $${producto.Subtotal.toFixed(2)}</li>`
+                    `<li>${producto.Nombre} - Cantidad: ${producto.Cantidad} - Precio: $${producto.Precio.toFixed(2)} - Subtotal: $${producto.Subtotal.toFixed(2)}<br>Comentario: ${producto.Comentario || 'Sin comentario'}</li>`
                 );
             });
 
-            // Actualizar el total acumulado
+            // Actualizar el total acumulado en la interfaz
             $("#visibleTotalPago").val(totalPago.toFixed(2));
             $("#hiddenTotalPago").val(totalPago.toFixed(2));
-            productosSeleccionados.push({
-                Total_Pago: totalPago
-            });
+        }
+        // Función para limpiar solo la lista de productos seleccionados
+        function limpiarProductos() {
+            productosSeleccionados = []; // Vaciar el array de productos seleccionados
+            actualizarListadoProductos(); // Actualizar la lista visual
+            $("#visibleTotalPago").val(''); // Limpiar el total
+            $("#hiddenTotalPago").val('');
         }
 
         // Función para guardar la venta
         function crearVenta() {
+
+            // Construye el objeto venta incluyendo el Total_Pago calculado
             var venta = {
                 Id_VentaViewModel: 0,  // O el valor adecuado
                 oCliente: {
@@ -191,21 +211,22 @@
                 oLocalidad: {
                     Id_Localidad: $("#selectLocalidad").val()
                 },
-                Fecha_Venta: new Date().toISOString()
-                // Agrega otros campos según sea necesario
+                Fecha_Venta: new Date().toISOString(),
+                Total_Pago: parseFloat($("#hiddenTotalPago").val())
             };
+
             // Enviar la venta al backend
             $.ajax({
                 url: '@Url.Action("InsertarVenta", "Home")',  // Cambia esto por tu URL real
                 type: "POST",
                 data: JSON.stringify(venta),
-                dataType: "json",
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        var ventaId = response.data ? response.data.Id_Venta : null;  // Verifica que data e Id_Venta existan
+                        // Usa el nombre correcto del ID que retorna el backend
+                        var ventaId = response.data ? response.data.Id_VentaViewModel : null; // Verifica que data e Id_VentaViewModel existan
                         if (ventaId) {
-                            insertarDetallesVenta(ventaId);
+                            insertarDetallesVenta(ventaId);  // Llama a la función para insertar los detalles
                         } else {
                             alert("Error: No se pudo obtener el ID de la venta.");
                         }
@@ -219,20 +240,21 @@
             });
         }
 
-        // Función para insertar los detalles de la venta
         function insertarDetallesVenta(ventaId) {
-            // Crear los detalles de la venta (productos seleccionados)
+            // Crear el objeto ProductoViewModel con los detalles de la venta (productos seleccionados)
             var detallesVenta = productosSeleccionados.map(function (producto) {
                 return {
-                    Id_DetalleVenta: 0,
+                    Id_DetalleVenta: 0,  // Incrementar Id_DetalleVenta en cada iteración
                     oVentaViewModel: {
-                        Id_Venta: ventaId
+                        Id_VentaViewModel: ventaId
                     },
-                    Id_Producto: producto.Id_Producto,
+                    oProducto: {
+                        Id_Producto: producto.Id_Producto
+                    },
                     Cantidad: producto.Cantidad,
-                    Precio: producto.Precio,
-                    Subtotal: producto.Subtotal,
-                    Total_Pago: producto.Total_Pago
+                    Observacion: producto.Comentario,
+                    PrecioUnitario: producto.Precio,
+                    Subtotal: producto.Subtotal
                 };
             });
 
@@ -257,8 +279,6 @@
                 }
             });
         }
-
-
 
 
     </script>

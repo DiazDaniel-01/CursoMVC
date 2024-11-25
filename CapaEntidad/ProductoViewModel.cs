@@ -11,9 +11,9 @@ namespace CapaEntidad
         public int Id_DetalleVenta { get; set; }
         public VentaViewModel oVentaViewModel { get; set; }
         public Producto oProducto { get; set; }
+        public string Observacion { get; set; }
         public int Cantidad { get; set; }
         public decimal PrecioUnitario { get; set; }
         public decimal Subtotal { get; set; }
-        public decimal Total_Pago { get; set; }
     }
 }

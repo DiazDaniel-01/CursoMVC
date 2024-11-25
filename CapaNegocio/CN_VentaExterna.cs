@@ -88,6 +88,10 @@ namespace CapaNegocio
             {
                 Mensaje = "La fecha de venta no puede ser vacía";
             }
+            else if (obj.Total_Pago <= 0)
+            {
+                Mensaje = "El Pago Total debe ser mayor a cero";
+            }
 
             // Si no se encontró ningún error en la validación
             if (string.IsNullOrEmpty(Mensaje))
@@ -127,10 +131,6 @@ namespace CapaNegocio
             else if (obj.Subtotal <= 0)
             {
                 Mensaje = "El subtotal debe ser mayor a cero";
-            }
-            else if (obj.Total_Pago <= 0)
-            {
-                Mensaje = "El total a pagar debe ser mayor a cero";
             }
 
             // Si no se encontró ningún error en la validación
