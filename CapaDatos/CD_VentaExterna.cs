@@ -20,7 +20,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "SELECT Id_Cliente, Nombre, Celular FROM CLIENTE";
+                    string query = "SELECT Id_Cliente, Nombre, Apellido, Celular FROM CLIENTE";
                     SqlCommand cmd = new SqlCommand(query, oconexion);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();
@@ -31,6 +31,7 @@ namespace CapaDatos
                             lista.Add(new Cliente()
                             {
                                 Id_Cliente = Convert.ToInt32(dr["Id_Cliente"]),
+                                Apellido = dr["Apellido"].ToString(),
                                 Nombre = dr["Nombre"].ToString(),
                                 Celular = dr["Celular"].ToString()
                             });
@@ -64,8 +65,7 @@ namespace CapaDatos
                         {
                             lista.Add(new Localidad()
                             {
-                                Id_Localidad = Convert.ToInt32(dr["Id_Localidad"]),
-                                Barrio = dr["Barrio"].ToString()
+                                Id_Localidad = Convert.ToInt32(dr["Id_Localidad"])
                             });
                         }
                     }
@@ -119,14 +119,12 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_InsertarLocalidad", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Barrio", obj.Barrio);
                     cmd.Parameters.AddWithValue("@CodigoPostal", obj.Codigo_Postal);
                     cmd.Parameters.AddWithValue("@Departamento", obj.Departamento);
                     cmd.Parameters.AddWithValue("@Calle", obj.Calle);
                     cmd.Parameters.AddWithValue("@Calle2", obj.Calle_2);
                     cmd.Parameters.AddWithValue("@Piso", obj.Piso);
                     cmd.Parameters.AddWithValue("@Referencia", obj.Referencia);
-                    cmd.Parameters.AddWithValue("@CostoEnvio", obj.Costo_Envio);
 
                     cmd.Parameters.Add("@Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -144,6 +142,35 @@ namespace CapaDatos
                 Mensaje += ex.Message;
             }
             return idautogenerado;
+        }
+
+        public bool EliminarLocalidad(int id)
+        {
+            bool resultado = false;
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EliminarLocalidad", oconexion);
+                    cmd.Parameters.AddWithValue("Id_Localidad", id); // Agrega el parámetro del procedimiento almacenado
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconexion.Open(); // Abre la conexión
+                    int filasAfectadas = cmd.ExecuteNonQuery(); // Ejecuta el procedimiento almacenado
+
+                    // Verifica si se eliminó al menos un registro
+                    resultado = filasAfectadas > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de la excepción
+                Console.WriteLine($"Error: {ex.Message}");
+                resultado = false;
+            }
+
+            return resultado;
         }
 
 

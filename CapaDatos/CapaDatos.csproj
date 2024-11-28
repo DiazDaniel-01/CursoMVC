@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="CD_Carrusel.cs" />
     <Compile Include="CD_Categoria.cs" />
-    <Compile Include="CD_ExtraP.cs" />
     <Compile Include="CD_Producto.cs" />
     <Compile Include="CD_Reporte.cs" />
     <Compile Include="CD_Usuarios.cs" />

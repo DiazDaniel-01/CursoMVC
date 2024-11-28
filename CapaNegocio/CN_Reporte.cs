@@ -22,5 +22,9 @@ namespace CapaNegocio
             return objCapaDato.VerDashBoard();
         }
 
+        public bool EliminarVenta(int id, out string Mensaje)
+        {
+            return objCapaDato.EliminarVenta(id, out Mensaje);
+        }
     }
 }

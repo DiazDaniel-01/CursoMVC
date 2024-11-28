@@ -669,7 +669,7 @@
     <Content Include="Views\Home\Cliente.cshtml" />
     <Content Include="Views\Home\Localidad.cshtml" />
     <Content Include="Views\Home\CrearVenta.cshtml" />
-    <Content Include="Views\Mantenedor\Carrrusel.cshtml" />
+    <Content Include="Views\Mantenedor\Carrusel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -709,7 +709,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>62140</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44346/</IISUrl>
+          <IISUrl>https://localhost:44346/Admin</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>https://localhost:44346/Admin</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="modal-body mt-3">
-    <h5>Crear Venta Externa</h5>
+    <h2>Crear Venta Externa</h2>
 
     <!-- Seleccionar Cliente -->
     <div class="mb-3">
@@ -57,9 +57,9 @@
         <ul id="listaProductosSeleccionados"></ul>
     </div>
 
-    <div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
         <!-- Botón para limpiar productos seleccionados -->
-        <div class="mb-3">
+        <div class="text-end">
             <button type="button" class="btn btn-danger" onclick="limpiarProductos()">Limpiar Productos Seleccionados</button>
         </div>
         <!-- Botón para crear venta -->

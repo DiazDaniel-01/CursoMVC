@@ -27,6 +27,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("Id_Venta", Id_Venta);
                     cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
+
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
@@ -34,20 +35,20 @@ namespace CapaDatos
                             lista.Add(
                                 new Reporte()
                                 {
-                                    FechaVenta = dr["FechaVenta"].ToString(),
+                                    Id_Venta = dr["Id_Venta"].ToString(),
                                     Clientes = dr["Cliente"].ToString(),
+                                    Barrio = dr["Barrio"].ToString(),
                                     Productos = dr["Producto"].ToString(),
-                                    Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
-                                    Total_Producto = Convert.ToInt32(dr["Total_Productos"].ToString()),
-                                    Total_Pago = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR")),
-                                    Id_Venta = dr["Id_Venta"].ToString()
+                                    Cantidad = Convert.ToInt32(dr["Cantidad"]),
+                                    PrecioUnitario = Convert.ToDecimal(dr["PrecioUnitario"], new CultureInfo("es-AR")),
+                                    FechaVenta = dr["FechaVenta"].ToString(),
+                                    Total_Pago = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR"))
                                 }
                             );
                         }
                     }
                 }
             }
-
             catch
             {
                 lista = new List<Reporte>();
@@ -55,6 +56,7 @@ namespace CapaDatos
 
             return lista;
         }
+
 
         public DashBoard VerDashBoard()
         {
@@ -91,6 +93,34 @@ namespace CapaDatos
             return objeto;
         }
 
+        public bool EliminarVenta(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_EliminarVentaCompleta", oconexion);
+                        cmd.Parameters.AddWithValue("@Id_Venta", id);
+                        cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        oconexion.Open();
+                        cmd.ExecuteNonQuery();
+                        resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                        Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
 
     }
 }

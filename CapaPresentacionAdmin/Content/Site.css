@@ -12596,9 +12596,9 @@ body {
 
             .sb-sidenav .sb-sidenav-menu .nav .nav-link {
                 display: flex;
-                align-items: center;
+                align-items: center;/*
                 padding-top: 0.75rem;
-                padding-bottom: 0.75rem;
+                padding-bottom: 0.75rem;*/
                 position: relative;
             }
 
@@ -12865,3 +12865,99 @@ body {
     font-size: 0.75rem;
     border-radius: 0.375rem !important;
 }
+
+/*Espacio param CapaPresentacionAdmin*/
+/* Clase para destacar filas */
+.highlight-row {
+    background-color: #e0f7fa; /* Color de fondo diferente */
+    font-weight: bold; /* Negrita para resaltar */
+}
+
+/* Estilos generales */
+.nav-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #bbb; /* Gris por defecto */
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #007bff; /* Azul al pasar el cursor */
+}
+
+.sb-nav-link-icon {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.sb-sidenav-footer {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #bbb;
+}
+
+    .sb-sidenav-footer .small {
+        font-weight: bold;
+    }
+
+/* Ajusta el contenedor principal de cada enlace */
+.nav-link {
+    display: block; /* Asegura que cada enlace ocupe toda la fila */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    color: inherit; /* Usa el color de texto predeterminado */
+    padding: 5px 10px; /* Reduce el padding interno */
+    margin: 2px 0; /* Reduce el espaciado entre enlaces */
+    transition: background-color 0.3s ease; /* Suaviza el cambio de fondo */
+}
+
+.nav-group {
+    margin-bottom: 15px; /* Espaciado entre los grupos */
+}
+
+.nav-group-title-head {
+    font-size: 16px; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita para el título */
+    color: rgba(255, 255, 255, 0.25); /* Color del título */
+    padding-top: 20px;
+    margin-bottom: 10px; /* Espaciado debajo del título */
+    padding-left: 10px; /* Añadir espacio a la izquierda del título */
+}
+
+.nav-group-title {
+    font-size: 16px; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita para el título */
+    color: rgba(255, 255, 255, 0.25); /* Color del título */
+    margin-bottom: 10px; /* Espaciado debajo del título */
+    padding-left: 10px; /* Añadir espacio a la izquierda del título */
+}
+/* Alinea iconos y texto */
+.sb-nav-link-content {
+    display: flex; /* Flexbox para alineación */
+    align-items: center; /* Alinea verticalmente los iconos y el texto */
+}
+
+/* Ajuste del contenedor de los iconos */
+.sb-nav-link-icon {
+    display: flex; /* Flexbox para centrar el ícono */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    width: 30px; /* Reduce el ancho fijo para los iconos */
+    height: 30px; /* Reduce la altura fija para los iconos */
+    font-size: 1rem; /* Tamaño uniforme de los iconos (más pequeño) */
+    margin-right: 8px; /* Reduce el espaciado entre el ícono y el texto */
+}
+
+.dataTables-rowGroup div {
+    display: flex;
+    justify-content: space-between; /* Para separar a los extremos */
+    align-items: center; /* Centrar verticalmente */
+    padding: 0.5rem 1rem; /* Opcional: agregar espaciado */
+    background-color: #f8f9fa; /* Color de fondo claro */
+    font-weight: bold; /* Resaltar el texto */
+}
+

@@ -146,6 +146,11 @@ namespace CapaNegocio
             }
         }
 
+        public bool EliminarLocalidad(int id)
+        {
+            return objCapaDato.EliminarLocalidad(id);
+        }
+
 
     }
 }
