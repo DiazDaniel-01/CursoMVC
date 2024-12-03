@@ -12909,7 +12909,6 @@ body {
 .nav-link {
     display: block; /* Asegura que cada enlace ocupe toda la fila */
     text-decoration: none; /* Quita el subrayado de los enlaces */
-    color: inherit; /* Usa el color de texto predeterminado */
     padding: 5px 10px; /* Reduce el padding interno */
     margin: 2px 0; /* Reduce el espaciado entre enlaces */
     transition: background-color 0.3s ease; /* Suaviza el cambio de fondo */
@@ -12960,4 +12959,3 @@ body {
     background-color: #f8f9fa; /* Color de fondo claro */
     font-weight: bold; /* Resaltar el texto */
 }
-

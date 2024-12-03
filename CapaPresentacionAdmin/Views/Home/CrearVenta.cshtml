@@ -86,10 +86,20 @@
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
+                    // Limpia las opciones previas
                     $("#selectCliente").empty();
                     $("#selectCliente").append('<option value="">Seleccione un Cliente</option>');
+
+                    // Recorre los clientes recibidos
                     $.each(response.data, function (index, item) {
-                        $("<option>").attr({ "value": item.Id_Cliente }).text(item.Nombre).appendTo("#selectCliente");
+                        // Construye un texto concatenado para mostrar en la opción
+                        const textoCliente = `ID: ${item.Id_Cliente} | Nombre: ${item.Nombre} ${item.Apellido} | Celular: ${item.Celular || "N/A"}`;
+
+                        // Agrega la opción al select
+                        $("<option>")
+                            .attr({ "value": item.Id_Cliente })
+                            .text(textoCliente)
+                            .appendTo("#selectCliente");
                     });
                 },
                 error: function (error) {
@@ -98,17 +108,28 @@
             });
         }
 
+
         // Cargar localidades desde el backend
         function cargarLocalidades() {
             $.ajax({
                 url: '@Url.Action("ListarLocalidad", "Home")',
                 type: "GET",
                 dataType: "json",
-                success: function (response) {
+                success: function (data) {
+                    // Limpia las opciones previas
                     $("#selectLocalidad").empty();
                     $("#selectLocalidad").append('<option value="">Seleccione una Localidad</option>');
-                    $.each(response.data, function (index, item) {
-                        $("<option>").attr({ "value": item.Id_Localidad }).text(item.Barrio).appendTo("#selectLocalidad");
+
+                    // Recorre las localidades recibidas
+                    $.each(data.data, function (index, item) {
+                        // Construye un texto concatenado para mostrar en la opción
+                        const textoLocalidad = `ID: ${item.Id_Localidad} | Código Postal: ${item.oBarrios.Codigo_Postal} | Barrio: ${item.oBarrios.Barrio} | Departamento: ${item.Departamento || "N/A"} | Calle: ${item.Calle || "N/A"} | Calle 2: ${item.Calle_2 || "N/A"} | Piso: ${item.Piso || "N/A"} | Referencia: ${item.Referencia || "N/A"} | Costo Envío: ${item.oBarrios.Costo_Envio}`;
+
+                        // Agrega la opción al select
+                        $("<option>")
+                            .attr({ "value": item.Id_Localidad, "data-envio": item.oBarrios.Costo_Envio })
+                            .text(textoLocalidad)
+                            .appendTo("#selectLocalidad");
                     });
                 },
                 error: function (error) {
@@ -117,6 +138,7 @@
             });
         }
 
+
         // Cargar productos desde el backend
         function cargarProductos() {
             $.ajax({
@@ -124,10 +146,22 @@
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
+                    // Limpia las opciones previas
+                    $("#selectProducto").empty();
+                    $("#selectProducto").append('<option value="">Seleccione un Producto</option>');
+
+                    // Recorre los productos recibidos
                     $.each(data.data, function (index, item) {
+                        // Construye un texto concatenado para mostrar en la opción
+                        const textoProducto = `Nombre: ${item.Nombre} | Descripción: ${item.Descripcion || "Sin descripción"} | Precio: $${item.Precio.toFixed(2)}`;
+
+                        // Agrega la opción al select
                         $("<option>")
-                            .attr({ "value": item.Id_Producto, "data-precio": item.Precio })
-                            .text(item.Nombre)
+                            .attr({
+                                "value": item.Id_Producto,
+                                "data-precio": item.Precio
+                            })
+                            .text(textoProducto)
                             .appendTo("#selectProducto");
                     });
                 },
@@ -136,6 +170,7 @@
                 }
             });
         }
+
 
         // Agregar producto seleccionado a la lista
         function agregarProductoSeleccionado() {
@@ -173,30 +208,31 @@
             actualizarListadoProductos();
         }
 
+
         // Actualizar el listado de productos seleccionados y el total
         function actualizarListadoProductos() {
             var totalPago = 0;
+            var envioTotal = 0; // Para almacenar el costo de envío único
             $("#listaProductosSeleccionados").empty(); // Limpiar la lista visual
 
             productosSeleccionados.forEach(producto => {
                 totalPago += producto.Subtotal;
 
-                // Mostrar cada producto en la lista
+                // Mostrar cada producto en la lista (sin el costo de envío)
                 $("#listaProductosSeleccionados").append(
                     `<li>${producto.Nombre} - Cantidad: ${producto.Cantidad} - Precio: $${producto.Precio.toFixed(2)} - Subtotal: $${producto.Subtotal.toFixed(2)}<br>Comentario: ${producto.Comentario || 'Sin comentario'}</li>`
                 );
             });
 
-            // Actualizar el total acumulado en la interfaz
-            $("#visibleTotalPago").val(totalPago.toFixed(2));
-            $("#hiddenTotalPago").val(totalPago.toFixed(2));
-        }
-        // Función para limpiar solo la lista de productos seleccionados
-        function limpiarProductos() {
-            productosSeleccionados = []; // Vaciar el array de productos seleccionados
-            actualizarListadoProductos(); // Actualizar la lista visual
-            $("#visibleTotalPago").val(''); // Limpiar el total
-            $("#hiddenTotalPago").val('');
+            // Obtener el costo de envío de la localidad seleccionada (si existe)
+            envioTotal = parseFloat($("#selectLocalidad option:selected").data('envio')) || 0;
+
+            // Actualizar el total acumulado (sumando el costo de envío una vez)
+            var totalConEnvio = totalPago + envioTotal;
+
+            // Mostrar el total incluyendo el envío con el mensaje correspondiente
+            $("#visibleTotalPago").val(`${totalConEnvio.toFixed(2)} + Envío = $${envioTotal.toFixed(2)}`);
+            $("#hiddenTotalPago").val(totalConEnvio.toFixed(2));
         }
 
         // Función para guardar la venta

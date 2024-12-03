@@ -28,6 +28,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
+        public ActionResult Barrio()
+        {
+            return View();
+        }
         //Se crean los metodos para listar, registar, editar y eliminar CATEGORIAS
         #region CATEGORIA
 
@@ -311,6 +315,54 @@ namespace CapaPresentacionAdmin.Controllers
 
 
 
+        #endregion
+
+        #region BARRIO
+        [HttpGet]
+        public JsonResult ListarBarrio()
+        {
+            List<Barrios> oLista = new List<Barrios>();
+
+            oLista = new CN_VentaExterna().ListarBarrio();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult RegistrarBarrio(Barrios objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            // Obtener la lista de barrios existentes
+            List<Barrios> listaBarrios = new CN_Barrio().ListarBarrio();
+
+            // Verificar si el Código Postal ya existe en la lista
+            bool existe = listaBarrios.Any(b => b.Codigo_Postal == objeto.Codigo_Postal);
+
+            if (!existe) // Si no existe, registrar
+            {
+                resultado = new CN_Barrio().RegistrarBarrio(objeto, out mensaje);
+            }
+            else // Si existe, editar
+            {
+                resultado = new CN_Barrio().EditarBarrio(objeto, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult EliminarBarrio(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Barrio().EliminarBarrio(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 

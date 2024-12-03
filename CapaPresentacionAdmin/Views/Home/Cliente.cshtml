@@ -21,23 +21,48 @@
             <div class="col-sm-6">
                 <div class="mb-2">
                     <label for="txtCelular" class="form-label">Celular del Cliente</label>
-                    <input type="email" class="form-control" id="txtCelular" autocomplete="off">
+                    <input type="tel" class="form-control" id="txtCelular" autocomplete="off">
                 </div>
             </div>
         </div>
     </div>
-</div>
-<hr>
-
-<!-- Botón para enviar ambos formularios -->
-<div class="row mt-4">
-    <div class="col-12">
-        <button type="button" class="btn btn-primary" onclick="CrearCliente()">Guardar Cliente</button>
+    <!-- Botón para enviar ambos formularios -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary" onclick="CrearCliente()">Guardar Cliente</button>
+        </div>
     </div>
+
+    <hr />
+    <div class="container-cliente">
+        <h5 class="mb-4">Listado de Clientes sin Venta</h5>
+        <table id="tablaClientes" class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id Cliente</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Celular</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se cargarán los clientes con tu método para listar -->
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+
+
 </div>
 
 @section scripts{
     <script>
+        $(document).ready(function () {
+            cargarClientes(); // Llama a la función para cargar datos al inicio
+        });
+
         function CrearCliente() {
             var cliente = {
                 Id_Cliente: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
@@ -76,5 +101,68 @@
                 }
             });
         }
+
+        // Función para listar clientes
+        function cargarClientes() {
+            $.ajax({
+                url: '@Url.Action("Clientessinventas", "Home")', // Genera la URL dinámicamente
+                type: 'GET', // Método HTTP correcto para listar
+                dataType: "json",
+                success: function (response) {
+                    if (!response || !response.data) {
+                        console.warn("No se encontraron clientes.");
+                        $("#tablaClientes tbody").html("<tr><td colspan='8'>No hay clientes registrados.</td></tr>");
+                        return;
+                    }
+
+                    const clientes = response.data;
+                    const tbody = $("#tablaClientes tbody");
+                    tbody.empty();
+
+                    clientes.forEach(function (clientes) {
+                        const fila = `
+                            <tr id="fila-${clientes.Id_Cliente}">
+                                <td>${clientes.Id_Cliente}</td>
+                                <td>${clientes.Nombre}</td>
+                                <td>${clientes.Apellido}</td>
+                                <td>${clientes.Celular}</td>
+                                <td>
+                                    <button onclick="eliminarCliente(${clientes.Id_Cliente})">Eliminar</button>
+                                </td>
+                            </tr>`;
+                        tbody.append(fila);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Ocurrió un error al listar los clientes:", error);
+                }
+            });
+
+        }
+        // Función para eliminar un cliente
+        function eliminarCliente(id) {
+            if (confirm("¿Está seguro de que desea eliminar este cliente?")) {
+                $.ajax({
+                    url: '@Url.Action("EliminarCliente", "Home")',
+                    type: 'POST',
+                    data: JSON.stringify({ id: id }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.resultado) {
+                            alert("Cliente eliminado correctamente.");
+                            // Eliminar la fila correspondiente del HTML
+                            $('#fila-' + id).remove();
+                        } else {
+                            alert("No se pudo eliminar el Cliente.");
+                        }
+                    },
+                    error: function () {
+                        alert("Ocurrió un error al intentar eliminar el cliente.");
+                    }
+                });
+            }
+        }
+
     </script>
 }

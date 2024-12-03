@@ -41,6 +41,8 @@ namespace CapaDatos
                                     Productos = dr["Producto"].ToString(),
                                     Cantidad = Convert.ToInt32(dr["Cantidad"]),
                                     PrecioUnitario = Convert.ToDecimal(dr["PrecioUnitario"], new CultureInfo("es-AR")),
+                                    Costo_Envio = Convert.ToDecimal(dr["Costo_Envio"], new CultureInfo("es-AR")),
+                                    Subtotal = Convert.ToDecimal(dr["Subtotal"], new CultureInfo("es-AR")),
                                     FechaVenta = dr["FechaVenta"].ToString(),
                                     Total_Pago = Convert.ToDecimal(dr["Total_Pago"], new CultureInfo("es-AR"))
                                 }

@@ -21,6 +21,21 @@ namespace CapaNegocio
         {
             return objCapaDato.ListarLocalidad();
         }
+
+        public List<Barrios> ListarBarrio()
+        {
+            return objCapaDato.ListarBarrio();
+        }
+
+        public List<Localidad> Localidadsinventa()
+        {
+            return objCapaDato.Localidadsinventa();
+        }
+        public List<Cliente> Clientessinventas()
+        {
+            return objCapaDato.Clientessinventas();
+        }
+
         public int InsertarCliente(Cliente obj, out string Mensaje)
         {
 
@@ -48,10 +63,18 @@ namespace CapaNegocio
 
             Mensaje = string.Empty;
 
-            if (obj.Codigo_Postal == 0)
+            if (obj.oBarrios.Codigo_Postal == 0)
             {
-
                 Mensaje = "Debe ingresar su Codigo Postal";
+            }
+
+            else if (obj.Piso == 0)
+            {
+                Mensaje = "El Piso debe ser un número válido distinto de 0";
+            }
+            else if (obj.Piso < 1) // Si deseas que el número sea mayor que 0
+            {
+                Mensaje = "El Piso debe ser un número mayor que 0";
             }
 
             else if (string.IsNullOrEmpty(obj.Calle) || string.IsNullOrWhiteSpace(obj.Calle))
@@ -150,7 +173,10 @@ namespace CapaNegocio
         {
             return objCapaDato.EliminarLocalidad(id);
         }
-
+        public bool EliminarCliente(int id, out string Mensaje)
+        {
+            return objCapaDato.EliminarCliente(id, out Mensaje);
+        }
 
     }
 }

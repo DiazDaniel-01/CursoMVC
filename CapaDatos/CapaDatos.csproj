@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CD_Barrio.cs" />
     <Compile Include="CD_Carrusel.cs" />
     <Compile Include="CD_Categoria.cs" />
     <Compile Include="CD_Producto.cs" />

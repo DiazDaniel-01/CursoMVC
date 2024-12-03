@@ -149,6 +149,7 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\icono\arargentinaflag.svg" />
     <Content Include="Content\icono\changuito.svg" />
     <Content Include="Content\icono\IMG-20240920-WA0038-fotor-bg-remover-20240921181742.png" />
     <Content Include="Content\icono\tacho.svg" />

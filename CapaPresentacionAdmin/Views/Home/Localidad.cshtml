@@ -9,14 +9,18 @@
         <div class="row g-1">
             <div class="col-sm-6">
                 <div class="mb-2">
-                    <label for="txtBarrio" class="form-label">Barrio</label>
-                    <input type="text" class="form-control" id="txtBarrio" autocomplete="off">
+                    <label for="selectBarrio" class="form-label">Seleccionar Barrio</label>
+                    <select id="selectBarrio" class="form-select">
+                        <option value="">Seleccione un Barrio</option>
+                    </select>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="mb-2">
-                    <label for="txtCodigoPostal" class="form-label">Código Postal</label>
-                    <input type="text" class="form-control" id="txtCodigoPostal" autocomplete="off">
+                    <label for="selectCodigoPostal" class="form-label">Seleccionar Código Postal</label>
+                    <select id="selectCodigoPostal" class="form-select">
+                        <option value="">Seleccione un Codigo Postal</option>
+                    </select>
                 </div>
             </div>
 
@@ -58,36 +62,65 @@
 
             <div class="col-sm-6">
                 <div class="mb-2">
-                    <label for="txtCosto" class="form-label">Costo del Envio</label>
-                    <input type="text" class="form-control" id="txtCosto" placeholder="Campo no obligatorio" autocomplete="off">
+                    <label for="selectCosto" class="form-label">Costo del Envio</label>
+                    <select id="selectCosto" class="form-select">
+                        <option value="">Se le seleccionara un costo del envio</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
-    <hr>
-
     <!-- Botón para enviar ambos formularios -->
     <div class="row mt-4">
         <div class="col-12">
             <button type="button" class="btn btn-primary" onclick="CrearLocalidad()">Guardar Localidad</button>
         </div>
     </div>
+
+    <hr />
+    <div class="container-localidad">
+        <h5 class="mb-4">Listado de Localidades sin Venta</h5>
+        <table id="tablaLocalidades" class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id Localidad</th>
+                    <th>Código Postal</th>
+                    <th>Barrio</th>
+                    <th>Costo Envio</th>
+                    <th>Departamento</th>
+                    <th>Calle</th>
+                    <th>Segunda Calle</th>
+                    <th>Piso</th>
+                    <th>Referencia</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se cargarán las localidades con tu método para listar -->
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
 </div>
 
 @section scripts{
     <script>
-
+        $(document).ready(function () {
+            cargarLocalidades(); // Llama a la función para cargar datos al inicio
+            cargarBarrios();
+        });
         function CrearLocalidad() {
             var localidad = {
                 Id_Localidad: 0, // Si es nuevo, pon 0, si es editar usa el ID existente
-                Barrio: $("#txtBarrio").val(),
-                Codigo_Postal: $("#txtCodigoPostal").val(),
+                oBarrios: {
+                    Codigo_Postal: $("#selectBarrio").val()
+                },
                 Departamento: $("#txtDepartamento").val(),
                 Piso: $("#txtNumeroPiso").val(),
                 Calle: $("#txtCalle1").val(),
                 Calle_2: $("#txtCalle2").val(),
-                Referencia: $("#txtReferencia").val(),
-                Costo_Envio: $("#txtCosto").val(),
+                Referencia: $("#txtReferencia").val()
             };
 
             // Intentamos guardar la localidad
@@ -102,6 +135,10 @@
 
                     if (data.resultado) {
                         localidad.Id_Localidad = data.resultado;
+                        // Si se guarda correctamente, recarga la tabla
+                        cargarLocalidades();  // Esto actualizará la tabla con el nuevo cliente creado
+                        // Limpiar el formulario después de guardar
+                        $("#formLocalidad input").val('');
                     } else {
                         $("#mensajeError").text(data.mensaje);
                         $("#mensajeError").show();
@@ -119,6 +156,137 @@
                     });
                 }
             });
+        }
+
+        function cargarBarrios() {
+            $.ajax({
+                url: '@Url.Action("ListarBarrio", "Home")',
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    const barrios = response.data;
+
+                    // Limpia los selects
+                    $("#selectBarrio").empty();
+                    $("#selectCodigoPostal").empty();
+                    $("#selectCosto").empty();
+
+                    // Agrega las opciones predeterminadas
+                    $("#selectBarrio").append('<option value="">Seleccione un Barrio</option>');
+                    $("#selectCodigoPostal").append('<option value="">Seleccione un Código Postal</option>');
+                    $("#selectCosto").append('<option value="">Se le seleccionará un costo del envío</option>');
+
+                    // Llena ambos selects con los datos
+                    barrios.forEach(function (item) {
+                        $("#selectBarrio").append($("<option>").val(item.Codigo_Postal).text(item.Barrio));
+                        $("#selectCodigoPostal").append($("<option>").val(item.Codigo_Postal).text(item.Codigo_Postal));
+                    });
+
+                    // Sincronizar selects cuando cambia Barrio
+                    $("#selectBarrio").on("change", function () {
+                        const selectedCodigoPostal = $(this).val();
+                        const selectedBarrio = barrios.find(b => b.Codigo_Postal == selectedCodigoPostal);
+
+                        if (selectedBarrio) {
+                            $("#selectCodigoPostal").val(selectedBarrio.Codigo_Postal);
+                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                        } else {
+                            resetFields();
+                        }
+                    });
+
+                    // Sincronizar selects cuando cambia Código Postal
+                    $("#selectCodigoPostal").on("change", function () {
+                        const selectedCodigoPostal = $(this).val();
+                        const selectedBarrio = barrios.find(b => b.Codigo_Postal == selectedCodigoPostal);
+
+                        if (selectedBarrio) {
+                            $("#selectBarrio").val(selectedBarrio.Codigo_Postal);
+                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                        } else {
+                            resetFields();
+                        }
+                    });
+
+                    // Función para reiniciar campos
+                    function resetFields() {
+                        $("#selectBarrio").val("");
+                        $("#selectCodigoPostal").val("");
+                        $("#selectCosto").html('<option value="">Se le seleccionará un costo del envío</option>');
+                    }
+                },
+                error: function (error) {
+                    console.log("Error al cargar barrios:", error);
+                }
+            });
+        }
+
+
+        // Función para listar localidades
+        function cargarLocalidades() {
+            $.ajax({
+                url: '@Url.Action("Localidadsinventa", "Home")', // Genera la URL dinámicamente
+                type: 'GET', // Método HTTP correcto para listar
+                dataType: "json",
+                success: function (response) {
+                    if (!response || !response.data) {
+                        console.warn("No se encontraron localidades.");
+                        $("#tablaLocalidades tbody").html("<tr><td colspan='8'>No hay localidades registradas.</td></tr>");
+                        return;
+                    }
+
+                    const localidades = response.data;
+                    const tbody = $("#tablaLocalidades tbody");
+                    tbody.empty();
+
+                    localidades.forEach(function (localidad) {
+                        const fila = `
+                            <tr id="fila-${localidad.Id_Localidad}">
+                                <td>${localidad.Id_Localidad}</td>
+                                <td>${localidad.oBarrios.Codigo_Postal}</td>
+                                <td>${localidad.oBarrios.Barrio}</td>
+                                <td>${localidad.oBarrios.Costo_Envio}</td>
+                                <td>${localidad.Departamento}</td>
+                                <td>${localidad.Calle}</td>
+                                <td>${localidad.Calle_2}</td>
+                                <td>${localidad.Piso}</td>
+                                <td>${localidad.Referencia}</td>
+                                <td>
+                                    <button onclick="eliminarLocalidad(${localidad.Id_Localidad})">Eliminar</button>
+                                </td>
+                            </tr>`;
+                        tbody.append(fila);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Ocurrió un error al listar las localidades:", error);
+                }
+            });
+
+        }
+        // Función para eliminar una localidad
+        function eliminarLocalidad(id) {
+            if (confirm("¿Está seguro de que desea eliminar esta localidad?")) {
+                $.ajax({
+                    url: '@Url.Action("EliminarLocalidad", "Home")',
+                    type: 'POST',
+                    data: JSON.stringify({ id: id }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.resultado) {
+                            alert("Localidad eliminada correctamente.");
+                            // Eliminar la fila correspondiente del HTML
+                            $('#fila-' + id).remove();
+                        } else {
+                            alert("No se pudo eliminar la localidad.");
+                        }
+                    },
+                    error: function () {
+                        alert("Ocurrió un error al intentar eliminar la localidad.");
+                    }
+                });
+            }
         }
 
     </script>

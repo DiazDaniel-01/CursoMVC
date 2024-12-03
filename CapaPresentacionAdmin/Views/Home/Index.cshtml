@@ -66,38 +66,40 @@
             Historial de Ventas
         </div>
         <div class="card-body">
-            <div class="row align-items-lg-end">
-                <div class="col-sm-2">
-                    <div class="mb-2">
-                        <label class="form-label">Fecha de Inicio:</label>
-                        <input class="form-control" type="text" id="txtfechainicio" name="FechaInicio" />
+            <form action="@Url.Action("ExportarVenta","Home")" method="post">
+                <div class="row align-items-lg-end">
+                    <div class="col-sm-2">
+                        <div class="mb-2">
+                            <label class="form-label">Fecha de Inicio:</label>
+                            <input class="form-control" type="text" id="txtfechainicio" name="FechaInicio" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="mb-2">
-                        <label class="form-label">Fecha de Finalización:</label>
-                        <input class="form-control" type="text" id="txtfechafin" name="FechaFin" />
+                    <div class="col-sm-2">
+                        <div class="mb-2">
+                            <label class="form-label">Fecha de Finalización:</label>
+                            <input class="form-control" type="text" id="txtfechafin" name="FechaFin" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="mb-2">
-                        <label class="form-label">Nro. de Transacción:</label>
-                        <input class="form-control" type="text" id="txtidventa" name="Id_Venta" />
+                    <div class="col-sm-2">
+                        <div class="mb-2">
+                            <label class="form-label">Nro. de Transacción:</label>
+                            <input class="form-control" type="text" id="txtidventa" name="Id_Venta" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-sm-1">
-                    <div class="mb-2 d-grid">
-                        <button class="btn btn-primary" id="btnbuscar" type="button"><i class="fas fa-search"></i> Buscar</button>
+                    <div class="col-sm-1">
+                        <div class="mb-2 d-grid">
+                            <button class="btn btn-primary" id="btnbuscar" type="button"><i class="fas fa-search"></i> Buscar</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-sm-1">
-                    <div class="mb-2 d-grid">
-                        <button class="btn btn-success" type="submit"><i class="fas fa-file-excel"></i> Exportar</button>
+                    <div class="col-sm-1">
+                        <div class="mb-2 d-grid">
+                            <button class="btn btn-success" type="submit"><i class="fas fa-file-excel"></i> Exportar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
 
             <hr />
 
@@ -112,13 +114,17 @@
                                 <th>Productos</th>
                                 <th>Precio</th>
                                 <th>Cantidad</th>
+                                <th>Sub. Total</th>
+                                <th>Costo del Envio</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
                         </tbody>
+
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -180,6 +186,18 @@
                     },
                     { "data": "Cantidad" },
                     {
+                        "data": "Subtotal",
+                        "render": function (data, type, row) {
+                            return '$' + parseFloat(data).toFixed(2);
+                        }
+                    },
+                    {
+                        "data": "Costo_Envio",
+                        "render": function (data, type, row) {
+                            return '$' + parseFloat(data).toFixed(2);
+                        }
+                    },
+                    {
                         "data": "Total_Pago",
                         "render": function (data, type, row) {
                             return '$' + parseFloat(data).toFixed(2);
@@ -188,12 +206,14 @@
                 ],
                 "columnDefs": [
                     { "width": "10%", "targets": 0 },   // FechaVenta
-                    { "width": "10%", "targets": 1 },   // Nro. de Transacción
-                    { "width": "15%", "targets": 2 },   // Clientes
-                    { "width": "15%", "targets": 3 },   // Barrio
-                    { "width": "18%", "targets": 4 },   // Productos
-                    { "width": "10%", "targets": 5 },   // Precio
-                    { "width": "8%", "targets": 6 }    // Cantidad
+                    { "width": "10%", "targets": 1 },   // Clientes
+                    { "width": "15%", "targets": 2 },   // Barrio
+                    { "width": "15%", "targets": 3 },   // Productos
+                    { "width": "8%", "targets": 4 },   // Precio Unitario
+                    { "width": "8%", "targets": 5 },   // Cantidad
+                    { "width": "8%", "targets": 6 },    // Subtotal
+                    { "width": "8%", "targets": 7 },   // Cantidad
+                    { "width": "8%", "targets": 8 }    // Subtotal
                 ],
                 "rowGroup": {
                     // Agrupa las filas por el valor en la columna Id_Venta

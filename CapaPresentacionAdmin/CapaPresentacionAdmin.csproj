@@ -662,7 +662,6 @@
     <Content Include="Views\Home\Usuario.cshtml" />
     <Content Include="Views\Mantenedor\Categoria.cshtml" />
     <Content Include="Views\Mantenedor\Producto.cshtml" />
-    <Content Include="Templates\Royal Tech - Historial_de_Ventas.xlsx" />
     <Content Include="Views\Acceso\Index.cshtml" />
     <Content Include="Views\Acceso\CambiarClave.cshtml" />
     <Content Include="Views\Acceso\Reestablecer.cshtml" />
@@ -670,6 +669,8 @@
     <Content Include="Views\Home\Localidad.cshtml" />
     <Content Include="Views\Home\CrearVenta.cshtml" />
     <Content Include="Views\Mantenedor\Carrusel.cshtml" />
+    <Content Include="Templates\Royal Tech - Historial_de_Ventas.xlsx" />
+    <Content Include="Views\Mantenedor\Barrio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

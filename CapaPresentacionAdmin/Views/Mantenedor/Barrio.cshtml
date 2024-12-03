@@ -1,22 +1,20 @@
 ﻿
 @{
-    ViewBag.Title = "Categoria";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Barrio";
 }
 
-
 <ol class="breadcrumb mb-4 mt-4">
-    <h5>Categorias</h5>
+    <h5>Barrios</h5>
 </ol>
 
 <div class="card">
     <div class="card-header">
-        <i class="fas fa-tags"> </i>  Lista de Categorias
+        <i class="fas fa-map-marker-alt"></i>Lista de Barrios
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nueva Categoria</button>
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear nuevo Barrio</button>
             </div>
         </div>
 
@@ -25,9 +23,9 @@
         <table id="tabla" class="display cell-border" style="width: 100%">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Activo</th>
+                    <th>Codigo Postal</th>
+                    <th>Nombre del Barrio</th>
+                    <th>Costo de Envio</th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,7 +41,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Nueva Categoria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Barrio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -53,22 +51,20 @@
                 <div class="row g-1">
 
                     <div class="col-sm-6">
-                        <label for="txtnombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="txtnombre" autocomplete="off">
+                        <label for="txtcodigopostal" class="form-label">Codigo Postal</label>
+                        <input type="number" class="form-control" id="txtcodigopostal" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="txtdescripcion" class="form-label">Descripción</label>
-                        <input type="text" class="form-control" id="txtdescripcion" autocomplete="off">
+                        <label for="txtbarrio" class="form-label">Nombre del Barrio</label>
+                        <input type="text" class="form-control" id="txtbarrio" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="cboactivo" class="form-label">Activo</label>
-                        <select id="cboactivo" class="form-select">
-                            <option value="1">Si</option>
-                            <option value="0">No</option>
-                        </select>
+                        <label for="txtenvio" class="form-label">Costo de Envio</label>
+                        <input type="number" class="form-control" id="txtenvio" autocomplete="off">
                     </div>
+
                 </div>
 
                 <!--Mensaje de Alerta-->
@@ -84,7 +80,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="GuardarBarrio()">Guardar</button>
             </div>
         </div>
     </div>
@@ -100,22 +96,14 @@
             responsive: true,
             ordering: false,
             "ajax": {
-                url: '@Url.Action("ListarCategorias", "Mantenedor")',
+                url: '@Url.Action("ListarBarrio", "Home")',
                 type: "GET",
                 dataType: "json"
             },
             "columns": [
-                { "data": "Nombre" },
-                { "data": "Descripcion" },
-                {
-                    "data": "Activo", "render": function (valor) {
-                        if (valor) {
-                            return '<span class="badge bg-success">Si</span>'
-                        } else {
-                            return '<span class="badge bg-danger">No</span>'
-                        }
-                    }
-                },
+                { "data": "Codigo_Postal" },
+                { "data": "Barrio" },
+                { "data": "Costo_Envio" },
                 {
                     "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
                         '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
@@ -131,20 +119,17 @@
 
         function abrirModal(json) {
 
-            $("#txtid").val(0);
-            $("#txtnombre").val("");
-            $("#txtdescripcion").val("");
-            $("#cboactivo").val(1);
+            $("#txtcodigopostal").val(0);
+            $("#txtbarrio").val("");
+            $("#txtenvio").val(0);
             $("#mensajeError").hide();
 
 
             if (json != null) {
 
-                $("#txtid").val(json.Id_Categoria);
-                $("#txtnombre").val(json.Nombre);
-                $("#txtdescripcion").val(json.Descripcion);
-                $("#cboactivo").val(json.Activo == true ? 1 : 0);
-
+                $("#txtcodigopostal").val(json.Codigo_Postal);
+                $("#txtbarrio").val(json.Barrio);
+                $("#txtenvio").val(json.Costo_Envio);
             }
             $("#FormModal").modal("show");
         }
@@ -161,14 +146,14 @@
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-            var categoriaseleccionada = $(this).closest("tr");
+            var barrioseleccionado = $(this).closest("tr");
 
-            var data = tabladata.row(categoriaseleccionada).data();
+            var data = tabladata.row(barrioseleccionado).data();
 
 
             swal({
                 title: "Esta Seguro?",
-                text: "¿Desea eliminar el categoria?",
+                text: "¿Desea eliminar el barrio?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-primary",
@@ -179,16 +164,16 @@
             function () {
 
                 jQuery.ajax({
-                    url: '@Url.Action("EliminarCategoria", "Mantenedor")',
+                    url: '@Url.Action("EliminarBarrio", "Mantenedor")',
                     type: "POST",
-                    data: JSON.stringify({ id: data.Id_Categoria }),
+                    data: JSON.stringify({ id: data.Codigo_Postal }),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
 
                         if (data.resultado) {
 
-                            tabladata.row(categoriaseleccionada).remove().draw();
+                            tabladata.row(barrioseleccionado).remove().draw();
 
                         }
                         else {
@@ -204,29 +189,28 @@
             });
         })
 
-        function Guardar() {
-            var Categoria = {
-                Id_Categoria: $("#txtid").val(),
-                Nombre: $("#txtnombre").val(),
-                Descripcion: $("#txtdescripcion").val(),
-                Activo: $("#cboactivo").val() == 1 ? true : false
+        function GuardarBarrio() {
+            var Barrio = {
+                Codigo_Postal: $("#txtcodigopostal").val(),
+                Barrio: $("#txtbarrio").val(),
+                Costo_Envio: $("#txtenvio").val(),
             }
 
             jQuery.ajax({
-                url: '@Url.Action("GuardarCategoria", "Mantenedor")',
+                url: '@Url.Action("RegistrarBarrio", "Mantenedor")',
                 type: "POST",
-                data: JSON.stringify({ objeto: Categoria }),
+                data: JSON.stringify({ objeto: Barrio }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
 
                     $(".modal-body").LoadingOverlay("hide");
 
-                    // Categoria NUEVO
-                    if (Categoria.Id_Categoria == 0) {
+                    // Barrio NUEVO
+                    if (Barrio.Codigo_Postal == 0) {
                         if (data.resultado != 0) {
-                            Categoria.Id_Categoria = data.resultado;
-                            tabladata.row.add(Categoria).draw(false);
+                            Barrio.Codigo_Postal = data.resultado;
+                            tabladata.row.add(Barrio).draw(false);
                             $("#FormModal").modal("hide");
                         }
                         else {
@@ -236,10 +220,10 @@
                         }
 
                     }
-                    // Categoria EDITAR
+                    // Barrio EDITAR
                     else {
                         if (data.resultado) {
-                            tabladata.row(filaSeleccionada).data(Categoria).draw(false);
+                            tabladata.row(filaSeleccionada).data(Barrio).draw(false);
                             filaSeleccionada = null;
                             $("#FormModal").modal("hide");
                         }

@@ -108,84 +108,99 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult EliminarVenta(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
 
-        //[HttpPost]
-        //public FileResult ExportarVenta(string FechaInicio, string FechaFin, string Id_Venta)
-        //{
-        //    List<Reporte> oLista = new List<Reporte>();
-        //    oLista = new CN_Reporte().Venta(FechaInicio, FechaFin, Id_Venta);
+            respuesta = new CN_Reporte().EliminarVenta(id, out mensaje);
 
-        //    DataTable dt = new DataTable();
-        //    dt.Locale = new System.Globalization.CultureInfo("es-AR");
-        //    dt.Columns.Add("FechaVenta", typeof(string));
-        //    dt.Columns.Add("Clientes", typeof(string));
-        //    dt.Columns.Add("Productos", typeof(string));
-        //    dt.Columns.Add("Precio", typeof(decimal));
-        //    dt.Columns.Add("Total_Producto", typeof(int));
-        //    dt.Columns.Add("Total_Pago", typeof(decimal));
-        //    dt.Columns.Add("Id_Venta", typeof(string));
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
-        //    foreach (Reporte rp in oLista)
-        //    {
-        //        dt.Rows.Add(new object[] {
-        //            rp.FechaVenta,
-        //            rp.Clientes,
-        //            rp.Productos,
-        //            rp.Precio,
-        //            rp.Total_Producto,
-        //            rp.Total_Pago,
-        //            rp.Id_Venta
-        //        });
-        //    }
+        [HttpPost]
+        public FileResult ExportarVenta(string FechaInicio, string FechaFin, string Id_Venta)
+        {
+            List<Reporte> oLista = new List<Reporte>();
+            oLista = new CN_Reporte().Venta(FechaInicio, FechaFin, Id_Venta);
 
-        //    string rutaPlantilla = Server.MapPath("~/Templates/Royal Tech - Historial_de_Ventas.xlsx");
+            DataTable dt = new DataTable();
+            dt.Locale = new System.Globalization.CultureInfo("es-AR");
+            dt.Columns.Add("FechaVenta", typeof(string));
+            dt.Columns.Add("Clientes", typeof(string));
+            dt.Columns.Add("Productos", typeof(string));
+            dt.Columns.Add("PrecioUnitario", typeof(decimal));
+            dt.Columns.Add("Cantidad", typeof(int));
+            dt.Columns.Add("Total_Pago", typeof(decimal));
+            dt.Columns.Add("Id_Venta", typeof(string));
 
-        //    using (XLWorkbook wb = new XLWorkbook(rutaPlantilla))
-        //    {
-        //        var worksheet = wb.Worksheet(1); // Selecciona la hoja de trabajo
+            foreach (Reporte rp in oLista)
+            {
+                dt.Rows.Add(new object[] {
+                    rp.FechaVenta,
+                    rp.Clientes,
+                    rp.Productos,
+                    rp.PrecioUnitario,
+                    rp.Cantidad,
+                    rp.Total_Pago,
+                    rp.Id_Venta
+                });
+            }
+
+            string rutaPlantilla = Server.MapPath("~/Templates/Royal Tech - Historial_de_Ventas.xlsx");
+
+            using (XLWorkbook wb = new XLWorkbook(rutaPlantilla))
+            {
+                var worksheet = wb.Worksheet(1); // Selecciona la hoja de trabajo
+
+                // Asigna las fechas a las celdas B11 y C11
+                worksheet.Cell("B11").Value = FechaInicio;
+                worksheet.Cell("C11").Value = FechaFin;
+
+                // Aplica el formato a las fechas
+                worksheet.Cell("B11").Style.Font.Bold = true;
+                worksheet.Cell("C11").Style.Font.Bold = true;
+
+                // Ajustar automáticamente el ancho de las columnas para las celdas de encabezado
+                worksheet.Columns("B:H").AdjustToContents();
+
+                // Aplicar formato a la fila de encabezado (B13:H13)
+                worksheet.Range("B13:H13").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Range("B13:H13").Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                worksheet.Range("B13:H13").Style.Font.Bold = true;
+
+                // Define el rango de formato para copiar
+                var rangoFormato = worksheet.Range("B13:H13");
+
+                int filaInicio = 14; // Empieza a insertar desde la fila 14
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    // Copiar formato
+                    rangoFormato.CopyTo(worksheet.Row(filaInicio));
+
+                    // Insertar los datos solo en las columnas correctas (B a H)
+                    worksheet.Cell("B" + filaInicio).Value = row["FechaVenta"].ToString();
+                    worksheet.Cell("C" + filaInicio).Value = row["Clientes"].ToString();
+                    worksheet.Cell("D" + filaInicio).Value = row["Productos"].ToString();
+                    worksheet.Cell("E" + filaInicio).Value = Convert.ToDecimal(row["PrecioUnitario"]);
+                    worksheet.Cell("F" + filaInicio).Value = Convert.ToInt32(row["Cantidad"]);
+                    worksheet.Cell("G" + filaInicio).Value = Convert.ToDecimal(row["Total_Pago"]);
+                    worksheet.Cell("H" + filaInicio).Value = Convert.ToInt32(row["Id_Venta"]);
 
 
-        //        // Definir el rango de formato para copiar
-        //        var rangoFormato = worksheet.Range("B15:H15");
+                    filaInicio++;
+                }
 
-        //        int filaInicio = 16; // Empieza a insertar desde la fila 16
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx");
+                }
+            }
+        }
 
-        //        foreach (DataRow row in dt.Rows)
-        //        {
-        //            // Copiar formato
-        //            rangoFormato.CopyTo(worksheet.Row(filaInicio));
-
-        //            // Insertar los datos solo en las columnas correctas (B a H)
-        //            worksheet.Cell("B" + filaInicio).Value = row["FechaVenta"].ToString();
-        //            worksheet.Cell("C" + filaInicio).Value = row["Clientes"].ToString();
-        //            worksheet.Cell("D" + filaInicio).Value = row["Productos"].ToString();
-        //            worksheet.Cell("E" + filaInicio).Value = Convert.ToDecimal(row["Precio"]);
-        //            worksheet.Cell("F" + filaInicio).Value = Convert.ToInt32(row["Total_Producto"]);
-        //            worksheet.Cell("G" + filaInicio).Value = Convert.ToDecimal(row["Total_Pago"]);
-        //            worksheet.Cell("H" + filaInicio).Value = Convert.ToInt32(row["Id_Venta"]);
-
-        //            // Establecer formato de números (Precio y Total_Pago con 2 decimales)
-        //            worksheet.Cell("E" + filaInicio).Style.NumberFormat.Format = "#,##0.00";
-        //            worksheet.Cell("G" + filaInicio).Style.NumberFormat.Format = "#,##0.00";
-        //            worksheet.Cell("F" + filaInicio).Style.NumberFormat.Format = "#,##0";
-
-        //            // Opcional: Si también necesitas restablecer bordes manualmente
-        //            worksheet.Range("B" + filaInicio + ":H" + filaInicio).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-        //            worksheet.Range("B" + filaInicio + ":H" + filaInicio).Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-
-        //            filaInicio++;
-        //        }
-
-        //        // Limpia la columna A de filas no deseadas (si es necesario)
-        //        worksheet.Range("A16:A100").Clear(); // Ajusta el rango si es necesario para más filas
-
-        //        using (MemoryStream stream = new MemoryStream())
-        //        {
-        //            wb.SaveAs(stream);
-        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx");
-        //        }
-        //    }
-        //}
         #endregion
 
         #region Cliente y Localidad
@@ -205,6 +220,36 @@ namespace CapaPresentacionAdmin.Controllers
             List<Localidad> oLista = new List<Localidad>();
 
             oLista = new CN_VentaExterna().ListarLocalidad();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ListarBarrio()
+        {
+            List<Barrios> oLista = new List<Barrios>();
+
+            oLista = new CN_VentaExterna().ListarBarrio();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult Localidadsinventa()
+        {
+            List<Localidad> oLista = new List<Localidad>();
+
+            oLista = new CN_VentaExterna().Localidadsinventa();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult Clientessinventas()
+        {
+            List<Cliente> oLista = new List<Cliente>();
+
+            oLista = new CN_VentaExterna().Clientessinventas();
 
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
         }
@@ -345,6 +390,17 @@ namespace CapaPresentacionAdmin.Controllers
             respuesta = new CN_VentaExterna().EliminarLocalidad(id);
 
             return Json(new { resultado = respuesta }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarCliente(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_VentaExterna().EliminarCliente(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

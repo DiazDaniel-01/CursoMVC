@@ -14,6 +14,8 @@ namespace CapaEntidad
         public string Productos { get; set; }
         public int Cantidad { get; set; }
         public decimal PrecioUnitario { get; set; }
+        public decimal Costo_Envio { get; set; }
+        public decimal Subtotal { get; set; }
         public string FechaVenta { get; set; }
         public decimal Total_Pago { get; set; }
 
