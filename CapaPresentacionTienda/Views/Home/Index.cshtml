@@ -846,6 +846,7 @@
                 },
                 Fecha_Venta: new Date().toISOString(),
                 Total_Pago: totalPagoGlobal
+
             };
 
             $.ajax({
@@ -870,6 +871,50 @@
                 }
             });
         }
+        // Validaciones de formulario
+        document.addEventListener("DOMContentLoaded", function () {
+            const txtNumeroPiso = document.getElementById("txtNumeroPiso");
+            const txtCelular = document.getElementById("txtCelular");
+            const confirmarPedido = document.querySelector(".boton-confirm");
+
+            // Deshabilitar el botón de confirmación inicialmente
+            confirmarPedido.disabled = true;
+
+            // Validar si los campos son correctos
+            function validarFormulario() {
+                const pisoValido = /^\d+$/.test(txtNumeroPiso.value); // Solo números en Piso
+                const celularValido = /^\d+$/.test(txtCelular.value); // Solo números en Celular
+
+                if (pisoValido && celularValido) {
+                    confirmarPedido.disabled = false;
+                } else {
+                    confirmarPedido.disabled = true;
+                }
+            }
+
+            // Agregar eventos de validación
+            txtNumeroPiso.addEventListener("input", validarFormulario);
+            txtCelular.addEventListener("input", validarFormulario);
+
+            // Mostrar mensajes de error en caso de valores inválidos
+            txtNumeroPiso.addEventListener("input", function () {
+                if (!/^\d+$/.test(txtNumeroPiso.value)) {
+                    txtNumeroPiso.setCustomValidity("Solo se permiten números en este campo.");
+                    txtNumeroPiso.reportValidity();
+                } else {
+                    txtNumeroPiso.setCustomValidity("");
+                }
+            });
+
+            txtCelular.addEventListener("input", function () {
+                if (!/^\d+$/.test(txtCelular.value)) {
+                    txtCelular.setCustomValidity("Solo se permiten números en este campo.");
+                    txtCelular.reportValidity();
+                } else {
+                    txtCelular.setCustomValidity("");
+                }
+            });
+        });
 
         function insertarDetallesVenta(ventaId) {
             var detallesVenta = $(".order-item").map(function () {
@@ -899,30 +944,52 @@
 
             // Filtrar posibles nulls (en caso de errores)
             detallesVenta = detallesVenta.filter(item => item !== null);
-
-            // Enviar detalles de la venta
-            $.ajax({
-                url: '@Url.Action("InsertarDetalleVenta", "Home")',
-                type: "POST",
-                data: JSON.stringify(detallesVenta),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        alert("Venta creada con éxito.");
-                        $(".additions").empty();
-                        actualizarTotalPago();
-                    } else {
-                        alert("Error al agregar los detalles de la venta: " + response.message);
-                    }
-                },
-                error: function (error) {
-                    console.error("Error al guardar los detalles de la venta:", error);
-                }
+// Enviar detalles de la venta
+$.ajax({
+    url: '@Url.Action("InsertarDetalleVenta", "Home")',
+    type: "POST",
+    data: JSON.stringify(detallesVenta),
+    contentType: "application/json",
+    success: function (response) {
+        if (response.success) {
+            // Mostrar SweetAlert de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'La venta se guardó correctamente.',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
+                $(".additions").empty();
+                actualizarTotalPago();
             });
+        } else {
+            // Mostrar SweetAlert de error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al agregar los detalles de la venta: ' + response.message,
+                confirmButtonText: 'Cerrar'
+            });
+        }
+    },
+    error: function (error) {
+        // Mostrar SweetAlert para errores de comunicación con el servidor
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al guardar los detalles de la venta. Intenta nuevamente.',
+            confirmButtonText: 'Cerrar'
+        });
+        console.error("Error al guardar los detalles de la venta:", error);
+    }
+});
+
         }
 
 
     </script>
+
 
 }
 
