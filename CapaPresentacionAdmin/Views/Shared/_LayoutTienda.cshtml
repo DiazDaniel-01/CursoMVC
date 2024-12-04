@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - La Bondioleta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="cont">
+            <!-- Logo y Nombre -->
+            <div class="logo">
+                <img alt="LaBondioleta" class="logo" height="100" src="~/Content/icono/Screenshot_20240630-124646-fotor-bg-remover-20240921174945.png" width="200" />
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="contact-info">
+                <div class="item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Direccion</span>
+                </div>
+                <div class="item">
+                    <i class="fas fa-phone"></i>
+                    <span>1160028911</span>
+                </div>
+                <div class="item">
+                    <i class="fas fa-envelope"></i>
+                    <span>labondioleta@gmail.com</span>
+                </div>
+            </div>
+
+            <!-- Iconos de redes sociales -->
+        </div>
+    </header>
+
+    <div id="layoutSidenav_content">
+        <div class="container-main">
+            @RenderBody()
+        </div>
+        <div class="body-content">
+            <footer class="py-5 bg-dark">
+                <div class="container"><p class="m-0 text-center text-white">Copyright &copy; @DateTime.Now.Year - La Bondioleta </p></div>
+                <p class="m-0 text-center text-white">Si sos administrador <a class="ps-3" href="@Url.Action("Index", "Acceso")">Inicie Sesion</a></p>
+            </footer>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/StyleBDTA.css")
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1110 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutTienda.cshtml";
+}
+
+<br />
+<main>
+    <div class="row justify-content-center">
+
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <div class="carousel-inner">
+                <!-- Primera imagen -->
+                <div class="carousel-item active">
+                    <img src="~/Content/imag/hamburguesa_1.jpg" alt="cafe" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption text-start">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segunda imagen -->
+                <div class="carousel-item">
+                    <img src="~/Content/imag/hamburguesa_2.jpg" alt="sorve" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tercera imagen -->
+                <div class="carousel-item">
+                    <img src="~/Content/imag/hamburguesa_3.jpg" alt="sorve" />
+                    <div class="container-carusel">
+                        <div class="carousel-caption text-end">
+                            <h5></h5>
+                            <p></p>
+                            <!-- Agrega un botón si es necesario -->
+                            <!-- <p><a class="btn btn-gradient rounded-pill px-5 py-2 shadow" href="#">Ver Más</a></p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <br />
+    <br />
+    <section class="mx-auto">
+        <!-- Botones de categorías como enlaces de ancla -->
+        <div class="content">
+            <div class="menu">
+                <!-- Barra de búsqueda -->
+                <div class="search-container text-center mb-4">
+                    <form class="d-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="productSearch" placeholder="Buscar productos..." aria-label="Buscar productos..." aria-describedby="btnNavbarSearch" autocomplete="off" />
+                        </div>
+                    </form>
+                </div>
+                <!-- Contenedor para las categorías -->
+                <div id="contenedor_categoria" class="container-categoria mb-4">
+                    <h2 class="fw-bold">Categorías</h2>
+                    <!-- Las categorías se agregarán dinámicamente aquí -->
+                </div>
+                <div class="no-product-message" style="display:none;">No se encontró el producto</div>
+                <!-- Contenedor para productos agrupados por categorías -->
+                <div id="contenedor_secciones_producto">
+                    <!-- Las secciones de productos por categoría se agregarán dinámicamente aquí -->
+                </div>
+                <div class="menu-navegacion">
+                    <div class="boton-mobile">
+                        <!-- Botón flotante para ir al pedido-->
+                        <div class="floating-button-container">
+                            <button class="floating-button add-to-cart" id="continueButton">
+                                <span class="button-text">Mi pedido</span>
+                                <span class="button-price-mobile" id="totalPriceMobile"> $0.00</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="boton-desktop">
+                        <!-- Botón flotante dentro del menu -->
+                        <div class="floating-button-container">
+                            <button class="floating-button add-to-cart" id="continueButton2">
+                                <span class="button-text">Continuar</span>
+                                <span class="button-price-desktop" id="totalPriceDesktop"> $0.00</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orden-container">
+                <div class="back-form">
+                    <button class="btn-close back-to-menu-button"></button>
+                </div>
+                <div class="orden">
+                    <h2>Mi pedido</h2>
+                    <div class="additions" id="order-list">
+                        <!-- Los productos se agregarán dinámicamente aquí -->
+                    </div>
+                    <h3 id="totalPago">Total a pagar: $0.00</h3>
+                    <div class="boton-form">
+                        <div class="floating-button-container">
+                            <button class="floating-button add-to-cart" id="formButton">
+                                <span class="button-text">Continuar</span>
+                                <span class="button-price-form" id="totalPriceForm"> $0.00</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formulario">
+                <div class="Barrio">
+                    <h3>Barrios</h3>
+                    <div class="mb-2">
+                        <select id="selectBarrio" class="form-select">
+                            <option value="">Seleccione un Barrio</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <select id="selectCodigoPostal" class="form-select">
+                            <option value="">Seleccione un Codigo Postal</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <select id="selectCosto" class="form-select">
+                            <option value="">Se le seleccionara un costo del envio</option>
+                        </select>
+                    </div>
+                </div>
+                <h3>Dirección</h3>
+
+                <div class="Localidad">
+                    <div class="calles">
+                        <div class="calle-1">
+                            <input type="text" class="form-control" id="txtCalle1" placeholder="Ingresa tu calle y número">
+                        </div>
+                        <div class="calle-2">
+                            <input type="text" class="form-control" id="txtCalle2" placeholder="¿Entre que calles se encuentra tu domicilio?">
+                        </div>
+                    </div>
+                    <div class="depart-piso">
+                        <div class="departamento">
+                            <input type="text" class="form-control" id="txtDepartamento" placeholder="Ingrese su departamento">
+                        </div>
+                        <div class="piso">
+                            <input type="number" class="form-control" id="txtNumeroPiso" placeholder="Número del piso">
+                        </div>
+                    </div>
+                    <div class="referencia">
+                        <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia para encontrar tu hogar (Ej: Nro de Casa, Manzana, etc.)">
+                    </div>
+                </div>
+                <h3>Datos de contacto</h3>
+                <div class="Cliente">
+                    <input type="text" class="form-control" id="txtNombreCliente" placeholder="Nombre">
+                    <input type="text" class="form-control" id="txtApellidoCliente" placeholder="Apellido">
+                    <div class="phone-number">
+                        <input type="tel" class="form-control" id="txtCelular" placeholder="011 2345-6789">
+                    </div>
+                </div>
+
+                <div class="confirm-cancel">
+                    <button class="boton-cancel">
+                        <span>Atrás</span>
+                    </button>
+                    <button class="boton-confirm" onclick="CrearLocalidad()">
+                        <span>Confirmar Pedido</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+@section scripts{
+
+    <script>
+    // Variable global para mantener el total del pago
+    let totalPagoGlobal = 0;
+
+    document.getElementById('continueButton').addEventListener('click', function () {
+        // Desplazar la página hacia la sección de "Mi Pedido"
+        document.querySelector('.orden-container').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    //Funcionalidad para que se meustre el formulario
+    document.addEventListener("DOMContentLoaded", function () {
+        const menu = document.querySelector(".menu");
+        const ordenContainer = document.querySelector(".orden-container");
+        const formulario = document.querySelector(".formulario");
+
+        const botonForm = document.getElementById("formButton");
+        const botonDesktop = document.getElementById("continueButton2");
+        const botonAtras = document.querySelector(".boton-cancel");
+
+        // Función para mostrar el formulario y ocultar el resto
+        function mostrarFormulario() {
+            if (window.innerWidth < 1080) {
+                menu.style.display = "none";
+                ordenContainer.style.display = "none";
+                formulario.style.display = "block";
+
+            }
+            else {
+                menu.style.display = "none";
+                ordenContainer.style.display = "none";
+                formulario.style.display = "block";
+            }
+        }
+
+        // Función para volver al menú y ocultar el formulario
+        function volverAlMenu() {
+            // Verificar si el ancho de la pantalla es menor a 1080px
+            if (window.innerWidth < 1080) {
+                menu.style.display = "block";
+                ordenContainer.style.display = "none";
+                formulario.style.display = "none";
+
+            }
+            else {
+                menu.style.display = "block";
+                ordenContainer.style.display = "block";
+                formulario.style.display = "none";
+            }
+        }
+
+        // Manejar clic en "Continuar" desde el botón en el formulario
+        botonForm.addEventListener("click", mostrarFormulario);
+        botonDesktop.addEventListener("click", mostrarFormulario);
+
+        // Manejar clic en "Atrás" en el formulario
+        botonAtras.addEventListener("click", volverAlMenu);
+    });
+
+
+
+    $(document).ready(function () {
+        MostrarCategoria();
+        MostrarProductos();
+        cargarBarrios();
+        // Filtro en tiempo real
+        $("#productSearch").on("input", function () {
+            var searchQuery = $(this).val().toLowerCase(); // Obtener el texto de búsqueda en minúsculas
+            filtrarProductos(searchQuery);
+        });
+        // Decrementar cantidad
+        $("#decreaseQuantity").click(function () {
+            var input = $("#quantityInput");
+            var currentValue = parseInt(input.val());
+
+            // Asegurarse de que el valor no sea menor que el mínimo (1)
+            if (currentValue > 1) {
+                input.val(currentValue - 1);
+            }
+        });
+
+        // Incrementar cantidad
+        $("#increaseQuantity").click(function () {
+            var input = $("#quantityInput");
+            var currentValue = parseInt(input.val());
+
+            // Incrementar el valor
+            input.val(currentValue + 1);
+        });
+
+        // Evento al hacer clic en un producto para abrir el modal
+        $(document).on('click', '.product-card', function () {
+            // Obtener datos del producto
+            const productName = $(this).find('.product-name').text();
+            const productDescription = $(this).find('p').text();
+            const productPrice = $(this).find('.cart').text();
+            const productImage = $(this).find('img').attr('src');
+
+            // Rellenar los datos en el modal
+            $('#productName').text(productName);
+            $('#productPrice').text(productPrice);
+            $('#productDescription').text(productDescription);
+            $('#productImage').attr('src', productImage);
+
+            // Restablecer valores predeterminados
+            $('#quantityInput').val(1);
+            $('#productComment').val('');
+
+            // Abrir el modal
+            $('#productModal').modal('show');
+        });
+
+        // Manejar el clic en el botón flotante para mostrar orden-container
+        $("#continueButton").click(function () {
+            if ($(window).width() <= 1080) {
+                $(".menu").hide();
+                $(".orden-container").show();
+            }
+        });
+
+        // Manejar el clic en el botón "Volver al Menú"
+        $(".back-to-menu-button").click(function () {
+            if ($(window).width() <= 1080) {
+                $(".orden-container").hide(); // Ocultar orden-container
+                $(".formulario").hide(); // Ocultar orden-container
+                $(".menu").show(); // Mostrar menú
+            } else {
+                $(".orden-container").show(); // Mostrar orden-container en pantallas grandes
+                $(".menu").show(); // Mostrar menú
+                $(".formulario").hide(); // Mostrar menú
+            }
+        });
+
+        $(window).resize(function () {
+            if ($(window).width() > 1080) {
+                $(".menu").show(); // Mostrar menú en pantallas grandes
+                $(".orden-container").show(); // Mostrar orden-container en pantallas grandes
+                $(".formulario").hide(); // Ocultar orden-container en pantallas pequeñas
+            } else {
+                $(".menu").show(); // Mostrar menú en pantallas pequeñas
+                $(".orden-container").hide(); // Ocultar orden-container en pantallas pequeñas
+            }
+        });
+
+    });
+
+    //Funcionalidad del Carrito
+    let currentOrderId = 1; // Inicializamos el ID de orden
+
+    $(document).ready(function () {
+        // Evento al hacer clic en "Agregar a mi pedido"
+        $("#addToOrderButton").click(function () {
+            // Capturar datos del modal
+            const productName = $("#productName").text();
+            const productQuantity = parseInt($("#quantityInput").val());
+            const productComment = $("#productComment").val();
+            const productPrice = parseFloat($("#productPrice").text().replace("$", "")); // Convertir a número
+            const productTotal = productPrice * productQuantity;
+
+            // Crear un nuevo elemento para la orden
+            const orderItem = `
+                <div class="order-item" id="order-${currentOrderId}">
+                    <h5>${productName}</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p>Cantidad: <span class="order-quantity">${productQuantity}</span></p>
+                            <p>Comentario: <span class="order-comment">${productComment}</span></p>
+                        </div>
+                        <div>
+                            <p>Precio unitario: $<span class="order-price">${productPrice.toFixed(2)}</span></p>
+                            <p>Total: $<span class="order-total">${productTotal.toFixed(2)}</span></p>
+                        </div>
+                        <button class="btn btn-tacho remove-order" data-order-id="${currentOrderId}"><img src="/Content/icono/tacho.svg"></button>
+                    </div>
+                    <hr>
+                </div>
+            `;
+
+            // Agregar el nuevo elemento a la sección de "Mi Pedido"
+            $(".additions").append(orderItem);
+
+            // Incrementar el ID de orden para el próximo producto
+            currentOrderId++;
+
+            // Actualizar el total del pedido general
+            actualizarTotalPago();
+
+            // Cerrar el modal
+            $('#productModal').modal('hide');
+        });
+
+        // Evento para eliminar un producto de la orden
+        $(document).on('click', '.remove-order', function () {
+            const orderId = $(this).data("order-id");
+            $(`#order-${orderId}`).remove(); // Eliminar la orden
+            actualizarTotalPago(); // Recalcular el total
+        });
+
+        // Función para actualizar el total del pedido general
+        function actualizarTotalPago() {
+            totalPagoGlobal = 0;
+            $(".order-total").each(function () {
+                totalPagoGlobal += parseFloat($(this).text());
+            });
+
+            // Usar la misma variable global para actualizar ambos elementos
+            actualizarTotalGlobal();
+        }
+
+        function actualizarTotalGlobal() {
+            // Actualizar el texto en el total del pago
+            $("#totalPago").text(`Total a pagar: $${totalPagoGlobal.toFixed(2)}`);
+
+            // Actualizar el texto en el botón flotante móvil
+            const botonFlotanteMobile = document.querySelector('#totalPriceMobile');
+            if (botonFlotanteMobile) {
+                botonFlotanteMobile.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+            }
+
+            // Actualizar el texto en el botón flotante desktop
+            const botonFlotanteDesktop = document.querySelector('#totalPriceDesktop');
+            if (botonFlotanteDesktop) {
+                botonFlotanteDesktop.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+            }
+
+            // Actualizar el texto en el botón flotante desktop
+            const botonFlotanteFrom = document.querySelector('#totalPriceForm');
+            if (botonFlotanteFrom) {
+                botonFlotanteFrom.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+            }
+        }
+
+    });
+    //Fin funcionalidad del Carrito
+
+
+    // Función para eliminar un producto del carrito
+    function deleteProduct(index) {
+        cartItems.splice(index, 1);
+        updateCartDisplay();
+    }
+
+
+    function filtrarProductos(query) {
+        let foundProduct = false; // Variable para saber si hay productos que coinciden
+
+        // Filtrar productos
+        $(".product-card").each(function () {
+            var productName = $(this).find(".product-name").text().toLowerCase();
+            if (productName.includes(query.toLowerCase())) {
+                $(this).show(); // Mostrar producto si coincide
+                foundProduct = true;
+            } else {
+                $(this).hide(); // Ocultar producto si no coincide
+            }
+        });
+
+        // Si no hay búsqueda, mostrar todo
+        if (query === "") {
+            $(".product-card").show(); // Mostrar todos los productos
+            $(".category-container").show(); // Mostrar todas las categorías
+            $(".category-divider").show(); // Mostrar los hr
+            return;
+        }
+
+        // Ocultar categorías sin productos visibles
+        $(".category-container").each(function () {
+            var categoryHasVisibleProducts = $(this).find(".product-card:visible").length > 0;
+            if (!categoryHasVisibleProducts) {
+                $(this).hide(); // Ocultar categoría si no tiene productos visibles
+                $(this).next(".category-divider").hide(); // Ocultar el hr correspondiente
+            } else {
+                $(this).show(); // Mostrar categoría si tiene productos visibles
+                $(this).next(".category-divider").show(); // Mostrar el hr correspondiente
+            }
+        });
+    }
+
+    function MostrarCategoria() {
+        jQuery.ajax({
+            url: '@Url.Action("ListaCategorias", "Tienda")',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(response) {
+                $("#contenedor_categoria").LoadingOverlay("hide");
+                $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
+
+                // Generar enlaces de categorías
+                $.each(response.data, function(i, element) {
+                    $("<a>")
+                        .addClass("cart text-black")
+                        .text(element.Nombre)
+                        .attr("href", "#categoria_" + element.Id_Categoria)
+                        .on("click", function(e) {
+                            e.preventDefault();
+
+                            // Desplazar al título de la categoría
+                            var categoryTitle = $("#categoria_" + element.Id_Categoria);
+                            if (categoryTitle.length) {
+                                categoryTitle[0].scrollIntoView({ behavior: "smooth" });
+                            }
+                        })
+                        .appendTo("#contenedor_categoria");
+                });
+
+                // Mostrar todos los productos en secciones al cargar
+                //MostrarProductoporCategoria();
+            },
+            beforeSend: function() {
+                $("#contenedor_categoria").LoadingOverlay("show");
+            }
+        });
+    }
+
+
+    function MostrarProductos() {
+        jQuery.ajax({
+            url: '@Url.Action("ListarTodosProductos", "Tienda")',
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                productosMap = {}; // Reinicia el mapa al obtener nuevos datos
+                $("#contenedor_secciones_producto").LoadingOverlay("hide");
+                $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
+
+                // Verificar si hay productos para mostrar
+                if (response.data.length > 0) {
+                    let currentCategory = null;
+                    let sectionContainer = null;
+
+                    // Agrupar productos por categoría
+                    var productsByCategory = {};
+
+                    $.each(response.data, function(i, element) {
+                        var categoryId = element.oCategoria.Id_Categoria;
+
+                        if (!productsByCategory[categoryId]) {
+                            productsByCategory[categoryId] = {
+                                categoryName: element.oCategoria.Nombre,
+                                products: []
+                            };
+                        }
+
+                        productsByCategory[categoryId].products.push(element);
+
+                        productosMap[element.Nombre] = element.Id_Producto;
+                    });
+
+                    // Renderizar las categorías y productos
+                    $.each(productsByCategory, function(categoryId, categoryData) {
+                        var sectionContainer = $("<div>").attr("id", "categoria_" + categoryId).addClass("category-container products mb-5")
+                            .append($("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName));
+
+                        var rowContainer = $("<div>").addClass("grid-container"); // Usamos grid-container para los productos
+                        sectionContainer.append(rowContainer);
+
+                        // Añadir productos a la fila
+                        $.each(categoryData.products, function(i, product) {
+                            var productCard = $("<div>").addClass("product product-card") // Usamos grid-item para cada producto
+                                .append(
+                                    $("<div>").append(
+                                        $("<h4>").addClass("product-name").text(product.Nombre),
+                                        $("<p>").text(product.Descripcion),
+                                        $("<button>").addClass("cart text-black").text("$" + product.Precio).data("idproducto", product.Id_Producto))
+                                );
+
+                            // Llamada AJAX para obtener la imagen en base64
+                            $.ajax({
+                                url: '@Url.Action("ImagenProducto", "Tienda")', // Ajustar URL si es necesario
+                                type: 'POST',
+                                data: JSON.stringify({ id: product.Id_Producto }),
+                                dataType: 'json',
+                                contentType: 'application/json; charset=utf-8',
+                                success: function(data) {
+                                    if (data.conversion) {
+                                        // Crear la imagen con base64 y agregarla al producto
+                                        var img = $("<img>")
+                                            .addClass("d-block")
+                                            .attr('src', 'data:image/' + data.extension + ';base64,' + data.textoBase64)
+                                            .attr('alt', product.Nombre);
+
+                                        // Añadir la imagen al producto
+                                        productCard.append(img);
+                                    }
+                                }
+                            });
+
+                            rowContainer.append(productCard);  // Añadir producto a la fila
+                        });
+
+                        sectionContainer.appendTo("#contenedor_secciones_producto");  // Añadir la sección al contenedor general
+                        $("#contenedor_secciones_producto").append("<hr class='category-divider' />");  // Línea divisora después de cada categoría
+                    });
+                } else {
+                    $("<div>").addClass("alert alert-warning")
+                        .text("No hay productos disponibles.")
+                        .appendTo("#contenedor_secciones_producto");
+                }
+            },
+            beforeSend: function() {
+                $("#contenedor_secciones_producto").LoadingOverlay("show");
+            }
+        });
+    }
+
+
+    // Funcionalidades para el carrusel
+
+    $(document).ready(function() {
+        // Llamar al método ListarCarrusel para obtener las imágenes
+        $.ajax({
+            url: '@Url.Action("ListarCarrusel", "Tienda")', // URL para obtener las imágenes del carrusel
+            type: 'GET',
+            success: function(response) {
+                var carruselContainer = $('#myCarousel .carousel-inner');
+                var indicadores = $('.carousel-indicators');
+                var contador = 0;
+
+                // Limpiar las imágenes previas en el carrusel (si las hay)
+                carruselContainer.empty();
+                indicadores.empty();
+
+                // Iterar sobre las imágenes que se recibieron del servidor
+                response.data.forEach(function(item, index) {
+                    // Crear el indicador
+                    var indicador = $('<button>')
+                        .attr('type', 'button')
+                        .attr('data-bs-target', '#myCarousel')
+                        .attr('data-bs-slide-to', index)
+                        .attr('aria-label', 'Slide ' + (index + 1));
+
+                    if (index === 0) {
+                        indicador.addClass('active');
+                    }
+
+                    indicadores.append(indicador);
+
+                    // Crear la imagen del carrusel
+                    var itemCarrousel = $('<div>').addClass('carousel-item');
+                    if (index === 0) {
+                        itemCarrousel.addClass('active');
+                    }
+
+                    // Llamar al método ImagenCarrusel para obtener la imagen en base64
+                    $.ajax({
+                        url: '@Url.Action("ImagenCarrusel", "Tienda")', // Ajusta la URL si es necesario
+                        type: 'POST',
+                        data: JSON.stringify({ id: item.Id_Carrusel }), // Pasar el ID de la imagen
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function(data) {
+                            if (data.conversion) {
+                                // Crear la imagen con base64 y agregarla al item del carrusel
+                                var img = $('<img>')
+                                    .addClass('d-block w-100')
+                                    .attr('src', 'data:image/' + data.extension + ';base64,' + data.textoBase64)
+                                    .attr('alt', item.Descripcion);
+
+                                // Agregar la imagen al item del carrusel
+                                itemCarrousel.append(img);
+                                carruselContainer.append(itemCarrousel);
+                            }
+                        },
+                        error: function() {
+                            alert('Error al cargar la imagen');
+                        }
+                    });
+                });
+            },
+            error: function() {
+                alert('Error al cargar las imágenes del carrusel');
+            }
+        });
+    });
+
+        // Funcionalidad para enviar LOCALIDAD Y CLIENTE
+
+
+        // Validaciones de formulario
+
+        function cargarBarrios() {
+            $.ajax({
+                url: '@Url.Action("ListarBarrio", "Tienda")',
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    const barrios = response.data;
+
+                    // Limpia los selects
+                    $("#selectBarrio").empty();
+                    $("#selectCodigoPostal").empty();
+                    $("#selectCosto").empty();
+
+                    // Agrega las opciones predeterminadas
+                    $("#selectBarrio").append('<option value="">Seleccione un Barrio</option>');
+                    $("#selectCodigoPostal").append('<option value="">Seleccione un Código Postal</option>');
+                    $("#selectCosto").append('<option value="">Se le seleccionará un costo del envío</option>');
+
+                    // Llena ambos selects con los datos
+                    barrios.forEach(function (item) {
+                        $("#selectBarrio").append($("<option>").val(item.Codigo_Postal).text(item.Barrio));
+                        $("#selectCodigoPostal").append($("<option>").val(item.Codigo_Postal).text(item.Codigo_Postal));
+                    });
+
+                    // Sincronizar selects cuando cambia Barrio
+                    $("#selectBarrio").on("change", function () {
+                        const selectedCodigoPostal = $(this).val();
+                        const selectedBarrio = barrios.find(b => b.Codigo_Postal == selectedCodigoPostal);
+
+                        if (selectedBarrio) {
+                            $("#selectCodigoPostal").val(selectedBarrio.Codigo_Postal);
+                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                        } else {
+                            resetFields();
+                        }
+                    });
+
+                    // Sincronizar selects cuando cambia Código Postal
+                    $("#selectCodigoPostal").on("change", function () {
+                        const selectedCodigoPostal = $(this).val();
+                        const selectedBarrio = barrios.find(b => b.Codigo_Postal == selectedCodigoPostal);
+
+                        if (selectedBarrio) {
+                            $("#selectBarrio").val(selectedBarrio.Codigo_Postal);
+                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                        } else {
+                            resetFields();
+                        }
+                    });
+
+                    // Función para reiniciar campos
+                    function resetFields() {
+                        $("#selectBarrio").val("");
+                        $("#selectCodigoPostal").val("");
+                        $("#selectCosto").html('<option value="">Se le seleccionará un costo del envío</option>');
+                    }
+                },
+                error: function (error) {
+                    console.log("Error al cargar barrios:", error);
+                }
+            });
+        }
+
+        function validarLocalidad(localidad) {
+            let errores = [];
+
+            if (!localidad.oBarrios.Codigo_Postal) errores.push("Debes insertar un Barrio");
+            if (!localidad.Calle) errores.push("La calle es obligatoria.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
+        function CrearLocalidad() {
+            var localidad = {
+                Id_Localidad: 0,
+                oBarrios: {
+                    Codigo_Postal: $("#selectBarrio").val()
+                },
+                Departamento: $("#txtDepartamento").val(),
+                Piso: $("#txtNumeroPiso").val(),
+                Calle: $("#txtCalle1").val(),
+                Calle_2: $("#txtCalle2").val(),
+                Referencia: $("#txtReferencia").val()
+            };
+
+            if (!validarLocalidad(localidad)) {
+                return; // Detener si no pasa la validación
+            }
+
+            $.ajax({
+                url: '@Url.Action("CrearLocalidad", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ objeto: localidad }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    if (data.resultado) {
+                        localidad.Id_Localidad = data.resultado;
+                        datosLocalidad = localidad; // Guardar en la variable global
+                        $("#formLocalidad input").val(''); // Limpiar formulario
+                        CrearCliente(); // Llamar a la función para crear el cliente
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.mensaje || 'Error desconocido al guardar la localidad.',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                },
+                error: function () {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar la localidad. Por favor, inténtalo nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+        }
+
+
+
+        function validarCliente(cliente) {
+            let errores = [];
+
+            if (!cliente.Nombre) errores.push("El nombre del cliente es obligatorio.");
+            if (!cliente.Apellido) errores.push("El apellido del cliente es obligatorio.");
+            if (!cliente.Celular) errores.push("El celular del cliente es obligatorio.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
+        function CrearCliente() {
+            var cliente = {
+                Id_Cliente: 0,
+                Nombre: $("#txtNombreCliente").val(),
+                Apellido: $("#txtApellidoCliente").val(),
+                Celular: $("#txtCelular").val()
+            };
+
+            if (!validarCliente(cliente)) {
+                return; // Detener si no pasa la validación
+            }
+
+            $.ajax({
+                url: '@Url.Action("CrearCliente", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ objeto: cliente }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    if (data.resultado) {
+                        cliente.Id_Cliente = data.resultado;
+                        datosCliente = cliente; // Guardar en la variable global
+                        crearVenta(); // Llamar a la función para crear la venta
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error del Servidor',
+                            text: data.mensaje || 'Error desconocido al guardar el cliente.',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                },
+                error: function () {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar el cliente. Por favor, inténtalo nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+        }
+
+        var datosCliente = null; // Para almacenar el cliente creado
+        var datosLocalidad = null; // Para almacenar la localidad creada
+        var productosMap = {};
+
+        function validarVenta(cliente, localidad, totalPago) {
+            let errores = [];
+
+            if (!cliente || !cliente.Id_Cliente) errores.push("Debes registrar los datos del cliente.");
+            if (!localidad || !localidad.Id_Localidad) errores.push("Debes registrar la dirección de entrega (localidad).");
+            if (!totalPago || totalPago <= 0) errores.push("Debes seleccionar al menos un producto para realizar la venta.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
+        function crearVenta() {
+            if (!validarVenta(datosCliente, datosLocalidad, totalPagoGlobal)) {
+                return; // Detener si no pasa la validación
+            }
+
+            var venta = {
+                Id_VentaViewModel: 0,
+                oCliente: {
+                    Id_Cliente: datosCliente.Id_Cliente
+                },
+                oLocalidad: {
+                    Id_Localidad: datosLocalidad.Id_Localidad
+                },
+                Fecha_Venta: new Date().toISOString(),
+                Total_Pago: totalPagoGlobal
+            };
+
+            $.ajax({
+                url: '@Url.Action("InsertarVenta", "Tienda")',
+                type: "POST",
+                data: JSON.stringify(venta),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        var ventaId = response.data ? response.data.Id_VentaViewModel : null;
+                        if (ventaId) {
+                            insertarDetallesVenta(ventaId);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo obtener la venta. Intenta nuevamente.',
+                                confirmButtonText: 'Cerrar'
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message || 'Error al crear la venta.',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al guardar la venta. Intenta nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
+                }
+            });
+        }
+
+
+
+
+        function insertarDetallesVenta(ventaId) {
+            var detallesVenta = $(".order-item").map(function () {
+                var $item = $(this);
+                var productName = $item.find("h5").text(); // Extrae el nombre del producto
+                var productId = productosMap[productName]; // Busca el ID en el mapeo
+
+                if (!productId) {
+                    console.error("No se encontró el ID para el producto:", productName);
+                    return null; // O lanza una alerta o detén la ejecución si es crítico
+                }
+
+                return {
+                    Id_DetalleVenta: 0,
+                    oVentaViewModel: {
+                        Id_VentaViewModel: ventaId
+                    },
+                    oProducto: {
+                        Id_Producto: productId
+                    },
+                    Cantidad: parseInt($item.find(".order-quantity").text()),
+                    Observacion: $item.find(".order-comment").text(),
+                    PrecioUnitario: parseFloat($item.find(".order-price").text()),
+                    Subtotal: parseFloat($item.find(".order-total").text())
+                };
+            }).get();
+
+            detallesVenta = detallesVenta.filter(item => item !== null);
+
+            // Enviar detalles de la venta
+            $.ajax({
+                url: '@Url.Action("InsertarDetalleVenta", "Tienda")',
+                type: "POST",
+                data: JSON.stringify(detallesVenta),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Respuesta del servidor:", response); // Verificar estructura de la respuesta
+
+                    if (response.success) {
+                        // Mostrar SweetAlert de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: 'Venta enviada correctamente.',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
+                            $(".additions").empty();
+                        });
+                    } else {
+                        // Mostrar SweetAlert de error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al agregar los detalles de la venta: ' + (response.message || 'Sin mensaje de error.'),
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error("Error al guardar los detalles de la venta:", error);
+
+                    // Mostrar SweetAlert para errores de comunicación con el servidor
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al guardar los detalles de la venta. Intenta nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
+                }
+            });
+
+        }
+
+
+
+    </script>
+
+
+}
+
+<!-- Modal para Detalles del Producto -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Agrega el botón de "volver" aquí -->
+            <div class="product-select">
+                <div class="back">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="text-center">
+                    <!-- Imagen del Producto -->
+                    <img id="productImage" class="img-fluid mb-3" src="" alt="Imagen del Producto" style="max-height: 300px; object-fit: contain;">
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- Información del Producto -->
+                <div class="product-details">
+                    <div class="d-grid gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 id="productName"></h3>
+                            <button id="productPrice" class="cart w-auto text-black">
+                                <img src="/Content/icono/changuito.svg" alt="Changuito">
+                            </button>
+                        </div>
+                        <!-- Descripción del Producto -->
+                        <p id="productDescription" class="descripcion"></p>
+                    </div>
+                </div>
+                <!-- Cantidad-->
+                <div class="mb-3">
+                    <div class="contenedor-button d-flex justify-content-between align-items-center">
+                        <button type="button" class="button-minus" id="decreaseQuantity">-</button>
+                        <input type="number" value="1" min="1" class="cantidad" id="quantityInput">
+                        <button type="button" class="button-plus" id="increaseQuantity">+</button>
+                    </div>
+                </div>
+                <hr>
+                <!-- Comentarios -->
+                <h4>Comentarios</h4>
+                <textarea id="productComment" class="form-control" rows="3" placeholder="Escribe un comentario..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="add-to-cart" id="addToOrderButton">Agregar a mi pedido</button>
+            </div>
+        </div>
+    </div>
+</div>
+

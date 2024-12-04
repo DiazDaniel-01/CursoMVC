@@ -25,6 +25,7 @@ namespace CapaPresentacionTienda
                       "~/Scripts/loadingoverlay.min.js",
                       "~/Scripts/sweetalert.min.js"));
 
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/Site.css",
                 "~/Content/sweetalert.css"));
