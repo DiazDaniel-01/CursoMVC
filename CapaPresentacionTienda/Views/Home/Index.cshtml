@@ -154,7 +154,7 @@
                 <div class="Localidad">
                     <div class="calles">
                         <div class="calle-1">
-                            <input type="text" class="form-control" id="txtCalle1" placeholder="Ingresa tu calle y número" required>
+                            <input type="text" class="form-control" id="txtCalle1" placeholder="Ingresa tu calle y número">
                         </div>
                         <div class="calle-2">
                             <input type="text" class="form-control" id="txtCalle2" placeholder="¿Entre que calles se encuentra tu domicilio?">
@@ -169,15 +169,15 @@
                         </div>
                     </div>
                     <div class="referencia">
-                        <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia para encontrar tu hogar">
+                        <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia para encontrar tu hogar (Ej: Nro de Casa, Manzana, etc.)">
                     </div>
                 </div>
                 <h3>Datos de contacto</h3>
                 <div class="Cliente">
-                    <input type="text" class="form-control" id="txtNombreCliente" placeholder="Nombre" required>
-                    <input type="text" class="form-control" id="txtApellidoCliente" placeholder="Apellido" required>
+                    <input type="text" class="form-control" id="txtNombreCliente" placeholder="Nombre">
+                    <input type="text" class="form-control" id="txtApellidoCliente" placeholder="Apellido">
                     <div class="phone-number">
-                        <input type="tel" class="form-control" id="txtCelular" placeholder="011 2345-6789" required>
+                        <input type="tel" class="form-control" id="txtCelular" placeholder="011 2345-6789">
                     </div>
                 </div>
 
@@ -675,7 +675,11 @@
         });
     });
 
-    // Funcionalidad para enviar LOCALIDAD Y CLIENTE
+        // Funcionalidad para enviar LOCALIDAD Y CLIENTE
+
+
+        // Validaciones de formulario
+
             function cargarBarrios() {
             $.ajax({
                 url: '@Url.Action("ListarBarrio", "Home")',
@@ -739,6 +743,25 @@
             });
         }
 
+        function validarLocalidad(localidad) {
+            let errores = [];
+
+            if (!localidad.oBarrios.Codigo_Postal) errores.push("El código postal es obligatorio.");
+            if (!localidad.Calle) errores.push("La calle es obligatoria.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
         function CrearLocalidad() {
             var localidad = {
                 Id_Localidad: 0,
@@ -751,6 +774,10 @@
                 Calle_2: $("#txtCalle2").val(),
                 Referencia: $("#txtReferencia").val()
             };
+
+            if (!validarLocalidad(localidad)) {
+                return; // Detener si no pasa la validación
+            }
 
             $.ajax({
                 url: '@Url.Action("CrearLocalidad", "Home")',
@@ -767,13 +794,23 @@
                         $("#formLocalidad input").val(''); // Limpiar formulario
                         CrearCliente(); // Llamar a la función para crear el cliente
                     } else {
-                        $("#mensajeError").text(data.mensaje);
-                        $("#mensajeError").show();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.mensaje || 'Error desconocido al guardar la localidad.',
+                            confirmButtonText: 'Cerrar'
+                        });
                     }
                 },
                 error: function () {
-                    $("#mensajeError").text("Error al guardar localidad");
-                    $("#mensajeError").show();
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar la localidad. Por favor, inténtalo nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
                 },
                 beforeSend: function () {
                     $(".modal-body").LoadingOverlay("show", {
@@ -785,6 +822,28 @@
             });
         }
 
+
+
+        function validarCliente(cliente) {
+            let errores = [];
+
+            if (!cliente.Nombre) errores.push("El nombre del cliente es obligatorio.");
+            if (!cliente.Apellido) errores.push("El apellido del cliente es obligatorio.");
+            if (!cliente.Celular) errores.push("El celular del cliente es obligatorio.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
         function CrearCliente() {
             var cliente = {
                 Id_Cliente: 0,
@@ -792,6 +851,10 @@
                 Apellido: $("#txtApellidoCliente").val(),
                 Celular: $("#txtCelular").val()
             };
+
+            if (!validarCliente(cliente)) {
+                return; // Detener si no pasa la validación
+            }
 
             $.ajax({
                 url: '@Url.Action("CrearCliente", "Home")',
@@ -805,16 +868,25 @@
                     if (data.resultado) {
                         cliente.Id_Cliente = data.resultado;
                         datosCliente = cliente; // Guardar en la variable global
-                        alert("Cliente y localidad registrados correctamente.");
-                        crearVenta(); // Llamar a la función para crear el cliente
+                        crearVenta(); // Llamar a la función para crear la venta
                     } else {
-                        $("#mensajeError").text(data.mensaje);
-                        $("#mensajeError").show();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error del Servidor',
+                            text: data.mensaje || 'Error desconocido al guardar el cliente.',
+                            confirmButtonText: 'Cerrar'
+                        });
                     }
                 },
                 error: function () {
-                    $("#mensajeError").text("Error al guardar cliente");
-                    $("#mensajeError").show();
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar el cliente. Por favor, inténtalo nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
                 },
                 beforeSend: function () {
                     $(".modal-body").LoadingOverlay("show", {
@@ -826,14 +898,36 @@
             });
         }
 
+
+
+
         var datosCliente = null; // Para almacenar el cliente creado
         var datosLocalidad = null; // Para almacenar la localidad creada
         var productosMap = {};
 
+        function validarVenta(cliente, localidad, totalPago) {
+            let errores = [];
+
+            if (!cliente || !cliente.Id_Cliente) errores.push("Debes registrar los datos del cliente.");
+            if (!localidad || !localidad.Id_Localidad) errores.push("Debes registrar la dirección de entrega (localidad).");
+            if (!totalPago || totalPago <= 0) errores.push("Debes seleccionar al menos un producto para realizar la venta.");
+
+            if (errores.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Errores de Validación',
+                    html: errores.join("<br>"),
+                    confirmButtonText: 'Cerrar'
+                });
+                return false;
+            }
+            return true;
+        }
+
+
         function crearVenta() {
-            if (!datosCliente || !datosLocalidad) {
-                alert("Primero debes registrar un cliente y una localidad.");
-                return;
+            if (!validarVenta(datosCliente, datosLocalidad, totalPagoGlobal)) {
+                return; // Detener si no pasa la validación
             }
 
             var venta = {
@@ -846,7 +940,6 @@
                 },
                 Fecha_Venta: new Date().toISOString(),
                 Total_Pago: totalPagoGlobal
-
             };
 
             $.ajax({
@@ -860,61 +953,35 @@
                         if (ventaId) {
                             insertarDetallesVenta(ventaId);
                         } else {
-                            alert("Error: No se pudo obtener el ID de la venta.");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo obtener la venta. Intenta nuevamente.',
+                                confirmButtonText: 'Cerrar'
+                            });
                         }
                     } else {
-                        alert("Error al crear la venta: " + response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message || 'Error al crear la venta.',
+                            confirmButtonText: 'Cerrar'
+                        });
                     }
                 },
                 error: function () {
-                    console.error("Error al guardar la venta.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al guardar la venta. Intenta nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
                 }
             });
         }
-        // Validaciones de formulario
-        document.addEventListener("DOMContentLoaded", function () {
-            const txtNumeroPiso = document.getElementById("txtNumeroPiso");
-            const txtCelular = document.getElementById("txtCelular");
-            const confirmarPedido = document.querySelector(".boton-confirm");
 
-            // Deshabilitar el botón de confirmación inicialmente
-            confirmarPedido.disabled = true;
 
-            // Validar si los campos son correctos
-            function validarFormulario() {
-                const pisoValido = /^\d+$/.test(txtNumeroPiso.value); // Solo números en Piso
-                const celularValido = /^\d+$/.test(txtCelular.value); // Solo números en Celular
 
-                if (pisoValido && celularValido) {
-                    confirmarPedido.disabled = false;
-                } else {
-                    confirmarPedido.disabled = true;
-                }
-            }
-
-            // Agregar eventos de validación
-            txtNumeroPiso.addEventListener("input", validarFormulario);
-            txtCelular.addEventListener("input", validarFormulario);
-
-            // Mostrar mensajes de error en caso de valores inválidos
-            txtNumeroPiso.addEventListener("input", function () {
-                if (!/^\d+$/.test(txtNumeroPiso.value)) {
-                    txtNumeroPiso.setCustomValidity("Solo se permiten números en este campo.");
-                    txtNumeroPiso.reportValidity();
-                } else {
-                    txtNumeroPiso.setCustomValidity("");
-                }
-            });
-
-            txtCelular.addEventListener("input", function () {
-                if (!/^\d+$/.test(txtCelular.value)) {
-                    txtCelular.setCustomValidity("Solo se permiten números en este campo.");
-                    txtCelular.reportValidity();
-                } else {
-                    txtCelular.setCustomValidity("");
-                }
-            });
-        });
 
         function insertarDetallesVenta(ventaId) {
             var detallesVenta = $(".order-item").map(function () {
@@ -942,50 +1009,53 @@
                 };
             }).get();
 
-            // Filtrar posibles nulls (en caso de errores)
             detallesVenta = detallesVenta.filter(item => item !== null);
-// Enviar detalles de la venta
-$.ajax({
-    url: '@Url.Action("InsertarDetalleVenta", "Home")',
-    type: "POST",
-    data: JSON.stringify(detallesVenta),
-    contentType: "application/json",
-    success: function (response) {
-        if (response.success) {
-            // Mostrar SweetAlert de éxito
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: 'La venta se guardó correctamente.',
-                confirmButtonText: 'Aceptar'
-            }).then(() => {
-                // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
-                $(".additions").empty();
-                actualizarTotalPago();
+
+            // Enviar detalles de la venta
+            $.ajax({
+                url: '@Url.Action("InsertarDetalleVenta", "Home")',
+                type: "POST",
+                data: JSON.stringify(detallesVenta),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Respuesta del servidor:", response); // Verificar estructura de la respuesta
+
+                    if (response.success) {
+                        // Mostrar SweetAlert de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: 'Venta enviada correctamente.',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
+                            $(".additions").empty();
+                        });
+                    } else {
+                        // Mostrar SweetAlert de error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al agregar los detalles de la venta: ' + (response.message || 'Sin mensaje de error.'),
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error("Error al guardar los detalles de la venta:", error);
+
+                    // Mostrar SweetAlert para errores de comunicación con el servidor
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al guardar los detalles de la venta. Intenta nuevamente.',
+                        confirmButtonText: 'Cerrar'
+                    });
+                }
             });
-        } else {
-            // Mostrar SweetAlert de error
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al agregar los detalles de la venta: ' + response.message,
-                confirmButtonText: 'Cerrar'
-            });
-        }
-    },
-    error: function (error) {
-        // Mostrar SweetAlert para errores de comunicación con el servidor
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al guardar los detalles de la venta. Intenta nuevamente.',
-            confirmButtonText: 'Cerrar'
-        });
-        console.error("Error al guardar los detalles de la venta:", error);
-    }
-});
 
         }
+
 
 
     </script>

@@ -284,11 +284,11 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand("sp_InsertarLocalidad", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Codigo_Postal", obj.oBarrios.Codigo_Postal);
-                    cmd.Parameters.AddWithValue("@Departamento", obj.Departamento);
+                    cmd.Parameters.AddWithValue("@Departamento", (object)obj.Departamento ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@Calle", obj.Calle);
-                    cmd.Parameters.AddWithValue("@Calle2", obj.Calle_2);
-                    cmd.Parameters.AddWithValue("@Piso", obj.Piso);
-                    cmd.Parameters.AddWithValue("@Referencia", obj.Referencia);
+                    cmd.Parameters.AddWithValue("@Calle2", (object)obj.Calle_2 ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Piso", (object)obj.Piso ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Referencia", (object)obj.Referencia ?? DBNull.Value);
 
                     cmd.Parameters.Add("@Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;

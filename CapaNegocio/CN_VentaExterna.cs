@@ -68,15 +68,6 @@ namespace CapaNegocio
                 Mensaje = "Debe ingresar su Codigo Postal";
             }
 
-            else if (obj.Piso == 0)
-            {
-                Mensaje = "El Piso debe ser un número válido distinto de 0";
-            }
-            else if (obj.Piso < 1) // Si deseas que el número sea mayor que 0
-            {
-                Mensaje = "El Piso debe ser un número mayor que 0";
-            }
-
             else if (string.IsNullOrEmpty(obj.Calle) || string.IsNullOrWhiteSpace(obj.Calle))
             {
                 Mensaje = "El nombre de la Calle no puede ser vacio";
