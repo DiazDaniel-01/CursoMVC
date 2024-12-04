@@ -10,7 +10,7 @@ using System.IO;
 
 namespace CapaPresentacionTienda.Controllers
 {
-    public class HomeController : Controller
+    public class TiendaController : Controller
     {
         public ActionResult Index()
         {
