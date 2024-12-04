@@ -479,7 +479,7 @@
 
     function MostrarCategoria() {
         jQuery.ajax({
-            url: '@Url.Action("ListaCategorias", "Home")',
+            url: '@Url.Action("ListaCategorias", "Tienda")',
             type: "GET",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -517,7 +517,7 @@
 
     function MostrarProductos() {
         jQuery.ajax({
-            url: '@Url.Action("ListarTodosProductos", "Home")',
+            url: '@Url.Action("ListarTodosProductos", "Tienda")',
             type: "GET",
             dataType: "json",
             success: function (response) {
@@ -568,7 +568,7 @@
 
                             // Llamada AJAX para obtener la imagen en base64
                             $.ajax({
-                                url: '@Url.Action("ImagenProducto", "Home")', // Ajustar URL si es necesario
+                                url: '@Url.Action("ImagenProducto", "Tienda")', // Ajustar URL si es necesario
                                 type: 'POST',
                                 data: JSON.stringify({ id: product.Id_Producto }),
                                 dataType: 'json',
@@ -611,7 +611,7 @@
     $(document).ready(function() {
         // Llamar al método ListarCarrusel para obtener las imágenes
         $.ajax({
-            url: '@Url.Action("ListarCarrusel", "Home")', // URL para obtener las imágenes del carrusel
+            url: '@Url.Action("ListarCarrusel", "Tienda")', // URL para obtener las imágenes del carrusel
             type: 'GET',
             success: function(response) {
                 var carruselContainer = $('#myCarousel .carousel-inner');
@@ -645,7 +645,7 @@
 
                     // Llamar al método ImagenCarrusel para obtener la imagen en base64
                     $.ajax({
-                        url: '@Url.Action("ImagenCarrusel", "Home")', // Ajusta la URL si es necesario
+                        url: '@Url.Action("ImagenCarrusel", "Tienda")', // Ajusta la URL si es necesario
                         type: 'POST',
                         data: JSON.stringify({ id: item.Id_Carrusel }), // Pasar el ID de la imagen
                         dataType: 'json',
@@ -682,7 +682,7 @@
 
         function cargarBarrios() {
             $.ajax({
-                url: '@Url.Action("ListarBarrio", "Home")',
+                url: '@Url.Action("ListarBarrio", "Tienda")',
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
@@ -780,7 +780,7 @@
             }
 
             $.ajax({
-                url: '@Url.Action("CrearLocalidad", "Home")',
+                url: '@Url.Action("CrearLocalidad", "Tienda")',
                 type: "POST",
                 data: JSON.stringify({ objeto: localidad }),
                 dataType: "json",
@@ -857,7 +857,7 @@
             }
 
             $.ajax({
-                url: '@Url.Action("CrearCliente", "Home")',
+                url: '@Url.Action("CrearCliente", "Tienda")',
                 type: "POST",
                 data: JSON.stringify({ objeto: cliente }),
                 dataType: "json",
@@ -943,7 +943,7 @@
             };
 
             $.ajax({
-                url: '@Url.Action("InsertarVenta", "Home")',
+                url: '@Url.Action("InsertarVenta", "Tienda")',
                 type: "POST",
                 data: JSON.stringify(venta),
                 contentType: "application/json",
@@ -1013,7 +1013,7 @@
 
             // Enviar detalles de la venta
             $.ajax({
-                url: '@Url.Action("InsertarDetalleVenta", "Home")',
+                url: '@Url.Action("InsertarDetalleVenta", "Tienda")',
                 type: "POST",
                 data: JSON.stringify(detallesVenta),
                 contentType: "application/json",
