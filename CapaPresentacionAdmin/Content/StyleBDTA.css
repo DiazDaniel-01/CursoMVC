@@ -54,18 +54,16 @@ h4 {
 /* MAIN CONTAINER */
 .cont {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permite el apilado automático */
 }
 
 /* LOGO */
 .logo {
     display: flex;
     align-items: center;
-    margin-right: auto;
-    margin: 0px 30px;
+    margin: 0 30px;
 }
 
     .logo img {
@@ -77,6 +75,7 @@ h4 {
     display: flex;
     align-items: center;
     color: #333;
+    flex-wrap: wrap; /* Para manejar apilado en pantallas pequeñas */
 }
 
     .contact-info .item {
@@ -889,6 +888,28 @@ textarea.form-control {
     }
 
 
+}
+
+@media (max-width: 860px) {
+    .cont {
+        flex-direction: column; /* Cambia a apilado */
+        align-items: center; /* Centra el contenido */
+    }
+
+    .contact-info {
+        flex-direction: column; /* Apila los elementos verticalmente */
+        width: 100%; /* Ocupar ancho completo */
+    }
+
+        .contact-info .item {
+            padding: 10px 0;
+            border-left: none; /* Elimina el borde izquierdo */
+            border-top: 1px solid #333; /* Agrega borde superior */
+        }
+
+            .contact-info .item:first-child {
+                border-top: none; /* Elimina el borde superior del primer elemento */
+            }
 }
 
 

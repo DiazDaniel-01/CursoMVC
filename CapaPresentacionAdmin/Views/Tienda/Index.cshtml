@@ -977,6 +977,63 @@
             });
         }
 
+        function RealizarPedido() {
+            // Verificar que existan productos en el carrito
+            if (Object.keys(productosMap).length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Carrito vacío',
+                    text: 'No tienes productos en el carrito.',
+                    confirmButtonText: 'Cerrar'
+                });
+                return;
+            }
+
+            // Número de WhatsApp del vendedor
+            const numeroTelefono = "541136943084";
+            let mensaje = `¡Hola! Me gustaría realizar el siguiente pedido:\n\n`;
+
+            // Recorrer los productos en el carrito y construir el mensaje
+            $(".order-item").each(function () {
+                const $item = $(this);
+                const producto = $item.find("h5").text(); // Nombre del producto
+                const cantidad = parseInt($item.find(".order-quantity").text());
+                const precio = parseFloat($item.find(".order-price").text());
+                const subtotal = parseFloat($item.find(".order-total").text());
+
+                mensaje += `Producto: ${producto}\n`;
+                mensaje += `Cantidad: ${cantidad}\n`;
+                mensaje += `Precio: S/. ${precio.toFixed(2)}\n`;
+                mensaje += `Subtotal: S/. ${subtotal.toFixed(2)}\n\n`;
+            });
+
+            // Calcular el total desde la variable global o la vista
+            mensaje += `Total: S/. ${totalPagoGlobal.toFixed(2)}\n`;
+
+            // Verificar que los datos del cliente y la localidad existan
+            if (!datosCliente || !datosLocalidad) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Datos incompletos',
+                    text: 'Por favor, completa los datos del cliente y la dirección antes de realizar el pedido.',
+                    confirmButtonText: 'Cerrar'
+                });
+                return;
+            }
+
+            // Agregar los datos del cliente al mensaje
+            const clienteNombre = `${datosCliente.Nombre} ${datosCliente.Apellido}`;
+            const clienteTelefono = datosCliente.Celular || 'Sin teléfono';
+            const direccion = `${datosLocalidad.Calle}, ${datosLocalidad.Calle_2 || ''}, ${datosLocalidad.oBarrios.Codigo_Postal || ''}, ${datosLocalidad.Departamento || ''}, Piso: ${datosLocalidad.Piso || ''} "`;
+
+            mensaje += `\nCliente: ${clienteNombre}\n`;
+            mensaje += `Teléfono: ${clienteTelefono}\n`;
+            mensaje += `Dirección: ${direccion}\n`;
+
+            // Crear el enlace para enviar el mensaje por WhatsApp
+            const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(urlWhatsApp, "_blank");
+        }
 
 
 
@@ -1019,6 +1076,7 @@
 
                     if (response.success) {
                         // Mostrar SweetAlert de éxito
+
                         Swal.fire({
                             icon: 'success',
                             title: '¡Éxito!',
@@ -1028,6 +1086,7 @@
                             // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
                             $(".additions").empty();
                         });
+                        RealizarPedido();
                     } else {
                         // Mostrar SweetAlert de error
                         Swal.fire({

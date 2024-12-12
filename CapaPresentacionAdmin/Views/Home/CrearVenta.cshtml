@@ -208,6 +208,19 @@
             actualizarListadoProductos();
         }
 
+        function limpiarProductos() {
+            // Limpiar el arreglo de productos seleccionados
+            productosSeleccionados = [];
+
+            // Limpiar la lista visual de productos seleccionados
+            $("#listaProductosSeleccionados").empty();
+
+            // Reiniciar los totales visibles y ocultos
+            $("#visibleTotalPago").val("0.00");
+            $("#hiddenTotalPago").val("0.00");
+
+        }
+
 
         // Actualizar el listado de productos seleccionados y el total
         function actualizarListadoProductos() {
@@ -231,7 +244,7 @@
             var totalConEnvio = totalPago + envioTotal;
 
             // Mostrar el total incluyendo el envío con el mensaje correspondiente
-            $("#visibleTotalPago").val(`${totalConEnvio.toFixed(2)} + Envío = $${envioTotal.toFixed(2)}`);
+            $("#visibleTotalPago").val(`Pago Total = ${totalConEnvio.toFixed(2)} | Costo $${totalPago.toFixed(2)} + Envío $${envioTotal.toFixed(2)}`);
             $("#hiddenTotalPago").val(totalConEnvio.toFixed(2));
         }
 
