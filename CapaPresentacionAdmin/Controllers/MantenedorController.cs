@@ -132,7 +132,7 @@ namespace CapaPresentacionAdmin.Controllers
             {
                 if (archivoImagen != null)
                 {
-                    string ruta_guardar = ConfigurationManager.AppSettings["FotosProductos"];
+                    string ruta_guardar = Server.MapPath(ConfigurationManager.AppSettings["FotosProductos"]);
                     string extension = Path.GetExtension(archivoImagen.FileName);
                     string nombre_imagen = string.Concat(oProducto.Id_Producto.ToString(), extension);
 
@@ -150,7 +150,7 @@ namespace CapaPresentacionAdmin.Controllers
                     if (guardar_imagen_exito)
                     {
 
-                        oProducto.Ruta_Imagen = ruta_guardar;
+                        oProducto.Ruta_Imagen = ConfigurationManager.AppSettings["FotosProductos"];
                         oProducto.Nombre_Imagen = nombre_imagen;
                         bool rspta = new CN_Producto().GuardarDatosImagen(oProducto, out mensaje);
 
@@ -172,20 +172,36 @@ namespace CapaPresentacionAdmin.Controllers
             bool conversion;
             Producto oproducto = new CN_Producto().Listar().Where(p => p.Id_Producto == id).FirstOrDefault();
 
-            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oproducto.Ruta_Imagen, oproducto.Nombre_Imagen), out conversion);
-
-
-            return Json(new
+            if (oproducto != null)
             {
-                conversion = conversion,
-                textoBase64 = textoBase64,
-                extension = Path.GetExtension(oproducto.Nombre_Imagen)
+                // Resolver la ruta física desde la ruta relativa usando Server.MapPath
+                string rutaFisica = Server.MapPath(Path.Combine(oproducto.Ruta_Imagen, oproducto.Nombre_Imagen));
 
-            },
-            JsonRequestBehavior.AllowGet
-            );
+                // Convertir la imagen a base64
+                string textoBase64 = CN_Recursos.ConvertirBase64(rutaFisica, out conversion);
 
+                return Json(new
+                {
+                    conversion = conversion,
+                    textoBase64 = textoBase64,
+                    extension = Path.GetExtension(oproducto.Nombre_Imagen)
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                // Si no se encuentra el producto, devuelve un mensaje de error
+                return Json(new
+                {
+                    conversion = false,
+                    textoBase64 = string.Empty,
+                    extension = string.Empty,
+                    mensaje = "Producto no encontrado."
+                },
+                JsonRequestBehavior.AllowGet);
+            }
         }
+
 
 
         [HttpPost]
@@ -246,7 +262,7 @@ namespace CapaPresentacionAdmin.Controllers
             {
                 if (archivoImagen != null)
                 {
-                    string ruta_guardar = ConfigurationManager.AppSettings["FotosCarrusel"];
+                    string ruta_guardar = Server.MapPath(ConfigurationManager.AppSettings["FotosCarrusel"]);
                     string extension = Path.GetExtension(archivoImagen.FileName);
                     string nombre_imagen = string.Concat(oCarrusel.Id_Carrusel.ToString(), extension);
 
@@ -264,7 +280,7 @@ namespace CapaPresentacionAdmin.Controllers
                     if (guardar_imagen_exito)
                     {
 
-                        oCarrusel.Ruta_Imagen = ruta_guardar;
+                        oCarrusel.Ruta_Imagen = ConfigurationManager.AppSettings["FotosCarrusel"];
                         oCarrusel.Nombre_Imagen = nombre_imagen;
                         bool rspta = new CN_Carrusel().GuardarDatosImagen(oCarrusel, out mensaje);
 
@@ -284,21 +300,30 @@ namespace CapaPresentacionAdmin.Controllers
         public JsonResult ImagenCarrusel(int id)
         {
             bool conversion;
-            Carrusel oCarrusel = new CN_Carrusel().Listar().Where(p => p.Id_Carrusel == id).FirstOrDefault();
+            Carrusel oCarrusel = new CN_Carrusel().Listar().FirstOrDefault(p => p.Id_Carrusel == id);
 
-            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oCarrusel.Ruta_Imagen, oCarrusel.Nombre_Imagen), out conversion);
-
-
-            return Json(new
+            if (oCarrusel != null)
             {
-                conversion = conversion,
-                textoBase64 = textoBase64,
-                extension = Path.GetExtension(oCarrusel.Nombre_Imagen)
+                // Obtener ruta física usando Server.MapPath
+                string ruta_fisica = Server.MapPath(Path.Combine(oCarrusel.Ruta_Imagen, oCarrusel.Nombre_Imagen));
+                string textoBase64 = CN_Recursos.ConvertirBase64(ruta_fisica, out conversion);
 
-            },
-            JsonRequestBehavior.AllowGet
-            );
-
+                return Json(new
+                {
+                    conversion = conversion,
+                    textoBase64 = textoBase64,
+                    extension = Path.GetExtension(oCarrusel.Nombre_Imagen)
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new
+                {
+                    conversion = false,
+                    textoBase64 = string.Empty,
+                    extension = string.Empty
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
 

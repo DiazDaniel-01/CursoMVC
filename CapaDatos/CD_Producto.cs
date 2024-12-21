@@ -27,8 +27,8 @@ namespace CapaDatos
                     StringBuilder sb = new StringBuilder();
 
                     sb.AppendLine("select p.Id_Producto, p.Nombre, p.Descripcion,");
-                    sb.AppendLine("c.Id_Categoria, c.Nombre[NomCategoria],");
-                    sb.AppendLine("p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo");
+                    sb.AppendLine("c.Id_Categoria, c.Nombre[NomCategoria],c.Activo AS CatActivo,");
+                    sb.AppendLine("p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo AS ProdActivo");
                     sb.AppendLine("from PRODUCTO p");
                     sb.AppendLine("inner join CATEGORIA c on c.Id_Categoria = p.Id_Categoria");
 
@@ -44,11 +44,12 @@ namespace CapaDatos
                                 Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
                                 Nombre = dr["Nombre"].ToString(),
                                 Descripcion = dr["Descripcion"].ToString(),
-                                oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
+                                oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString(), Activo = Convert.ToBoolean(dr["CatActivo"])
+                                },
                                 Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
                                 Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
                                 Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
-                                Activo = Convert.ToBoolean(dr["Activo"])
+                                Activo = Convert.ToBoolean(dr["ProdActivo"])
                             });
                         }
                     }
@@ -198,16 +199,17 @@ namespace CapaDatos
             {
                 StringBuilder sb = new StringBuilder();
 
-                sb.AppendLine("select p.Id_Producto, p.Nombre, p.Descripcion,");
-                sb.AppendLine("c.Id_Categoria, c.Nombre[NomCategoria],");
-                sb.AppendLine("p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo");
-                sb.AppendLine("from PRODUCTO p");
-                sb.AppendLine("inner join CATEGORIA c on c.Id_Categoria = p.Id_Categoria");
-                sb.AppendLine("where c.Id_Categoria = @idcategoria");
+                sb.AppendLine("SELECT p.Id_Producto, p.Nombre, p.Descripcion,");
+                sb.AppendLine("       c.Id_Categoria, c.Nombre AS NomCategoria, c.Activo AS CatActivo,");
+                sb.AppendLine("       p.Precio, p.Ruta_Imagen, p.Nombre_Imagen, p.Activo AS ProdActivo");
+                sb.AppendLine("FROM PRODUCTO p");
+                sb.AppendLine("INNER JOIN CATEGORIA c ON c.Id_Categoria = p.Id_Categoria");
+                sb.AppendLine("WHERE c.Id_Categoria = @idcategoria");
 
                 SqlCommand cmd = new SqlCommand(sb.ToString(), oconexion);
                 cmd.Parameters.AddWithValue("@idcategoria", idcategoria);
                 cmd.CommandType = CommandType.Text;
+
                 oconexion.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
@@ -218,11 +220,16 @@ namespace CapaDatos
                             Id_Producto = Convert.ToInt32(dr["Id_Producto"]),
                             Nombre = dr["Nombre"].ToString(),
                             Descripcion = dr["Descripcion"].ToString(),
-                            oCategoria = new Categoria() { Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]), Nombre = dr["NomCategoria"].ToString() },
+                            oCategoria = new Categoria()
+                            {
+                                Id_Categoria = Convert.ToInt32(dr["Id_Categoria"]),
+                                Nombre = dr["NomCategoria"].ToString(),
+                                Activo = Convert.ToBoolean(dr["CatActivo"]) // Asignar el campo CatActivo
+                            },
                             Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-AR")),
                             Ruta_Imagen = dr["Ruta_Imagen"].ToString(),
                             Nombre_Imagen = dr["Nombre_Imagen"].ToString(),
-                            Activo = Convert.ToBoolean(dr["Activo"])
+                            Activo = Convert.ToBoolean(dr["ProdActivo"]) // Asegurar que se distingue del Activo de la categoría
                         });
                     }
                 }
@@ -230,6 +237,7 @@ namespace CapaDatos
 
             return lista;
         }
+
 
     }
 }

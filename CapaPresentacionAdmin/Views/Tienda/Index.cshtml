@@ -144,40 +144,41 @@
                         </select>
                     </div>
                     <div class="mb-2">
-                        <select id="selectCosto" class="form-select">
-                            <option value="">Se le seleccionara un costo del envio</option>
-                        </select>
+                        <div id="selectCosto" class="form-select bg-light">
+                            Envio: Seleccione un Barrio
+                        </div>
                     </div>
                 </div>
+
                 <h3>Dirección</h3>
 
                 <div class="Localidad">
                     <div class="calles">
                         <div class="calle-1">
-                            <input type="text" class="form-control" id="txtCalle1" placeholder="Ingresa tu calle y número">
+                            <input type="text" class="form-control" id="txtCalle1" placeholder="Ingresa tu calle y altura  *(campo obligatorio)" autocomplete="off">
                         </div>
                         <div class="calle-2">
-                            <input type="text" class="form-control" id="txtCalle2" placeholder="¿Entre que calles se encuentra tu domicilio?">
+                            <input type="text" class="form-control" id="txtCalle2" placeholder="¿Entre que calles se encuentra tu domicilio?" autocomplete="off">
                         </div>
                     </div>
                     <div class="depart-piso">
                         <div class="departamento">
-                            <input type="text" class="form-control" id="txtDepartamento" placeholder="Ingrese su departamento">
+                            <input type="text" class="form-control" id="txtDepartamento" placeholder="Ingrese su departamento" autocomplete="off">
                         </div>
                         <div class="piso">
-                            <input type="number" class="form-control" id="txtNumeroPiso" placeholder="Número del piso">
+                            <input type="number" class="form-control" id="txtNumeroPiso" placeholder="Número del piso" autocomplete="off">
                         </div>
                     </div>
                     <div class="referencia">
-                        <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia para encontrar tu hogar (Ej: Nro de Casa, Manzana, etc.)">
+                        <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia para encontrar tu hogar (Ej: Nro de Casa, Manzana, etc.)" autocomplete="off">
                     </div>
                 </div>
                 <h3>Datos de contacto</h3>
                 <div class="Cliente">
-                    <input type="text" class="form-control" id="txtNombreCliente" placeholder="Nombre">
-                    <input type="text" class="form-control" id="txtApellidoCliente" placeholder="Apellido">
+                    <input type="text" class="form-control" id="txtNombreCliente" placeholder="Nombre  *(campo obligatorio)">
+                    <input type="text" class="form-control" id="txtApellidoCliente" placeholder="Apellido  *(campo obligatorio)">
                     <div class="phone-number">
-                        <input type="tel" class="form-control" id="txtCelular" placeholder="011 2345-6789">
+                        <input type="tel" class="form-control" id="txtCelular" placeholder="91123456784  *(campo obligatorio)" autocomplete="off">
                     </div>
                 </div>
 
@@ -204,9 +205,28 @@
     // Variable global para mantener el total del pago
     let totalPagoGlobal = 0;
 
+    // Desplazar la página hacia la sección de "Mi Pedido"
     document.getElementById('continueButton').addEventListener('click', function () {
-        // Desplazar la página hacia la sección de "Mi Pedido"
         document.querySelector('.orden-container').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    //Manejo de error para el celular
+    document.getElementById("txtCelular").addEventListener("input", function (e) {
+        const celularInput = e.target;
+        const celular = celularInput.value;
+
+        // Validar longitud máxima
+        if (celular.length > 11) {
+            celularInput.setCustomValidity("Excediste la cantidad máxima de números permitidos (15).");
+        }
+        // Validar formato permitido
+        else if (!/^[+]?[\d-]*$/.test(celular)) {
+            celularInput.setCustomValidity("Solo se permiten números, el símbolo '+' y '-' (máximo 15 caracteres).");
+        } else {
+            celularInput.setCustomValidity("");
+        }
+
+        celularInput.reportValidity();
     });
 
     //Funcionalidad para que se meustre el formulario
@@ -397,42 +417,44 @@
             actualizarTotalPago(); // Recalcular el total
         });
 
-        // Función para actualizar el total del pedido general
-        function actualizarTotalPago() {
-            totalPagoGlobal = 0;
-            $(".order-total").each(function () {
-                totalPagoGlobal += parseFloat($(this).text());
-            });
 
-            // Usar la misma variable global para actualizar ambos elementos
-            actualizarTotalGlobal();
-        }
-
-        function actualizarTotalGlobal() {
-            // Actualizar el texto en el total del pago
-            $("#totalPago").text(`Total a pagar: $${totalPagoGlobal.toFixed(2)}`);
-
-            // Actualizar el texto en el botón flotante móvil
-            const botonFlotanteMobile = document.querySelector('#totalPriceMobile');
-            if (botonFlotanteMobile) {
-                botonFlotanteMobile.textContent = `$${totalPagoGlobal.toFixed(2)}`;
-            }
-
-            // Actualizar el texto en el botón flotante desktop
-            const botonFlotanteDesktop = document.querySelector('#totalPriceDesktop');
-            if (botonFlotanteDesktop) {
-                botonFlotanteDesktop.textContent = `$${totalPagoGlobal.toFixed(2)}`;
-            }
-
-            // Actualizar el texto en el botón flotante desktop
-            const botonFlotanteFrom = document.querySelector('#totalPriceForm');
-            if (botonFlotanteFrom) {
-                botonFlotanteFrom.textContent = `$${totalPagoGlobal.toFixed(2)}`;
-            }
-        }
 
     });
     //Fin funcionalidad del Carrito
+
+    // Función para actualizar el total del pedido general
+    function actualizarTotalPago() {
+        totalPagoGlobal = 0;
+        $(".order-total").each(function () {
+            totalPagoGlobal += parseFloat($(this).text());
+        });
+
+        // Usar la misma variable global para actualizar ambos elementos
+        actualizarTotalGlobal();
+    }
+
+    function actualizarTotalGlobal() {
+        // Actualizar el texto en el total del pago
+        $("#totalPago").text(`Total a pagar: $${totalPagoGlobal.toFixed(2)}`);
+
+        // Actualizar el texto en el botón flotante móvil
+        const botonFlotanteMobile = document.querySelector('#totalPriceMobile');
+        if (botonFlotanteMobile) {
+            botonFlotanteMobile.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+        }
+
+        // Actualizar el texto en el botón flotante desktop
+        const botonFlotanteDesktop = document.querySelector('#totalPriceDesktop');
+        if (botonFlotanteDesktop) {
+            botonFlotanteDesktop.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+        }
+
+        // Actualizar el texto en el botón flotante desktop
+        const botonFlotanteFrom = document.querySelector('#totalPriceForm');
+        if (botonFlotanteFrom) {
+            botonFlotanteFrom.textContent = `$${totalPagoGlobal.toFixed(2)}`;
+        }
+    }
 
 
     // Función para eliminar un producto del carrito
@@ -483,17 +505,19 @@
             type: "GET",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            success: function(response) {
+            success: function (response) {
                 $("#contenedor_categoria").LoadingOverlay("hide");
-                $("#contenedor_categoria").empty();  // Limpiar el contenedor de categorías
+                $("#contenedor_categoria").empty(); // Limpiar el contenedor de categorías
 
                 // Generar enlaces de categorías
-                $.each(response.data, function(i, element) {
+                $.each(response.data, function (i, element) {
+                    if (!element.Activo) return; // Saltar categorías inactivas
+
                     $("<a>")
                         .addClass("cart text-black")
                         .text(element.Nombre)
                         .attr("href", "#categoria_" + element.Id_Categoria)
-                        .on("click", function(e) {
+                        .on("click", function (e) {
                             e.preventDefault();
 
                             // Desplazar al título de la categoría
@@ -506,13 +530,14 @@
                 });
 
                 // Mostrar todos los productos en secciones al cargar
-                //MostrarProductoporCategoria();
+                // MostrarProductoporCategoria();
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#contenedor_categoria").LoadingOverlay("show");
             }
         });
     }
+
 
 
     function MostrarProductos() {
@@ -523,19 +548,30 @@
             success: function (response) {
                 productosMap = {}; // Reinicia el mapa al obtener nuevos datos
                 $("#contenedor_secciones_producto").LoadingOverlay("hide");
-                $("#contenedor_secciones_producto").html("");  // Limpiar antes de agregar nuevos productos
+                $("#contenedor_secciones_producto").html(""); // Limpiar antes de agregar nuevos productos
 
-                // Verificar si hay productos para mostrar
+                console.log("Respuesta del servidor:", response); // Verificar datos devueltos por el servidor
+
                 if (response.data.length > 0) {
-                    let currentCategory = null;
-                    let sectionContainer = null;
+                    let productsByCategory = {};
 
-                    // Agrupar productos por categoría
-                    var productsByCategory = {};
+                    // Agrupar productos por categoría, filtrando por activo
+                    $.each(response.data, function (i, element) {
+                        console.log("Procesando producto:", element); // Verificar cada producto
 
-                    $.each(response.data, function(i, element) {
-                        var categoryId = element.oCategoria.Id_Categoria;
+                        // Validar que el producto y su categoría estén activos
+                        if (!element.oCategoria.Activo) {
+                            console.log(`Categoría inactiva: ${element.oCategoria.Nombre}`);
+                            return; // Saltar productos cuya categoría no esté activa
+                        }
+                        if (!element.Activo) {
+                            console.log(`Producto inactivo: ${element.Nombre}`);
+                            return; // Saltar productos inactivos
+                        }
 
+                        const categoryId = element.oCategoria.Id_Categoria;
+
+                        // Si no existe la categoría en el mapa, inicializarla
                         if (!productsByCategory[categoryId]) {
                             productsByCategory[categoryId] = {
                                 categoryName: element.oCategoria.Nombre,
@@ -543,67 +579,96 @@
                             };
                         }
 
+                        // Agregar el producto a la categoría correspondiente
                         productsByCategory[categoryId].products.push(element);
 
+                        // Actualizar el mapa de productos
                         productosMap[element.Nombre] = element.Id_Producto;
                     });
 
-                    // Renderizar las categorías y productos
-                    $.each(productsByCategory, function(categoryId, categoryData) {
-                        var sectionContainer = $("<div>").attr("id", "categoria_" + categoryId).addClass("category-container products mb-5")
-                            .append($("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName));
+                    console.log("Productos agrupados por categoría:", productsByCategory); // Verificar agrupación
 
-                        var rowContainer = $("<div>").addClass("grid-container"); // Usamos grid-container para los productos
+                    // Renderizar categorías y productos
+                    $.each(productsByCategory, function (categoryId, categoryData) {
+                        // Ignorar categorías sin productos activos
+                        if (categoryData.products.length === 0) return;
+
+                        const sectionContainer = $("<div>")
+                            .attr("id", "categoria_" + categoryId)
+                            .addClass("category-container products mb-5")
+                            .append(
+                                $("<h3>").addClass("fw-bold category-name").text(categoryData.categoryName)
+                            );
+
+                        const rowContainer = $("<div>").addClass("grid-container");
                         sectionContainer.append(rowContainer);
 
-                        // Añadir productos a la fila
-                        $.each(categoryData.products, function(i, product) {
-                            var productCard = $("<div>").addClass("product product-card") // Usamos grid-item para cada producto
+                        // Renderizar productos de la categoría
+                        $.each(categoryData.products, function (i, product) {
+                            const productCard = $("<div>")
+                                .addClass("product product-card")
                                 .append(
                                     $("<div>").append(
                                         $("<h4>").addClass("product-name").text(product.Nombre),
                                         $("<p>").text(product.Descripcion),
-                                        $("<button>").addClass("cart text-black").text("$" + product.Precio).data("idproducto", product.Id_Producto))
+                                        $("<button>")
+                                            .addClass("cart text-black")
+                                            .text("$" + product.Precio)
+                                            .data("idproducto", product.Id_Producto)
+                                    )
                                 );
 
                             // Llamada AJAX para obtener la imagen en base64
                             $.ajax({
-                                url: '@Url.Action("ImagenProducto", "Tienda")', // Ajustar URL si es necesario
+                                url: '@Url.Action("ImagenProducto", "Tienda")',
                                 type: 'POST',
                                 data: JSON.stringify({ id: product.Id_Producto }),
                                 dataType: 'json',
                                 contentType: 'application/json; charset=utf-8',
-                                success: function(data) {
+                                success: function (data) {
                                     if (data.conversion) {
-                                        // Crear la imagen con base64 y agregarla al producto
-                                        var img = $("<img>")
+                                        const img = $("<img>")
                                             .addClass("d-block")
                                             .attr('src', 'data:image/' + data.extension + ';base64,' + data.textoBase64)
                                             .attr('alt', product.Nombre);
 
-                                        // Añadir la imagen al producto
                                         productCard.append(img);
                                     }
                                 }
                             });
 
-                            rowContainer.append(productCard);  // Añadir producto a la fila
+                            rowContainer.append(productCard);
                         });
 
-                        sectionContainer.appendTo("#contenedor_secciones_producto");  // Añadir la sección al contenedor general
-                        $("#contenedor_secciones_producto").append("<hr class='category-divider' />");  // Línea divisora después de cada categoría
+                        sectionContainer.appendTo("#contenedor_secciones_producto");
+                        $("#contenedor_secciones_producto").append("<hr class='category-divider' />");
                     });
+
+                    // Mostrar un mensaje si no hay categorías visibles
+                    if ($("#contenedor_secciones_producto").children().length === 0) {
+                        $("<div>")
+                            .addClass("alert alert-warning")
+                            .text("No hay productos disponibles.")
+                            .appendTo("#contenedor_secciones_producto");
+                    }
                 } else {
-                    $("<div>").addClass("alert alert-warning")
+                    $("<div>")
+                        .addClass("alert alert-warning")
                         .text("No hay productos disponibles.")
                         .appendTo("#contenedor_secciones_producto");
                 }
             },
-            beforeSend: function() {
+            error: function (xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+            },
+            beforeSend: function () {
                 $("#contenedor_secciones_producto").LoadingOverlay("show");
             }
         });
     }
+
+
+
 
 
     // Funcionalidades para el carrusel
@@ -695,8 +760,8 @@
 
                     // Agrega las opciones predeterminadas
                     $("#selectBarrio").append('<option value="">Seleccione un Barrio</option>');
-                    $("#selectCodigoPostal").append('<option value="">Seleccione un Código Postal</option>');
-                    $("#selectCosto").append('<option value="">Se le seleccionará un costo del envío</option>');
+                    $("#selectCodigoPostal").append('<option value="">O seleccione un Código Postal</option>');
+                    $("#selectCosto").append('<option value="">Se le asignará el costo de envío</option>');
 
                     // Llena ambos selects con los datos
                     barrios.forEach(function (item) {
@@ -711,7 +776,7 @@
 
                         if (selectedBarrio) {
                             $("#selectCodigoPostal").val(selectedBarrio.Codigo_Postal);
-                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                            $("#selectCosto").html(`<option value="">Costo: $${selectedBarrio.Costo_Envio}</option>`);
                         } else {
                             resetFields();
                         }
@@ -724,7 +789,7 @@
 
                         if (selectedBarrio) {
                             $("#selectBarrio").val(selectedBarrio.Codigo_Postal);
-                            $("#selectCosto").html(`<option value="">${selectedBarrio.Costo_Envio}</option>`);
+                            $("#selectCosto").html(`<option value="">Envio: $${selectedBarrio.Costo_Envio}</option>`);
                         } else {
                             resetFields();
                         }
@@ -734,7 +799,7 @@
                     function resetFields() {
                         $("#selectBarrio").val("");
                         $("#selectCodigoPostal").val("");
-                        $("#selectCosto").html('<option value="">Se le seleccionará un costo del envío</option>');
+                        $("#selectCosto").html('<option value="">Se le asignará el costo de envío</option>');
                     }
                 },
                 error: function (error) {
@@ -977,65 +1042,6 @@
             });
         }
 
-        function RealizarPedido() {
-            // Verificar que existan productos en el carrito
-            if (Object.keys(productosMap).length === 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Carrito vacío',
-                    text: 'No tienes productos en el carrito.',
-                    confirmButtonText: 'Cerrar'
-                });
-                return;
-            }
-
-            // Número de WhatsApp del vendedor
-            const numeroTelefono = "541136943084";
-            let mensaje = `¡Hola! Me gustaría realizar el siguiente pedido:\n\n`;
-
-            // Recorrer los productos en el carrito y construir el mensaje
-            $(".order-item").each(function () {
-                const $item = $(this);
-                const producto = $item.find("h5").text(); // Nombre del producto
-                const cantidad = parseInt($item.find(".order-quantity").text());
-                const precio = parseFloat($item.find(".order-price").text());
-                const subtotal = parseFloat($item.find(".order-total").text());
-
-                mensaje += `Producto: ${producto}\n`;
-                mensaje += `Cantidad: ${cantidad}\n`;
-                mensaje += `Precio: S/. ${precio.toFixed(2)}\n`;
-                mensaje += `Subtotal: S/. ${subtotal.toFixed(2)}\n\n`;
-            });
-
-            // Calcular el total desde la variable global o la vista
-            mensaje += `Total: S/. ${totalPagoGlobal.toFixed(2)}\n`;
-
-            // Verificar que los datos del cliente y la localidad existan
-            if (!datosCliente || !datosLocalidad) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Datos incompletos',
-                    text: 'Por favor, completa los datos del cliente y la dirección antes de realizar el pedido.',
-                    confirmButtonText: 'Cerrar'
-                });
-                return;
-            }
-
-            // Agregar los datos del cliente al mensaje
-            const clienteNombre = `${datosCliente.Nombre} ${datosCliente.Apellido}`;
-            const clienteTelefono = datosCliente.Celular || 'Sin teléfono';
-            const direccion = `${datosLocalidad.Calle}, ${datosLocalidad.Calle_2 || ''}, ${datosLocalidad.oBarrios.Codigo_Postal || ''}, ${datosLocalidad.Departamento || ''}, Piso: ${datosLocalidad.Piso || ''} "`;
-
-            mensaje += `\nCliente: ${clienteNombre}\n`;
-            mensaje += `Teléfono: ${clienteTelefono}\n`;
-            mensaje += `Dirección: ${direccion}\n`;
-
-            // Crear el enlace para enviar el mensaje por WhatsApp
-            const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(urlWhatsApp, "_blank");
-        }
-
-
 
         function insertarDetallesVenta(ventaId) {
             var detallesVenta = $(".order-item").map(function () {
@@ -1076,17 +1082,29 @@
 
                     if (response.success) {
                         // Mostrar SweetAlert de éxito
-
                         Swal.fire({
                             icon: 'success',
                             title: '¡Éxito!',
                             text: 'Venta enviada correctamente.',
                             confirmButtonText: 'Aceptar'
                         }).then(() => {
-                            // Vaciar el carrito y actualizar el total después de cerrar el SweetAlert
-                            $(".additions").empty();
+
+
+                            // Mostrar mensaje antes de realizar el pedido
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Confirmación',
+                                text: 'Se usará su número de teléfono para dirigirlo a WhatsApp y realizar el pedido.',
+                                confirmButtonText: 'Continuar',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancelar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Proceder con la función RealizarPedido si el usuario confirma
+                                    RealizarPedido();
+                                }
+                            });
                         });
-                        RealizarPedido();
                     } else {
                         // Mostrar SweetAlert de error
                         Swal.fire({
@@ -1109,7 +1127,89 @@
                     });
                 }
             });
+        }
 
+
+        function RealizarPedido() {
+            // Verificar que existan productos en el carrito
+            if (Object.keys(productosMap).length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Carrito vacío',
+                    text: 'No tienes productos en el carrito.',
+                    confirmButtonText: 'Cerrar'
+                });
+                return;
+            }
+
+            // Número de WhatsApp del vendedor
+            const numeroTelefono = "541136943084";
+            let mensaje = `¡Hola! Me gustaría realizar el siguiente pedido:\n\n`;
+
+            // Verificar si hay elementos `.order-item`
+            const items = $(".order-item");
+            if (items.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Carrito vacío',
+                    text: 'No se detectaron productos en el carrito.',
+                    confirmButtonText: 'Cerrar'
+                });
+                return;
+            }
+
+            items.each(function () {
+                const $item = $(this);
+
+                // Capturar datos del producto
+                const producto = $item.find("h5").text().trim(); // Nombre del producto
+                const cantidad = parseInt($item.find(".order-quantity").text().trim()) || 0;
+                const precio = parseFloat($item.find(".order-price").text().trim()) || 0;
+                const subtotal = parseFloat($item.find(".order-total").text().trim()) || 0;
+                const observacion = $item.find(".order-comment").text().trim() || "Sin observación";
+
+                mensaje += `Producto: ${producto}\n`;
+                mensaje += `Cantidad: ${cantidad}\n`;
+                mensaje += `Precio: $${precio.toFixed(2)}\n`;
+                mensaje += `Subtotal: $${subtotal.toFixed(2)}\n`;
+                mensaje += `Observación: ${observacion}\n\n`;
+            });
+
+            // Calcular el total desde la variable global o la vista
+            mensaje += `Total: $ ${totalPagoGlobal.toFixed(2)}\n`;
+
+            // Verificar que los datos del cliente y la localidad existan
+            if (!datosCliente || !datosLocalidad) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Datos incompletos',
+                    text: 'Por favor, completa los datos del cliente y la dirección antes de realizar el pedido.',
+                    confirmButtonText: 'Cerrar'
+                });
+                return;
+            }
+
+            // Agregar los datos del cliente al mensaje
+            const clienteNombre = `${datosCliente.Nombre} ${datosCliente.Apellido}`;
+            const clienteTelefono = datosCliente.Celular || 'Sin teléfono';
+            const barrioSeleccionado = $("#selectBarrio option:selected").text() || "Barrio no especificado";
+
+            const direccion = `${datosLocalidad.Calle}, 2da Calle: ${datosLocalidad.Calle_2 || 'n/a'}, Código Postal: ${datosLocalidad.oBarrios.Codigo_Postal || ''}, Barrio: ${barrioSeleccionado}, Departamento: ${datosLocalidad.Departamento || 'n/a'}, Piso: ${datosLocalidad.Piso || 'n/a'}`;
+
+            mensaje += `\nCliente: ${clienteNombre}\n`;
+            mensaje += `Teléfono: ${clienteTelefono}\n`;
+            mensaje += `Dirección: ${direccion}\n`;
+
+            // Crear el enlace para enviar el mensaje por WhatsApp
+            const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(urlWhatsApp, "_blank");
+
+            // Vaciar el carrito
+            $(".additions").empty();
+
+            // Reiniciar el pago total y actualizar el precio
+            totalPagoGlobal = 0; // Reiniciar la variable global
+            actualizarTotalPago(); // Actualizar el total en la interfaz
         }
 
 

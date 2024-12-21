@@ -256,8 +256,6 @@
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
 
-                        console.log(data); // Verifica la respuesta aquí
-
                         $("#img_producto").LoadingOverlay("hide");
                         if (data.conversion) {
                             $("#img_producto").attr({ "src": "data:image/" + data.extension + ";base64," + data.textoBase64 });

@@ -27,11 +27,6 @@ namespace CapaNegocio
                 Mensaje = "El nombre del Producto no puede ser vacio";
             }
 
-            else if (string.IsNullOrEmpty(obj.Descripcion) || string.IsNullOrWhiteSpace(obj.Descripcion))
-            {
-                Mensaje = "El descripcion del Producto no puede ser vacio";
-            }
-
             else if (obj.oCategoria.Id_Categoria == 0)
             {
                 Mensaje = "Debe seleccionar una categoria";
@@ -62,11 +57,6 @@ namespace CapaNegocio
             if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre))
             {
                 Mensaje = "El nombre del Producto no puede ser vacio";
-            }
-
-            else if (string.IsNullOrEmpty(obj.Descripcion) || string.IsNullOrWhiteSpace(obj.Descripcion))
-            {
-                Mensaje = "La descripcion del Producto no puede ser vacio";
             }
 
             else if (obj.oCategoria.Id_Categoria == 0)
