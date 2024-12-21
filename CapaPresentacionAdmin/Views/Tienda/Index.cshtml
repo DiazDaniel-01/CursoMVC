@@ -550,22 +550,16 @@
                 $("#contenedor_secciones_producto").LoadingOverlay("hide");
                 $("#contenedor_secciones_producto").html(""); // Limpiar antes de agregar nuevos productos
 
-                console.log("Respuesta del servidor:", response); // Verificar datos devueltos por el servidor
-
                 if (response.data.length > 0) {
                     let productsByCategory = {};
 
                     // Agrupar productos por categoría, filtrando por activo
                     $.each(response.data, function (i, element) {
-                        console.log("Procesando producto:", element); // Verificar cada producto
-
                         // Validar que el producto y su categoría estén activos
                         if (!element.oCategoria.Activo) {
-                            console.log(`Categoría inactiva: ${element.oCategoria.Nombre}`);
                             return; // Saltar productos cuya categoría no esté activa
                         }
                         if (!element.Activo) {
-                            console.log(`Producto inactivo: ${element.Nombre}`);
                             return; // Saltar productos inactivos
                         }
 
@@ -585,8 +579,6 @@
                         // Actualizar el mapa de productos
                         productosMap[element.Nombre] = element.Id_Producto;
                     });
-
-                    console.log("Productos agrupados por categoría:", productsByCategory); // Verificar agrupación
 
                     // Renderizar categorías y productos
                     $.each(productsByCategory, function (categoryId, categoryData) {
@@ -666,6 +658,7 @@
             }
         });
     }
+
 
 
 
